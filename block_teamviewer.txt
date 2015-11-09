@@ -1,0 +1,19 @@
+regex TV-RGX “\.teamviewer\.com”
+regex DG-RGX “\.dyngate\.com”
+
+class-map type regex match-any TV-CLS
+match regex DG-RGX
+match regex TV-RGX
+
+policy-map type inspect dns TV-PLC
+parameters
+message-length maximum 512
+match domain-name regex class TV-CLS
+drop
+
+policy-map global_policy
+class inspection_default
+no inspect dns preset_dns_map
+inspect dns TV-PLC
+
+service-policy global_policy global

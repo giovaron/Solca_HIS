@@ -1,0 +1,248 @@
+-----06/oct/2015-----
+sw-core1#show inventory
+NAME: "Switch System", DESCR: "Cisco Systems, Inc. WS-C4507R+E 7 slot switch "
+PID: WS-C4507R+E       , VID: V06  , SN: FXS1810Q05Q
+
+NAME: "Clock Module", DESCR: "Clock Module"
+PID: WS-X4K-CLOCK-E    , VID: V01  , SN: FXS180401TQ
+
+NAME: "Mux Buffer 1 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS180101PD
+
+NAME: "Mux Buffer 2 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS1801034Y
+
+NAME: "Mux Buffer 5 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS180101QG
+
+NAME: "Mux Buffer 6 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS180101L0
+
+NAME: "Mux Buffer 7 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS18010274
+
+NAME: "Linecard(slot 1)", DESCR: "10GE SFP+ with 12 SFP+ ports"
+PID: WS-X4712-SFP+E    , VID: V03  , SN: CAT1814L1K4
+
+NAME: "TenGigabitEthernet1/1", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515R3
+
+NAME: "TenGigabitEthernet1/2", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515RM
+
+NAME: "TenGigabitEthernet1/3", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS174613K0
+
+NAME: "TenGigabitEthernet1/4", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515QZ
+
+NAME: "TenGigabitEthernet1/5", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181600PK
+
+NAME: "TenGigabitEthernet1/6", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515QS
+
+NAME: "TenGigabitEthernet1/7", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181601EY
+
+NAME: "TenGigabitEthernet1/8", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181601F0
+
+NAME: "TenGigabitEthernet1/10", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS174601PM
+
+NAME: "TenGigabitEthernet1/11", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515QY
+
+NAME: "TenGigabitEthernet1/12", DESCR: "1000BaseT"
+PID: Unspecified       , VID:      , SN: AGM11442350
+
+NAME: "Supervisor(slot 3)", DESCR: "Sup 7L-E 10GE (SFP+), 1000BaseX (SFP) with 4 SFP Ports"
+PID: WS-X45-SUP7L-E    , VID: V03  , SN: CAT1803L1AH
+
+NAME: "Fan", DESCR: "FanTray"
+PID: WS-X4597+E        , VID: V02  , SN: FXS1807Q38K
+
+NAME: "Power Supply 1", DESCR: "Power Supply ( AC 1300W )"
+PID: PWR-C45-1300ACV   , VID: V08  , SN: SNI1804AU0Y
+
+NAME: "Power Supply 2", DESCR: "Power Supply ( AC 1300W )"
+PID: PWR-C45-1300ACV   , VID: V08  , SN: SNI1804AU27
+----------------------------------
+sw-core1#show interfaces status
+
+Port      Name               Status       Vlan       Duplex  Speed Type
+Te1/1     **backbone-patolog connected    trunk        full    10G 10GBase-SR
+Te1/2     **backbone-laborat connected    trunk        full    10G 10GBase-SR
+Te1/3     **backbone-uci**   connected    trunk        full    10G 10GBase-SR
+Te1/4     **backbone-citolog connected    trunk        full    10G 10GBase-SR
+Te1/5     **backbone-consult connected    trunk        full    10G 10GBase-SR
+Te1/6     **backbone-nutrici connected    trunk        full    10G 10GBase-SR
+Te1/7     **backbone-rrhh**  connected    trunk        full    10G 10GBase-SR
+Te1/8     **backbone-piso2** connected    trunk        full    10G 10GBase-SR
+Te1/9                        notconnect   1            full   auto No XCVR
+Te1/10    **backbone-sistema connected    trunk        full    10G 10GBase-SR
+Te1/11    **backbone-mnuclea connected    trunk        full    10G 10GBase-SR
+Te1/12    **servidores**     connected    10           full a-1000 1000BaseT
+Te3/1                        notconnect   1            full   auto No XCVR
+Te3/2                        notconnect   1            full   auto No XCVR
+Gi3/3                        inactive     1            full   1000 No Gbic
+Gi3/4                        inactive     1            full   1000 No Gbic
+Gi3/5                        inactive     1            full   1000 No Gbic
+Gi3/6                        inactive     1            full   1000 No Gbic
+Po10      **sw-sistemas**    connected    trunk      a-full    10G
+----------------------------------------------
+
+configuracion luego de insertar modulo
+
+-----------------------------------------------
+sw-core1#show inventory
+NAME: "Switch System", DESCR: "Cisco Systems, Inc. WS-C4507R+E 7 slot switch "
+PID: WS-C4507R+E       , VID: V06  , SN: FXS1810Q05Q
+
+NAME: "Clock Module", DESCR: "Clock Module"
+PID: WS-X4K-CLOCK-E    , VID: V01  , SN: FXS180401TQ
+
+NAME: "Mux Buffer 1 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS180101PD
+
+NAME: "Mux Buffer 2 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS1801034Y
+
+NAME: "Mux Buffer 5 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS180101QG
+
+NAME: "Mux Buffer 6 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS180101L0
+
+NAME: "Mux Buffer 7 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS18010274
+
+NAME: "Linecard(slot 1)", DESCR: "10GE SFP+ with 12 SFP+ ports"
+PID: WS-X4712-SFP+E    , VID: V03  , SN: CAT1814L1K4
+
+NAME: "TenGigabitEthernet1/1", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515R3
+
+NAME: "TenGigabitEthernet1/2", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515RM
+
+NAME: "TenGigabitEthernet1/3", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS174613K0
+
+NAME: "TenGigabitEthernet1/4", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515QZ
+
+NAME: "TenGigabitEthernet1/5", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181600PK
+
+NAME: "TenGigabitEthernet1/6", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515QS
+
+NAME: "TenGigabitEthernet1/7", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181601EY
+
+NAME: "TenGigabitEthernet1/8", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181601F0
+
+NAME: "TenGigabitEthernet1/10", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS174601PM
+
+NAME: "TenGigabitEthernet1/11", DESCR: "SFP-10Gbase-SR"
+PID: SFP-10G-SR        , VID: V03  , SN: FNS181515QY
+
+NAME: "TenGigabitEthernet1/12", DESCR: "1000BaseT"
+PID: Unspecified       , VID:      , SN: AGM11442350
+
+NAME: "Supervisor(slot 3)", DESCR: "Sup 7L-E 10GE (SFP+), 1000BaseX (SFP) with 4 SFP Ports"
+PID: WS-X45-SUP7L-E    , VID: V03  , SN: CAT1803L1AH
+
+NAME: "Linecard(slot 7)", DESCR: "10/100/1000BaseT (RJ45) with 48 10/100/1000 BaseT  EEE ports"
+PID: WS-X4748-RJ45-E   , VID: V03  , SN: CAT1923L0RE
+
+NAME: "Fan", DESCR: "FanTray"
+PID: WS-X4597+E        , VID: V02  , SN: FXS1807Q38K
+
+NAME: "Power Supply 1", DESCR: "Power Supply ( AC 1300W )"
+PID: PWR-C45-1300ACV   , VID: V08  , SN: SNI1804AU0Y
+
+NAME: "Power Supply 2", DESCR: "Power Supply ( AC 1300W )"
+PID: PWR-C45-1300ACV   , VID: V08  , SN: SNI1804AU27
+-----------------------------------
+sw-core1#show interfaces status
+
+Port      Name               Status       Vlan       Duplex  Speed Type
+Te1/1     **backbone-patolog connected    trunk        full    10G 10GBase-SR
+Te1/2     **backbone-laborat connected    trunk        full    10G 10GBase-SR
+Te1/3     **backbone-uci**   connected    trunk        full    10G 10GBase-SR
+Te1/4     **backbone-citolog connected    trunk        full    10G 10GBase-SR
+Te1/5     **backbone-consult connected    trunk        full    10G 10GBase-SR
+Te1/6     **backbone-nutrici connected    trunk        full    10G 10GBase-SR
+Te1/7     **backbone-rrhh**  connected    trunk        full    10G 10GBase-SR
+Te1/8     **backbone-piso2** connected    trunk        full    10G 10GBase-SR
+Te1/9                        notconnect   1            full   auto No XCVR
+Te1/10    **backbone-sistema connected    trunk        full    10G 10GBase-SR
+Te1/11    **backbone-mnuclea connected    trunk        full    10G 10GBase-SR
+Te1/12    **servidores**     connected    10           full a-1000 1000BaseT
+Te3/1                        notconnect   1            full   auto No XCVR
+Te3/2                        notconnect   1            full   auto No XCVR
+Gi3/3                        inactive     1            full   1000 No Gbic
+Gi3/4                        inactive     1            full   1000 No Gbic
+Gi3/5                        inactive     1            full   1000 No Gbic
+Gi3/6                        inactive     1            full   1000 No Gbic
+Gi7/1                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/2                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/3                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/4                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/5                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/6                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/7                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/8                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/9                        notconnect   1            auto   auto 10/100/1000-TX
+Gi7/10                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/11                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/12                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/13                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/14                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/15                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/16                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/17                       notconnect   1            auto   auto 10/100/1000-TX
+
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi7/18                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/19                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/20                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/21                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/22                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/23                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/24                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/25                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/26                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/27                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/28                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/29                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/30                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/31                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/32                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/33                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/34                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/35                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/36                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/37                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/38                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/39                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/40                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/41                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/42                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/43                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/44                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/45                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/46                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/47                       notconnect   1            auto   auto 10/100/1000-TX
+Gi7/48                       notconnect   1            auto   auto 10/100/1000-TX
+Po10      **sw-sistemas**    connected    trunk      a-full    10G
+-----------------------------------
+
+
+
+
