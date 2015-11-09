@@ -1,0 +1,32 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\INGRESOS_Y_SALIDAS_SEQ.lis
+
+Generated on Tue Aug 08  10:12:35 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Sequence INGSAL_SEQ                                                                                          * NOT IN DATABASE * ***
+                                           Start                                       1                                        
+                                       Increment                                       1                                        
+                                         Minimum                                       1                                        
+                                         Maximum                                                                                
+                                           Cycle                                      No                                        
+                                      Sort Order                                     Yes                                        
+                                      Cache Size                                                                                
+                                         Comment                                                                                
+                                                 ----------------------------------
+                                                 Sequence INGSAL_SEQ Differences: 1
+                                                 ----------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

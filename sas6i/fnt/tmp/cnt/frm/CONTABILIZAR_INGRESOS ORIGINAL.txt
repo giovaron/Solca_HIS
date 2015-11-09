@@ -1,0 +1,541 @@
+PROCEDURE Contabilizar_Ingresos_fct (nCntIngId NUMBER,nTipoCambio NUMBER,nTipoCambioE NUMBER,vMonedaLocal VARCHAR2,
+cEmpCod VARCHAR2,cTpoCmp VARCHAR2,dFechaCmp DATE,nClave NUMBER,dFechaDesde DATE,dFechaHasta DATE) IS
+-- Debe ser llamada desde EL POST-update
+-- errores CNT-01004 PARAMETRO NO DEFINIDO
+--         CNT-01005 MODO DE PAGO NO DEFINIDO
+--         CNT-01006 CARGO SIN CUENTA ASOCIADA
+--         CNT-01007 CAJA SIN CUENTA ASOCIADA
+-- **********************************************
+-- ESTA PENDIENTE LOS DESCUENTOS Y LAS OBLIGACIONES
+-- **********************************************
+CURSOR cDdsCntAnt IS -- INGRESOS POR ANTICIPOS (DEBE)
+  SELECT * FROM Deudas_Cnt
+  WHERE CNTING_ID=nCntIngId
+  AND CTACBR_NUMERO IS NULL
+  ORDER BY CJA_CODIGO,NUMERO;
+CURSOR cDdsCnt IS -- INGRESOS POR FACTURAS (DEBE)
+  SELECT * FROM Deudas_Cnt
+  WHERE CNTING_ID=nCntIngId AND CTACBR_NUMERO IS NOT NULL
+  ORDER BY CTACBR_NUMERO,CUENTA;
+CURSOR cNumDdsCnt(nCtaCbr NUMBER) IS -- INGRESOS POR FACTURAS (DEBE)
+  SELECT DTLCNTING.POR_ANTICIPOS,DTLCNTING.DESCUENTOS,DTLCNTING.CTACBR_TOTAL,COUNT (DISTINCT DDSCNT.NUMERO) NUMCUOTAS
+  FROM DEUDAS_CNT DDSCNT,DETALLES_CONTABILIZACION_ING DTLCNTING
+  WHERE DDSCNT.CNTING_ID=nCntIngId AND DDSCNT.CTACBR_NUMERO=nCtaCbr
+    AND DTLCNTING.CNTING_CNTING_ID=DDSCNT.CNTING_ID
+    AND DTLCNTING.CTACBR_NUMERO=DDSCNT.CTACBR_NUMERO
+    AND DTLCNTING.TIPO='INGFCT'
+  GROUP BY DTLCNTING.POR_ANTICIPOS,DTLCNTING.DESCUENTOS,DTLCNTING.CTACBR_TOTAL;
+CURSOR cFctIng (nCtaCbr NUMBER,vAgrCnt VARCHAR2) IS -- INGRESOS A ESAS FACTURAS (HABER)
+  SELECT CUENTA,EMP_CODIGO,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,AXL_CODIGO,SAXL_CODIGO,
+    SAXL2_CODIGO,SAXL3_CODIGO,SUM (VALOR) VALOR
+  FROM DETALLES_FACTURAS_INGRESOS
+  WHERE CTACBR_NUMERO=nCtaCbr
+    AND AGRUPADOR_CONTABLE=vAgrCnt
+  GROUP BY CUENTA,EMP_CODIGO,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,
+        AXL_CODIGO,SAXL_CODIGO,SAXL2_CODIGO,SAXL3_CODIGO
+  ORDER BY 10 ASC;
+
+CURSOR cIngCntIVA (nCtaCbr NUMBER,vCaja VARCHAR2) IS -- INGRESOS POR IVA (HABER)
+  SELECT * FROM INGRESOS_CNT
+  WHERE CNTING_ID=nCntIngId AND CTACBR_NUMERO=nCtaCbr 
+        AND CJA_CODIGO=vCaja AND ROUND(VALOR,2)>0;
+CURSOR cIngCntAnt (nAnt NUMBER) IS -- INGRESOS POR ANTICIPOS (HABER)
+  SELECT * FROM INGRESOS_CNT
+  WHERE CNTING_ID=nCntIngId AND CTACBR_NUMERO IS NULL AND NUMERO=nAnt;
+-- Ahora definimos la tabla que guardara los movimientos anter de crearlos en la base de datos
+
+/*
+CURSOR cIngCntIVA (nCtaCbr NUMBER) IS -- INGRESOS POR IVA (HABER)
+  SELECT * FROM INGRESOS_CNT_PRUEBAS2
+  WHERE CNTING_ID=nCntIngId AND CTACBR_NUMERO=nCtaCbr AND ROUND(VALOR,2)>0;
+CURSOR cIngCntAnt (nAnt NUMBER) IS -- INGRESOS POR ANTICIPOS (HABER)
+  SELECT * FROM INGRESOS_CNT_PRUEBAS2
+  WHERE CNTING_ID=nCntIngId AND CTACBR_NUMERO IS NULL AND NUMERO=nAnt;
+-- Ahora definimos la tabla que guardara los movimientos anter de crearlos en la base de datos
+*/
+
+
+CURSOR cDetFctSinCnt (nCtaCbr NUMBER,vAgrCnt VARCHAR2) IS -- DETALLES DE FACTURAS SIN CUENTA CONTABLE
+SELECT DISTINCT ITMCRG.DESCRIPCION
+  FROM DETALLES_FACTURAS_INGRESOS DTLFCTING,ITEM_CARGOS ITMCRG
+  WHERE DTLFCTING.CTACBR_NUMERO=nCtaCbr AND DTLFCTING.AGRUPADOR_CONTABLE=vAgrCnt AND DTLFCTING.CUENTA IS NULL
+    AND DECODE (NVL(ITMCRG.CRG_TIPO,'@#$%&'),'@#$%&',ITMCRG.ITM_TIPO,ITMCRG.CRG_TIPO)=DTLFCTING.CRG_TIPO
+    AND DECODE (NVL(ITMCRG.CRG_TIPO,'@#$%&'),'@#$%&',
+    ITMCRG.ITM_SBS_SCC_CODIGO||ITMCRG.ITM_SBS_CODIGO||TO_CHAR(ITMCRG.ITM_CODIGO),
+    ITMCRG.CRG_CODIGO)=DTLFCTING.CRG_CODIGO;
+CURSOR cCajas IS
+  SELECT *
+  FROM CAJAS_CNT
+  WHERE CNTING_ID=nCntIngId
+  ORDER BY CJA_CODIGO;
+CURSOR cCajasCbr(vCjaCod VARCHAR2) IS
+  SELECT *
+  FROM INGRESOS_CAJAS_CNT
+  WHERE CNTING_ID=nCntIngId
+    AND CJA_CODIGO=vCjaCod
+  ORDER BY ORDEN,CTACBR_NUMERO,NUMERO;
+CURSOR cBanco IS
+  SELECT PRMINT.CUENTA_CONTABLE,
+         PLNCNT.EMP_CODIGO EMP_CODIGO, PLNCNT.MYR_CODIGO
+         MYR_CODIGO, PLNCNT.CNT_CODIGO CNT_CODIGO, PLNCNT.SCNT_CODIGO SCNT_CODIGO,
+         PLNCNT.AXL_CODIGO AXL_CODIGO, PLNCNT.SAXL_CODIGO SAXL_CODIGO,
+         PLNCNT.SAXL2_CODIGO SAXL2_CODIGO, PLNCNT.SAXL3_CODIGO SAXL3_CODIGO
+  FROM PARAMETROS_INTEGRACION PRMINT,PLAN_DE_CUENTAS PLNCNT
+  WHERE PRMINT.EMP_CODIGO=cEmpCod
+    AND PRMINT.PARAMETRO='BNC'
+    AND PRMINT.TIPO='ING'
+    AND PRMINT.CUENTA_CONTABLE=PLNCNT.CODIGO (+);
+CURSOR cAntVnc IS
+  SELECT *
+  FROM ANTICIPOS_VINCULADOS_CNT
+  WHERE CNTING_ID=nCntIngId
+  ORDER BY CJA_CODIGO;
+CURSOR cMesCerrado IS
+  SELECT COUNT(*)
+    FROM CIERRES_DE_MES
+    WHERE TRUNC(MES,'MM')=TRUNC(dFechaCmp,'MM')
+      AND  ESTADO='C';
+  nContMesCerrado NUMBER:=0;-- Devuelve 1 si el mes esta cerrado caso contrario 0
+TYPE tMovCnt  IS TABLE OF MOVIMIENTOS%ROWTYPE INDEX BY BINARY_INTEGER;
+  vCtaBanco PARAMETROS_INTEGRACION.CUENTA_CONTABLE%TYPE;
+  rMovCnt tMovCnt; -- Tabla donde guardaremos los datos antes de contabilizar
+TYPE tIndiceCajas IS TABLE OF NUMBER INDEX BY BINARY_INTEGER;
+  rIndiceCajas tIndiceCajas; -- Cual es el valor de ingreso de cada caja
+  I NUMBER:=1;
+  nNumIng NUMBER:=1; -- Secuencia de la 1a Etapa
+  nNumCbr NUMBER:=1; -- Secuencia de la 2a Etapa
+  nNumDep NUMBER:=1; -- Secuencia de la 3a Etapa
+  nTotalDep NUMBER:=0;  -- El total del deposito
+  nTamAso NUMBER:=20;
+  vDescIng VARCHAR2(4000);
+  vDesc VARCHAR2(4000);
+  nCtaCbrAnt NUMBER:=0;
+  nNumCotCbr NUMBER:=0;-- Cuantas cuotas a cobrar tiene una cuenta por cobrar
+  nPorAnticipos NUMBER:=0; -- Cuanto de una cuenta por cobrar se aplica en anticipos
+  nTotalCtaCbr NUMBER:=0; -- El total de la cuenta por cobrar
+  nPorDescuentos NUMBER:=0;
+-- nCuadreH -> Guarda los totales parciales del haber para ver que cuadren con el debe
+-- de nCuadreD si no cuadra resta o suma la diferencia al ultimo movimiento del haber
+  nCuadreH NUMBER:=0;
+  nCuadreD NUMBER:=0;
+  nDifCuadre NUMBER:=0;
+  Etapa2i NUMBER:=0; -- Almacena el subindice de la caja 2 etapa para verificar el cuadre
+  nCaja NUMBER:=1; -- el numero de caja
+BEGIN
+-- PRIMERO CREAMOS LA CABECERA PARA VER QUE NO EXISTE UN COMPROBANTE IGUAL
+  OPEN cMesCerrado;
+  FETCH cMesCerrado INTO nContMesCerrado;
+  IF nContMesCerrado>0 THEN
+-- Error no se puede contabilizar para un mes cerrado
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00046');-- No se puede crear un comprobante de un mes ya cerrado
+  END IF;
+  vDescIng:='Ingresos de '||TO_CHAR(dFECHADESDE,'DD/MM/YYYY HH24:MI')||' hasta '||
+         TO_CHAR(dFECHAHASTA,'DD/MM/YYYY HH24:MI');
+  INSERT INTO COMPROBANTES (TPOCMPEMP_EMP_CODIGO,TPOCMPEMP_TPOCMP_CODIGO,FECHA,CLAVE,
+         MAYORIZADO,ESTADO,TOTAL,MONEDA_LOCAL,TIPO_DE_CAMBIO,TIPO_DE_CAMBIOE,
+         CONCEPTO,CRRMES_MES)
+     VALUES (cEmpCod,cTpoCmp,dFechaCmp,nClave,'F','N',0,vMonedaLocal,nTipoCambio,nTipoCambioE,vDescIng,NULL);
+/* PRIMERA ETAPA*/
+-- Primero creamos los movimientos para los anticipos
+-- Para la primera etapa la secuencia sera 100+ el Numero del ingreso
+  FOR rDdsCntAnt IN cDDsCntAnt LOOP
+    IF rDdsCntAnt.CUENTA IS NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01005',rDdsCntAnt.MDOPGO_DESCRIPCION,rDdsCntAnt.NUMERO,rDdsCntAnt.NUMERO_HC);-- El parametro de la cuenta contable para modo de pago efectivo no fijado
+    END IF;
+    -- FIJAMOS EL DEBE
+    rMovCnt(i).SECUENCIA:=100+nNumIng;
+    rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+    rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+    rMovCnt(i).CMP_FECHA:=dFechaCmp;
+    rMovCnt(i).CMP_CLAVE:=nClave;
+    rMovCnt(i).DEBE:=ROUND(rDdsCntAnt.VALOR,2);
+    rMovCnt(i).DEBEE:=ROUND(rDdsCntAnt.VALOR,2)*nTipoCambioE;
+    rMovCnt(i).HABER:=0;
+    rMovCnt(i).HABERE:=0;
+    rMovCnt(i).FECHA:=dFechaCmp;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rDdsCntAnt.EMP_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rDdsCntAnt.MYR_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rDdsCntAnt.CNT_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CODIGO:=rDdsCntAnt.SCNT_CODIGO;
+    rMovCnt(i).SS_S_A_CODIGO:=rDdsCntAnt.AXL_CODIGO;
+    rMovCnt(i).SS_S_CODIGO:=rDdsCntAnt.SAXL_CODIGO;
+    rMovCnt(i).SS_CODIGO:=rDdsCntAnt.SAXL2_CODIGO;
+    rMovCnt(i).S_CODIGO:=rDdsCntAnt.SAXL3_CODIGO;
+    rMovCnt(i).DESCRIPCION:=SUBSTR(rDdsCntAnt.DESCRIPCION||' HC:'||LTRIM(TO_CHAR(rDdsCntAnt.NUMERO_HC)),1,120);
+    rMovCnt(i).ASOCIACION:=NULL;
+    nCuadreD:=rMovCnt(i).DEBE;
+    ncuadreH:=0;
+    i:=i+1;
+    FOR rIngCntAnt IN cIngCntAnt(rDdsCntAnt.NUMERO) LOOP
+      IF rIngCntAnt.CUENTA IS NULL THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-01004','Anticipos');-- El parametro de la cuenta contable de los anticipos no fijado
+      END IF;
+      -- FIJAMOS EL HABER
+      rMovCnt(i).SECUENCIA:=100+nNumIng;
+      rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+      rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+      rMovCnt(i).CMP_FECHA:=dFechaCmp;
+      rMovCnt(i).CMP_CLAVE:=nClave;
+      rMovCnt(i).DEBE:=0;
+      rMovCnt(i).DEBEE:=0;
+      rMovCnt(i).HABER:=ROUND(rIngCntAnt.VALOR,2);
+      rMovCnt(i).HABERE:=ROUND(rIngCntAnt.VALOR,2)*nTipoCambioE;
+      rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rIngCntAnt.EMP_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rIngCntAnt.MYR_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rIngCntAnt.CNT_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CODIGO:=rIngCntAnt.SCNT_CODIGO;
+      rMovCnt(i).SS_S_A_CODIGO:=rIngCntAnt.AXL_CODIGO;
+      rMovCnt(i).SS_S_CODIGO:=rIngCntAnt.SAXL_CODIGO;
+      rMovCnt(i).SS_CODIGO:=rIngCntAnt.SAXL2_CODIGO;
+      rMovCnt(i).S_CODIGO:=rIngCntAnt.SAXL3_CODIGO;
+      rMovCnt(i).DESCRIPCION:=SUBSTR(rDdsCntAnt.DESCRIPCION||' HC:'||LTRIM(TO_CHAR(rDdsCntAnt.NUMERO_HC)),1,120);
+      rMovCnt(i).ASOCIACION:=NULL;
+      nCuadreH:=nCuadreH+rMovCnt(i).HABER;
+      i:=i+1;
+    END LOOP;
+    nDifCuadre:=nCuadreD-nCuadreH;
+    IF nDifCuadre!=0 THEN
+-- si la diferencia es menor a 5 centavos ajustamos el cuadre
+      rMovCnt(i-1).HABER:=rMovCnt(i-1).HABER+nDifCuadre;
+      rMovCnt(i-1).HABERE:=rMovCnt(i-1).HABERE+(nDifCuadre*nTipoCambioE);
+    END IF;
+    nNumIng:=nNumIng+1;
+  END LOOP;
+-- Ahora generamos los ingresos como tales
+  nNumIng:=nNumIng-1;
+  FOR rDdsCnt IN cDDsCnt LOOP
+    IF rDdsCnt.CUENTA IS NULL THEN
+      OPEN cNumDdsCnt(rDdsCnt.CTACBR_NUMERO);
+      FETCH cNumDdsCnt INTO nPorAnticipos,nPorDescuentos,nTotalCtacbr,nNumCotCbr;
+      CLOSE cNumDdsCnt;
+      IF ROUND(ntotalCtaCbr-nPorAnticipos,1)>0  THEN
+-- Solo cuando lo pagado por anticipos no cubre el total de la deuda
+-- y la cuota por pagar no se ha creado damos un error de que falta la cuota
+        QMS$ERRORS.SHOW_MESSAGE('CNT-01005',REPLACE(rDdsCnt.MDOPGO_DESCRIPCION,'Cuota no Creada',''),rDdsCnt.CTACBR_NUMERO,rDdsCnt.NUMERO_HC);-- El parametro de la cuenta contable para modo de pago no fijado
+      ELSIF ROUND(ntotalCtaCbr-nPorAnticipos,1)<0 THEN
+-- Aqui en teoria jamas debería entrar porque nunca los anticipos vinculados pueden ser mayores que la deuda
+        QMS$ERRORS.SHOW_MESSAGE('ADM-00011','El pago por anticipos para la cuenta por cobrar No.'||rDdsCnt.CTACBR_NUMERO||' de '||rDdscnt.Descripcion||' es menor que los anticipos','Comuniquese con SoftCase');
+      END IF;
+      GOTO Continuar_Etapa1;
+    END IF;
+  	-- FIJAMOS EL DEBE
+    IF nCtaCbrAnt!=rDdsCnt.CTACBR_NUMERO THEN
+      nNumIng:=nNumIng+1;
+    END IF;
+    rMovCnt(i).SECUENCIA:=100+nNumIng;
+    rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+    rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+    rMovCnt(i).CMP_FECHA:=dFechaCmp;
+    rMovCnt(i).CMP_CLAVE:=nClave;
+    rMovCnt(i).DEBE:=ROUND(rDdsCnt.VALOR,2);
+    rMovCnt(i).DEBEE:=ROUND(rDdsCnt.VALOR,2)*nTipoCambioE;
+    rMovCnt(i).HABER:=0;
+    rMovCnt(i).HABERE:=0;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rDdsCnt.EMP_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rDdsCnt.MYR_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rDdsCnt.CNT_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CODIGO:=rDdsCnt.SCNT_CODIGO;
+    rMovCnt(i).SS_S_A_CODIGO:=rDdsCnt.AXL_CODIGO;
+    rMovCnt(i).SS_S_CODIGO:=rDdsCnt.SAXL_CODIGO;
+    rMovCnt(i).SS_CODIGO:=rDdsCnt.SAXL2_CODIGO;
+    rMovCnt(i).S_CODIGO:=rDdsCnt.SAXL3_CODIGO;
+    rMovCnt(i).DESCRIPCION:=SUBSTR(rDdsCnt.DESCRIPCION||' HC:'||LTRIM(TO_CHAR(rDdsCnt.NUMERO_HC)),1,120);
+    rMovCnt(i).ASOCIACION:=SUBSTR(rDdsCnt.ASOCIACION,1,nTamAso);
+    IF nCtaCbrAnt!=rDdsCnt.CTACBR_NUMERO THEN
+-- solo cuando la cuenta por cobrar es diferente enceramos los verificadores
+      OPEN cNumDdsCnt(rDdsCnt.CTACBR_NUMERO);
+      FETCH cNumDdsCnt INTO nPorAnticipos,nPorDescuentos,nTotalCtacbr,nNumCotCbr;
+      CLOSE cNumDdsCnt;
+      ncuadreH:=0;
+-- El total de debe se calcula sumando los anticipos si los hay para obtener el valor correcto para el cuadre
+      nCuadreD:=rMovCnt(i).DEBE/*+ROUND(nPorAnticipos,2)*/+(ROUND(nPorDescuentos,2));
+      nCtaCbrAnt:=rDdsCnt.CTACBR_NUMERO; -- FIJAMOS LA CTA X COBRAR ULTIMA GENERADA PARA NO REPETIRLA
+    ELSE
+-- Caso contrario acumulamos los verificadores y restamos el numero de cuotas a cobrar por llenar
+      nNumCotCbr:=nNumCotCbr-1;
+      nCuadreD:=nCuadreD+rMovCnt(i).DEBE;
+      nCtaCbrAnt:=rDdsCnt.CTACBR_NUMERO; -- FIJAMOS LA CTA X COBRAR ULTIMA GENERADA PARA NO REPETIRLA
+    END IF;
+    i:=i+1;
+    IF rDdsCnt.CUENTA IS NOT NULL THEN
+      UPDATE CUOTAS_A_COBRAR
+      SET CONTABILIZADO=DECODE (ESTADO,'CNC','V','P')
+      WHERE NUMERO=rDdsCnt.NUMERO
+            AND CTACBR_NUMERO=rDdsCnt.CTACBR_NUMERO AND ESTADO!='ANL';
+      IF SQL%ROWCOUNT!=1 AND rDdsCnt.MDOPGO_DESCRIPCION!='Pago por anticipo' THEN
+-- Si no actualizo un registro, significa que hubo un error y la cuota estaba anulada o no existe
+-- *** NO DEBE ACTUALIZARSE CUANDO SE PAGA LA FACTURA POR UN ANTICIPO (MDOPGO_DESCRIPCION='Pago por anticipo') ***
+        QMS$ERRORS.SHOW_MESSAGE('ADM-00009','La cuota # '||rDdsCnt.NUMERO||' de la Cta x Cobrar # '||rDdsCnt.CTACBR_NUMERO||' esta marcada como anulada o no existe','Comuniquese con Softcase Cia Ltda');
+      END IF;
+    END IF;
+
+    IF nNumCotCbr=1 THEN
+-- Se llenan los ingresos una sola vez para toda la cuenta por cobrar
+-- solo ingresar para la ultima o unica cuota por cobrar
+      FOR rIngCntIVA IN cIngCntIVA(rDdsCnt.CTACBR_NUMERO,rDdsCnt.CJA_CODIGO) LOOP
+-- Vemos el IVA solo de la ultima deuda porque sino duplica el valor del IVA
+        IF rIngCntIVA.CUENTA IS NULL THEN
+          QMS$ERRORS.SHOW_MESSAGE('CNT-01004','IVA');-- El parametro de la cuenta contable del IVA no fijado
+        END IF;
+        rMovCnt(i).SECUENCIA:=100+nNumIng;
+        rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+        rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+        rMovCnt(i).CMP_FECHA:=dFechaCmp;
+        rMovCnt(i).CMP_CLAVE:=nClave;
+        rMovCnt(i).DEBE:=0;
+        rMovCnt(i).DEBEE:=0;
+        rMovCnt(i).HABER:=ROUND(rIngCntIVA.VALOR,2);
+        rMovCnt(i).HABERE:=ROUND(rIngCntIVA.VALOR,2)*nTipoCambioE;
+        rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rIngCntIVA.EMP_CODIGO;
+        rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rIngCntIVA.MYR_CODIGO;
+        rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rIngCntIVA.CNT_CODIGO;
+        rMovCnt(i).SS_S_A_SC_CODIGO:=rIngCntIVA.SCNT_CODIGO;
+        rMovCnt(i).SS_S_A_CODIGO:=rIngCntIVA.AXL_CODIGO;
+        rMovCnt(i).SS_S_CODIGO:=rIngCntIVA.SAXL_CODIGO;
+        rMovCnt(i).SS_CODIGO:=rIngCntIVA.SAXL2_CODIGO;
+        rMovCnt(i).S_CODIGO:=rIngCntIVA.SAXL3_CODIGO;
+        rMovCnt(i).DESCRIPCION:=SUBSTR(rDdsCnt.DESCRIPCION||' HC:'||LTRIM(TO_CHAR(rDdsCnt.NUMERO_HC)||' Fct '||rDdsCnt.ASOCIACION),1,120);
+        rMovCnt(i).ASOCIACION:=SUBSTR(rDdsCnt.ASOCIACION,1,ntamAso);
+        nCuadreH:=nCuadreH+rMovCnt(i).HABER;
+        i:=i+1;
+      END LOOP;
+      FOR rFctIng IN cFctIng(rDdsCnt.CTACBR_NUMERO,rDdsCnt.AGRUPADOR_CONTABLE) LOOP
+        IF rFctIng.CUENTA IS NULL THEN
+          vDesc:=NULL;
+       	  FOR rDetFctSinCnt IN cDetFctSinCnt(rDdsCnt.CTACBR_NUMERO,rDdsCnt.AGRUPADOR_CONTABLE) LOOP
+      		-- Llenamos la cargos que no tienen asociacion
+      	    vDesc:=vDesc||rDetFctSinCnt.DESCRIPCION||', ';
+      	  END LOOP;
+      	  vDesc:=SUBSTR(vDesc,1,LENGTH(vDesc)-2)||'.';
+          QMS$ERRORS.SHOW_MESSAGE('CNT-01006',vDesc,rDdsCnt.CTACBR_NUMERO);-- El parametro de la cuenta contable del IVA no fijado
+        END IF;
+        rMovCnt(i).SECUENCIA:=100+nNumIng;
+        rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+        rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+        rMovCnt(i).CMP_FECHA:=dFechaCmp;
+        rMovCnt(i).CMP_CLAVE:=nClave;
+        rMovCnt(i).DEBE:=0;
+        rMovCnt(i).DEBEE:=0;
+        rMovCnt(i).HABER:=ROUND(rFctIng.VALOR,2);
+        rMovCnt(i).HABERE:=ROUND(rFctIng.VALOR,2)*nTipoCambioE;
+        rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rFctIng.EMP_CODIGO;
+        rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rFctIng.MYR_CODIGO;
+        rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rFctIng.CNT_CODIGO;
+        rMovCnt(i).SS_S_A_SC_CODIGO:=rFctIng.SCNT_CODIGO;
+        rMovCnt(i).SS_S_A_CODIGO:=rFctIng.AXL_CODIGO;
+        rMovCnt(i).SS_S_CODIGO:=rFctIng.SAXL_CODIGO;
+        rMovCnt(i).SS_CODIGO:=rFctIng.SAXL2_CODIGO;
+        rMovCnt(i).S_CODIGO:=rFctIng.SAXL3_CODIGO;
+        rMovCnt(i).DESCRIPCION:=SUBSTR(rDdsCnt.DESCRIPCION||' HC:'||LTRIM(TO_CHAR(rDdsCnt.NUMERO_HC)||' Fct '||rDdsCnt.ASOCIACION),1,120);
+        rMovCnt(i).ASOCIACION:=NULL;
+        nCuadreH:=nCuadreH+rMovCnt(i).HABER;
+        i:=i+1;
+      END LOOP;
+      nDifCuadre:=nCuadreD-nCuadreH;
+      IF nDifCuadre!=0 THEN
+        IF ABS(nDifCuadre)<=0.05 THEN
+          rMovCnt(i-1).HABER:=rMovCnt(i-1).HABER+nDifCuadre;
+          rMovCnt(i-1).HABERE:=rMovCnt(i-1).HABERE+(nDifCuadre*nTipoCambioE);
+        ELSE
+          QMS$ERRORS.SHOW_MESSAGE('CNT-01011',rDdsCnt.NUMERO_HC,nCtaCbrAnt,nDifCuadre);
+        END IF;
+      END IF;
+    END IF;
+<<Continuar_Etapa1>> -- Aqui solo viene para evitar hacer todo el procesamiento cuando no
+-- tiene un modo de pago asociado porque a una cuenta por cobrar todo se pago por anticipos
+  NULL;
+  END LOOP;
+/* SEGUNDA ETAPA */
+  nNumCbr:=1;
+  FOR rCajas IN cCajas LOOP
+    IF rCajas.Cuenta IS NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01007',rCajas.CJA_CODIGO); -- no se ha definido la cuenta de la caja
+    END IF;
+    -- FIJAMOS EL DEBE
+    rMovCnt(i).SECUENCIA:=200+nNumCbr;
+    rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+    rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+    rMovCnt(i).CMP_FECHA:=dFechaCmp;
+    rMovCnt(i).CMP_CLAVE:=nClave;
+    rMovCnt(i).DEBE:=ROUND(rCajas.VALOR,2);
+    rMovCnt(i).DEBEE:=ROUND(rCajas.VALOR,2)*nTipoCambioE;
+    rMovCnt(i).HABER:=0;
+    rMovCnt(i).HABERE:=0;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rCajas.EMP_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rCajas.MYR_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rCajas.CNT_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CODIGO:=rCajas.SCNT_CODIGO;
+    rMovCnt(i).SS_S_A_CODIGO:=rCajas.AXL_CODIGO;
+    rMovCnt(i).SS_S_CODIGO:=rCajas.SAXL_CODIGO;
+    rMovCnt(i).SS_CODIGO:=rCajas.SAXL2_CODIGO;
+    rMovCnt(i).S_CODIGO:=rCajas.SAXL3_CODIGO;
+    rMovCnt(i).DESCRIPCION:=SUBSTR(vDescIng,1,120);
+    rMovCnt(i).ASOCIACION:=NULL;
+    nTotalDep:=nTotalDep+ROUND(rCajas.VALOR,2);
+    nCuadreD:=rMovCnt(i).DEBE;
+    nCuadreH:=0;
+    Etapa2i:=i;
+    rIndiceCajas(nCaja):=i;
+    nCaja:=nCaja+1;
+    i:=i+1;
+    FOR rCajasCbr IN cCajasCbr(rCajas.CJA_CODIGO) LOOP
+      IF rCajasCbr.CUENTA IS NULL THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-01005',REPLACE(rCajasCbr.MDOPGO_DESCRIPCION,'Cuota no Creada',''),rCajasCbr.CTACBR_NUMERO,rCajasCbr.NUMERO_HC);-- El parametro de la cuenta contable para modo de pago no fijado
+      END IF;
+  	-- FIJAMOS EL HABER
+      rMovCnt(i).SECUENCIA:=200+nNumCbr;
+      rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+      rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+      rMovCnt(i).CMP_FECHA:=dFechaCmp;
+      rMovCnt(i).CMP_CLAVE:=nClave;
+      rMovCnt(i).DEBE:=0;
+      rMovCnt(i).DEBEE:=0;
+      rMovCnt(i).HABER:=ROUND(rCajasCbr.VALOR,2);
+      rMovCnt(i).HABERE:=ROUND(rCajasCbr.VALOR,2)*nTipoCambioE;
+      rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rCajasCbr.EMP_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rCajasCbr.MYR_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rCajasCbr.CNT_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CODIGO:=rCajasCbr.SCNT_CODIGO;
+      rMovCnt(i).SS_S_A_CODIGO:=rCajasCbr.AXL_CODIGO;
+      rMovCnt(i).SS_S_CODIGO:=rCajasCbr.SAXL_CODIGO;
+      rMovCnt(i).SS_CODIGO:=rCajasCbr.SAXL2_CODIGO;
+      rMovCnt(i).S_CODIGO:=rCajasCbr.SAXL3_CODIGO;
+      rMovCnt(i).DESCRIPCION:=SUBSTR(rCajasCbr.DESCRIPCION||' HC:'||LTRIM(TO_CHAR(rCajasCbr.NUMERO_HC)),1,120);
+      rMovCnt(i).ASOCIACION:=SUBSTR(rCajasCbr.ASOCIACION,1,nTamAso);
+      nCuadreH:=nCuadreH+rMovCnt(i).HABER;
+      i:=i+1;
+    END LOOP;
+    nDifCuadre:=nCuadreH-nCuadreD;
+    IF nDifCuadre!=0 THEN
+-- Corregimos el desfase si hay diferencia sumando las ingresos por cajas y las totales por cajas
+      rMovCnt(Etapa2i).DEBE:=rMovCnt(Etapa2i).DEBE+nDifCuadre;
+      rMovCnt(Etapa2i).DEBEE:=rMovCnt(Etapa2i).DEBEE+(nDifCuadre*nTipoCambioE);
+      nTotalDep:=nTotalDep+nDifCuadre;
+    END IF;
+    nNumCbr:=nNumCbr+1;
+  END LOOP;
+/* TERCERA ETAPA */
+  FOR rAntVnc IN cAntVnc LOOP
+-- Primero indicamos los anticipos vinculados
+    IF rAntVnc.CUENTA IS NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01004','Anticipos');-- El parametro de la cuenta contable de los anticipos no fijado
+    END IF;
+    rMovCnt(i).SECUENCIA:=300;
+    rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+    rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+    rMovCnt(i).CMP_FECHA:=dFechaCmp;
+    rMovCnt(i).CMP_CLAVE:=nClave;
+    rMovCnt(i).DEBE:=ROUND(rAntVnc.VALOR,2);
+    rMovCnt(i).DEBEE:=ROUND(rAntVnc.VALOR,2)*nTipoCambioE;
+    nTotalDep:=nTotalDep-ROUND(rAntVnc.VALOR,2); -- Restamos la cantidad a Depositar
+    rMovCnt(i).HABER:=0;
+    rMovCnt(i).HABERE:=0;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rAntVnc.EMP_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rAntVnc.MYR_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rAntVnc.CNT_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CODIGO:=rAntVnc.SCNT_CODIGO;
+    rMovCnt(i).SS_S_A_CODIGO:=rAntVnc.AXL_CODIGO;
+    rMovCnt(i).SS_S_CODIGO:=rAntVnc.SAXL_CODIGO;
+    rMovCnt(i).SS_CODIGO:=rAntVnc.SAXL2_CODIGO;
+    rMovCnt(i).S_CODIGO:=rAntVnc.SAXL3_CODIGO;
+    rMovCnt(i).DESCRIPCION:=rAntVnc.DESCRIPCION;
+    rMovCnt(i).ASOCIACION:=SUBSTR(rAntVnc.ASOCIACION,1,nTamAso);
+    i:=i+1;
+  END LOOP;
+  nNumDep:=1;
+  FOR rBanco IN cBanco LOOP
+-- Primero hacemos el depósito de bancos
+    IF ROUND(nTotalDep,2)>0  THEN
+-- Solo cuando hay deposito genera el movimiento en la cuenta de banco
+-- caso contrario no. Para evitar que genere un movimiento con debe=0 y haber=0
+      rMovCnt(i).SECUENCIA:=300;
+      rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+      rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+      rMovCnt(i).CMP_FECHA:=dFechaCmp;
+      rMovCnt(i).CMP_CLAVE:=nClave;
+      rMovCnt(i).DEBE:=ROUND(nTotalDep,2);
+      rMovCnt(i).DEBEE:=ROUND(nTotalDep,2)*nTipoCambioE;
+      rMovCnt(i).HABER:=0;
+      rMovCnt(i).HABERE:=0;
+      rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rBanco.EMP_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rBanco.MYR_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rBanco.CNT_CODIGO;
+      rMovCnt(i).SS_S_A_SC_CODIGO:=rBanco.SCNT_CODIGO;
+      rMovCnt(i).SS_S_A_CODIGO:=rBanco.AXL_CODIGO;
+      rMovCnt(i).SS_S_CODIGO:=rBanco.SAXL_CODIGO;
+      rMovCnt(i).SS_CODIGO:=rBanco.SAXL2_CODIGO;
+      rMovCnt(i).S_CODIGO:=rBanco.SAXL3_CODIGO;
+      rMovCnt(i).DESCRIPCION:=SUBSTR('Deposito de '||vDescIng,1,120);
+      rMovCnt(i).ASOCIACION:=NULL;
+      i:=i+1;
+   END IF;
+   nNumDep:=nNumDep+1;
+  END LOOP;
+  IF nNumDep=1 THEN
+-- No existe el parametro de bancos porque el nNumDep sale sin sumar uno, no entro al bucle anterior
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01004','Banco');-- El parametro de la cuenta contable del Banco no fijado
+  END IF;
+  nNumDep:=1;
+  nCaja:=1;
+  FOR rCajas IN cCajas LOOP
+    IF rCajas.Cuenta IS NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01007',rCajas.CJA_CODIGO); -- no se ha definido la cuenta de la caja
+    END IF;
+    -- FIJAMOS EL DEBE
+    rMovCnt(i).SECUENCIA:=300+nNumDep;
+    rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+    rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+    rMovCnt(i).CMP_FECHA:=dFechaCmp;
+    rMovCnt(i).CMP_CLAVE:=nClave;
+    rMovCnt(i).DEBE:=0;
+    rMovCnt(i).DEBEE:=0;
+-- Como la caja viene en orden el indice almacenado en rIndiceCaja
+-- apunta al Movimiento correcto del HABER
+-- y guarda lo mismo en las cajas del DEBE como del HABER
+    rMovCnt(i).HABER:=rMovCnt(rIndiceCajas(nCaja)).DEBE;
+    rMovCnt(i).HABERE:=rMovCnt(rIndiceCajas(nCaja)).DEBEE;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rCajas.EMP_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rCajas.MYR_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rCajas.CNT_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CODIGO:=rCajas.SCNT_CODIGO;
+    rMovCnt(i).SS_S_A_CODIGO:=rCajas.AXL_CODIGO;
+    rMovCnt(i).SS_S_CODIGO:=rCajas.SAXL_CODIGO;
+    rMovCnt(i).SS_CODIGO:=rCajas.SAXL2_CODIGO;
+    rMovCnt(i).S_CODIGO:=rCajas.SAXL3_CODIGO;
+    rMovCnt(i).DESCRIPCION:=SUBSTR(vDescIng,1,120);
+    rMovCnt(i).ASOCIACION:=NULL;
+    nCaja:=nCaja+1;
+    i:=i+1;
+    nNumDep:=nNumDep+1;
+  END LOOP;
+-- AHORA SI NO HA HABIDO NINGUN ERROR CREAMOS LOS DETALLES DEL COMPROBANTE
+  FOR I IN 1..rMovCnt.COUNT LOOP
+    IF (rMovCnt(I).DEBE=0 AND rMovCnt(I).HABER=0) OR (rMovCnt(I).DEBE>0 AND rMovCnt(I).HABER>0) THEN
+      QMS$ERRORS.SHOW_MESSAGE('ADM-00009',rMovCnt(I).SS_S_A_SC_CNT_MYR_EMP_CODIGO||
+            rMovCnt(I).SS_S_A_SC_CNT_MYR_CODIGO||rMovCnt(I).SS_S_A_SC_CNT_CODIGO||
+  	    rMovCnt(I).SS_S_A_SC_CODIGO||rMovCnt(I).SS_S_A_CODIGO||rMovCnt(I).SS_S_CODIGO||
+            rMovCnt(I).SS_CODIGO||rMovCnt(I).S_CODIGO||' '||rMovCnt(I).DESCRIPCION||' ** DEBE ** '||rMovCnt(I).DEBE||' ** HABER **'||rMovCnt(I).HABER,'Comuniquese con Softcase');
+    END IF;
+    INSERT INTO MOVIMIENTOS (MVM_ID,CMP_TPOCMPEMP_EMP_CODIGO,CMP_TPOCMPEMP_TPOCMP_CODIGO,
+  	    CMP_FECHA,CMP_CLAVE,FECHA,SECUENCIA,DEBE,HABER,DEBEE,HABERE,MONEDA,TIPO_DE_CAMBIO,MAYORIZADO,
+  	    SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,SS_S_A_SC_CNT_CODIGO,
+  	    SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,SS_CODIGO,S_CODIGO,
+            DESCRIPCION,ASOCIACION,ESTADO_MOVIMIENTO,OBL_OBL_ID)
+      VALUES (MVM_SEQ.NEXTVAL,cEmpCod,cTpoCmp,dFechaCmp,nClave,dFechaCmp,rMovCnt(I).SECUENCIA,
+  	    rMovCnt(I).DEBE,rMovCnt(I).HABER,rMovCnt(I).DEBEE,rMovCnt(I).HABERE,
+            vMonedaLocal,nTipoCambio,'F',rMovCnt(I).SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+            rMovCnt(I).SS_S_A_SC_CNT_MYR_CODIGO,rMovCnt(I).SS_S_A_SC_CNT_CODIGO,
+  	    rMovCnt(I).SS_S_A_SC_CODIGO,rMovCnt(I).SS_S_A_CODIGO,rMovCnt(I).SS_S_CODIGO,
+            rMovCnt(I).SS_CODIGO,rMovCnt(I).S_CODIGO,
+  	    rMovCnt(I).DESCRIPCION,rMovCnt(I).ASOCIACION,'N',NULL);
+  END LOOP;
+--    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en el procedimiento CONTABILIZAR_INGRESOS_FCT por error '|| SQLERRM);
+-- Marcamos la fechas como contabilizadas
+EXCEPTION
+  WHEN DUP_VAL_ON_INDEX THEN
+-- FALLA SI YA EXISTE UN COMPROBANTE IGUAL (CABECERA)
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01010',cTpoCmp||'-'||TO_CHAR(dFechaCmp,'DD/MM/YYYY')||'-'||TO_CHAR(nClave));
+  WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en el procedimiento CONTABILIZAR_INGRESOS_FCT por error '||SQLERRM);
+END;
+

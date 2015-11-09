@@ -1,0 +1,14 @@
+
+Connected to: Oracle9i Release 9.2.0.5.0 - 64bit Production
+JServer Release 9.2.0.5.0 - Production
+Export done in WE8ISO8859P1 character set and UTF8 NCHAR character set
+
+About to export specified tables via Conventional Path ...
+. . exporting table                      CONVENIOS          1 rows exported
+. . exporting table        CONVENIOS_EQUIVALENCIAS       5953 rows exported
+. . exporting table               GRUPOS_TARIFARIO         20 rows exported
+. . exporting table          SUBGRUPOS_1_TARIFARIO        151 rows exported
+. . exporting table          SUBGRUPOS_2_TARIFARIO         21 rows exported
+. . exporting table            SUBGRUPOS_TARIFARIO        114 rows exported
+. . exporting table                     TARIFARIOS       9198 rows exported
+Export terminated successfully without warnings.

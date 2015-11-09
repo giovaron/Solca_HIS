@@ -1,0 +1,32 @@
+[12/28/06 08:39:21 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=652]
+	>> ERROR: Abnormal termination, Error Code: C0000006 IN_PAGE_ERROR
+
+======================= STACK DUMP =======================
+
+Fault address:  67DF6BAC 01:00045BAC
+Module: C:\ORANT\BIN\DEB60.dll
+
+System Information:
+Operating System: Windows NT Version 5.1 Build 2600 Service Pack 2
+Command line: "C:\ORANT\BIN\ifrun60.EXE" M:\sas\bin\rdp\frm\rolpgsgnr.fmx
+FORM/BLOCK/FIELD: ROLLQDHBR:LQD.FECHA_SALIDA
+Last Trigger: KEY-EXIT - (In Progress)
+Msg: <NULL>
+Last Builtin: DO_KEY - (Successfully Completed)
+
+Registers:
+EAX:01D2CAA4
+EBX:02310E4C
+ECX:000000F4
+EDX:00000585
+ESI:02311000
+EDI:01D2CC58
+CS:EIP:001B:67DF6BAC
+SS:ESP:0023:0012DCE8  EBP:00000014
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010202
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+------------------- End of Stack Trace -------------------
+
+

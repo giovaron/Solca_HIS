@@ -1,0 +1,186 @@
+
+Reconcile Report: \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\subgrupos_1_tarifario.lis
+
+Generated on Tue Jun 21  10:57:06 2011 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table SUBGRUPOS_1_TARIFARIO                                                                                  * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                                        
+                                         Cluster                                                                                
+                                      Index Only                                      No                                        
+
+                                          Cached                                                                                
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+                                         Comment                                                                                
+Column CONVENIO                                                                                              * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                      25                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column TIPO                                                                                                  * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     250                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                          TIPO_TARIFARIO                                        
+                                         Comment                                                                                
+Column SBGTRF_GRPTRF_CODIGO                                                                                  * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     240                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column SBGTRF_CODIGO                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     255                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column CODIGO                                                                                                * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     255                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column DESCRIPCION                                                                                           * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     255                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Index SBG1TRF_SBGTRF_FK                                                                                      * NOT IN DATABASE * ***
+                                          Unique                                      No                                        
+                                          Global                                      No                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                  Index Reversed                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                                CONVENIO                                CONVENIO
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                                    TIPO                                    TIPO
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                    SBGTRF_GRPTRF_CODIGO                    SBGTRF_GRPTRF_CODIGO
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                           SBGTRF_CODIGO                           SBGTRF_CODIGO
+Primary Key SBG1TRF_PK                                                                                       * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                                CONVENIO                                        
+                                      Key Column                                    TIPO                                        
+                                      Key Column                    SBGTRF_GRPTRF_CODIGO                                        
+                                      Key Column                           SBGTRF_CODIGO                                        
+                                      Key Column                                  CODIGO                                        
+
+Index SBG1TRF_PK                                                                                             * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                      No                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+
+Foreign Key SBG1TRF_SBGTRF_FK                                                                                * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                  Cascade Delete                                RESTRICT                                        
+                                  Cascade Update                                RESTRICT                                        
+                                 Exception Table                                                                                
+                                      Join Table                     SUBGRUPOS_TARIFARIO                                        
+                                      Key Column                                CONVENIO                                        
+                                      Key Column                                    TIPO                                        
+                                      Key Column                    SBGTRF_GRPTRF_CODIGO                                        
+                                      Key Column                           SBGTRF_CODIGO                                        
+
+                               Referenced Column            SUBGRUPOS_TARIFARIO.CONVENIO                                        
+                               Referenced Column                SUBGRUPOS_TARIFARIO.TIPO                                        
+                               Referenced Column       SUBGRUPOS_TARIFARIO.GRPTRF_CODIGO                                        
+                               Referenced Column              SUBGRUPOS_TARIFARIO.CODIGO                                        
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                             ------------------------------------------
+                                             Table SUBGRUPOS_1_TARIFARIO Differences: 1
+                                             ------------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

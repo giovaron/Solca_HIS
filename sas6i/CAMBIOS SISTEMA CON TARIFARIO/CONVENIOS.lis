@@ -1,0 +1,235 @@
+
+Reconcile Report: \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\CONVENIOS.lis
+
+Generated on Wed Jun 08  13:36:19 2011 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table CONVENIOS                                                                                              * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                                        
+                                         Cluster                                                                                
+                                      Index Only                                     Yes                                        
+                               Percent Threshold                                                                                
+                             Overflow Tablespace                                                                                
+                                          Cached                                                                                
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+                                         Comment                                                                                
+Column CONVENIO                                                                                              * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                      25                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                               TARIFARIO                                        
+                                         Comment                                                                                
+Column DESCRIPCION                                                                                           * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     250                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Primary Key CNV_PK                                                                                           * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                                CONVENIO                                        
+
+Index CNV_PK                                                                                                 * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                      No                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                                   ------------------------------
+                                                   Table CONVENIOS Differences: 1
+                                                   ------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table CONVENIOS_PROMOCIONES                                                                                  * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                                        
+                                         Cluster                                                                                
+                                      Index Only                                      No                                        
+
+                                          Cached                                                                                
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+                                         Comment                                                                                
+Column CNV_CONVENIO                                                                                          * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                      10                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column PRM_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                       2                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column DESCRIPCION                                                                                           * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     250                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column FECHA_INICIO                                                                                          * NOT IN DATABASE * ***
+                                        Datatype                                    DATE                                        
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column FECHA_FIN                                                                                             * NOT IN DATABASE * ***
+                                        Datatype                                    DATE                                        
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column ESTADO_DE_DISPONIBILIDAD                                                                              * NOT IN DATABASE * ***
+                                        Datatype                                    CHAR                                        
+                                      Max Length                                       1                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                     'D'                                        
+                                          Domain                ESTADO_DE_DISPONIBILIDAD                                        
+                                         Comment                                                                                
+
+Primary Key CNVPRM_PK                                                                                        * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                            CNV_CONVENIO                                        
+                                      Key Column                              PRM_CODIGO                                        
+
+Index CNVPRM_PK                                                                                              * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                      No                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+
+Foreign Key CNVPRM_PRM_FK                                                                                    * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                  Cascade Delete                                RESTRICT                                        
+                                  Cascade Update                                RESTRICT                                        
+                                 Exception Table                                                                                
+                                      Join Table                             PROMOCIONES                                        
+                                      Key Column                              PRM_CODIGO                                        
+
+                               Referenced Column                      PROMOCIONES.CODIGO                                        
+
+Foreign Key CNVPRM_CNV_FK                                                                                    * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                  Cascade Delete                                RESTRICT                                        
+                                  Cascade Update                                RESTRICT                                        
+                                 Exception Table                                                                                
+                                      Join Table                               CONVENIOS                                        
+                                      Key Column                            CNV_CONVENIO                                        
+
+                               Referenced Column                      CONVENIOS.CONVENIO                                        
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                             ------------------------------------------
+                                             Table CONVENIOS_PROMOCIONES Differences: 1
+                                             ------------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 2
+====================================================================================================================================

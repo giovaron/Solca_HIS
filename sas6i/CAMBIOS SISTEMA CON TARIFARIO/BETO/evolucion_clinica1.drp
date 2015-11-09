@@ -1,0 +1,9 @@
+-- C:\tmp\evolucion_clinica1.drp
+--
+-- Generated for Oracle 9i on Thu Jun 09  10:29:16 2011 by Server Generator 6.5.96.5.6
+
+
+ALTER TABLE HOJAS_DE_EVOLUCION DROP COLUMN MINUTOS
+/
+ALTER TABLE HOJAS_DE_EVOLUCION_JN DROP COLUMN MINUTOS
+/

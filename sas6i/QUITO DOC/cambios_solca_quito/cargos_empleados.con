@@ -1,0 +1,15 @@
+-- Y:\sas\guiones\cambios_solca_quito\cargos_empleados.con
+--
+-- Generated for Oracle 9i on Tue Aug 08  09:03:59 2006 by Server Generator 6.5.96.5.6
+  
+
+ 
+
+PROMPT Creating Foreign Key on 'CARGOS_EMPLEADOS'
+ALTER TABLE CARGOS_EMPLEADOS ADD (CONSTRAINT
+ CRGEMP_OCPEMP_FK FOREIGN KEY 
+  (OCPEMP_CODIGO) REFERENCES OCUPACIONES_EMPLEADOS
+  (CODIGO))
+/
+
+

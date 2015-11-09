@@ -1,0 +1,32 @@
+[07/30/09 14:16:39 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=5896]
+	>> ERROR: Abnormal termination, Error Code: C0000005 ACCESS_VIOLATION
+
+======================= STACK DUMP =======================
+
+Fault address:  6764B614 01:000EA614
+Module: C:\ORANT\BIN\ORA805.dll
+
+System Information:
+Operating System: Windows NT Version 5.1 Build 2600 Service Pack 2
+Command line: "C:\ORANT\BIN\ifrun60.EXE" y:\sas6i\bin\sri\frm\srignr.fmx
+FORM/BLOCK/FIELD: :.
+Last Trigger:  - (No error number)
+Last Builtin:  - (No error number)
+
+Registers:
+EAX:6C70745C
+EBX:3A793B62
+ECX:61735C3A
+EDX:0000021E
+ESI:0012DE5F
+EDI:735C3A7A
+CS:EIP:001B:6764B614
+SS:ESP:0023:0012DA34  EBP:0012DE50
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010206
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+0x0012de50 696c5c69 3a793b62 0000021e 0012dc40 635c6e69 0x6764b614          
+------------------- End of Stack Trace -------------------
+
+

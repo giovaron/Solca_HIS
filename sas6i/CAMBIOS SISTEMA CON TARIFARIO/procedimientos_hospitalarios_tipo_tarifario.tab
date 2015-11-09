@@ -1,0 +1,15 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\procedimientos_hospitalarios_tipo_tarifario.tab
+--
+-- Generated for Oracle 9i on Mon Jun 20  14:22:13 2011 by Server Generator 6.5.96.5.6
+ 
+
+PROMPT Altering Table 'PROCEDIMIENTOS_HOSPITALARIOS' 
+ALTER TABLE PROCEDIMIENTOS_HOSPITALARIOS 
+ ADD (TRF_TIPO VARCHAR2(250)
+ )
+ MODIFY (PUNTOS NUMBER(9,6) DEFAULT 0
+ ,NIVEL NUMBER(1) DEFAULT 0
+ )
+/
+
+

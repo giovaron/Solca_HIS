@@ -1,0 +1,8 @@
+Crear parametros de empresa
+
+	- ANESTESIOLOGO   =  ANS   -- Esto ya esta
+	- INTENSIVISTA    =  INT   -- Esto ya esta
+
+Crear Especialidad y atar a los medicos que corresponda
+
+	- INT Intensivista

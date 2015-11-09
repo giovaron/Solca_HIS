@@ -1,0 +1,17 @@
+CEDULA          APELLIDOS                           NOMBRES
+--------------- ----------------------------------- -------------------------------
+1706339361      BARRERA CAJAS                       MARCELA SUSANA
+0501526628      BAUTISTA FERNANDEZ                  MAURO VINICIO
+0602554583      BAÑOS NORIEGA                       SILVIA LORENA
+1703641975      BELDUMA GUALAN                      BLANCA JUDITH
+1711136117      BELTRAN GONZALEZ                    CLAUDIA ANGELICA
+1705476925      BENAVIDEZ MORALES                   WILMA MARIA
+1709573388      BERMUDEZ SANCHEZ                    LUISA EDITH
+1706324496      BRITO MALDONADO                     CARMEN ELENA
+1711007961      CEVALLOS IGLESIAS                   HENRRY RENE
+0400965752      CHILES LIMA                         RUTH MERY
+1713637039      GUALLASAMIN CHALCO                  EDWIN FABIAN
+1707712053      NINAHUALPA CASA                     LUIS BENIGNO
+100258474-4     PEREZ ENCALADA                      VERONICA PATRICIA
+1791817680      SALINAS VARGAS                      GLADYS MARIA DOLORES
+1708536584      ZAPATA DIAZ                         MARIO ROBERTO

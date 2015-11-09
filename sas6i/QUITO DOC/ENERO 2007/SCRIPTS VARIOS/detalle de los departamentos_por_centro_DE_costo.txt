@@ -1,0 +1,17 @@
+SELECT CG1.RV_MEANING TIPO,CG2.RV_MEANING AGRUPADOR,C.DESCRIPCION CENTRO_COSTO,C.CUENTA_CONTABLE_MAYOR CUENTA,
+       a.codigo codigo_area,a.nombre nombre_area,d.codigo codigo_dep,d.nombre nombre_Dep,dc.porcentaje
+FROM CENTROS_DE_COSTOS C,CG_REF_CODES CG1,CG_REF_CODES CG2,areas a,departamentos d,
+     departamentos_centros_costos dc
+WHERE C.TIPO = CG1.RV_LOW_VALUE AND
+      CG1.RV_DOMAIN= 'AGRUPADOR COSTOS GENERAL' AND
+      C.AGRUPADOR = CG2.RV_LOW_VALUE AND
+      CG2.RV_DOMAIN = 'AGRUPADOR COSTOS ESPECIFICO' and
+      a.codigo = d.ara_codigo and
+      d.ara_codigo = dc.dpr_ara_codigo and
+      d.codigo = dc.dpr_codigo and
+      dc.cntcst_tipo = c.tipo and
+      dc.cntcst_emp_codigo = c.emp_codigo and
+      dc.cntcst_agrupador = c.agrupador
+order by a.codigo,a.nombre,d.codigo,d.nombre
+      
+

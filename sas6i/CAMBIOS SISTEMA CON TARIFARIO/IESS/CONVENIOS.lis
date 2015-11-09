@@ -1,0 +1,98 @@
+
+Reconcile Report: \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\ICSC\CONVENIOS.lis
+
+Generated on Wed Aug 03  09:26:26 2011 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table CONVENIOS                                                                                              * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                                        
+                                         Cluster                                                                                
+                                      Index Only                                     Yes                                        
+                               Percent Threshold                                                                                
+                             Overflow Tablespace                                                                                
+                                          Cached                                                                                
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                      10                                        
+                                    Percent Used                                                                                
+                                 Initial Extents                                  256000                                        
+                                     Next Extent                                  102400                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                 TBDATOS                                        
+                                        Parallel                                      No                                        
+                                         Comment                                                                                
+Column CONVENIO                                                                                              * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     250                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                               TARIFARIO                                        
+                                         Comment                                                                                
+Column DESCRIPCION                                                                                           * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     250                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Primary Key CNV_PK                                                                                           * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                                CONVENIO                                        
+
+Index CNV_PK                                                                                                 * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                      No                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                      No                                        
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                                   ------------------------------
+                                                   Table CONVENIOS Differences: 1
+                                                   ------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

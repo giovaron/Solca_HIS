@@ -1,0 +1,50 @@
+
+SQL*Loader: Release 9.2.0.1.0 - Production on Jue Ago 3 12:56:16 2006
+
+Copyright (c) 1982, 2002, Oracle Corporation.  All rights reserved.
+
+Control File:   F:\RINA\SOLCAQ\SCRIPTS\depreciacion2.CTL
+Data File:      F:\RINA\SOLCAQ\SCRIPTS\depreciacion2.txt
+  Bad File:     F:\RINA\SOLCAQ\SCRIPTS\depreciacion2.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table ACTIVOS_FIJOS_TMP_MOD, loaded from every logical record.
+Insert option in effect for this table: APPEND
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+CODIGO_PROPIO                       FIRST     *  WHT      CHARACTER            
+DESCRIPCION                          NEXT     *  WHT      CHARACTER            
+VALOR_INICIAL                        NEXT     *  WHT      CHARACTER            
+VALOR_ACTUAL                         NEXT     *  WHT      CHARACTER            
+
+
+Table ACTIVOS_FIJOS_TMP_MOD:
+  51 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                  66048 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:            51
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Jue Ago 03 12:56:16 2006
+Run ended on Jue Ago 03 12:56:17 2006
+
+Elapsed time was:     00:00:01.72
+CPU time was:         00:00:00.03

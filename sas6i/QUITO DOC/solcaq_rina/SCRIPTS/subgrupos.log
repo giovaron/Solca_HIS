@@ -1,0 +1,53 @@
+
+SQL*Loader: Release 9.2.0.1.0 - Production on Mar Jul 18 16:06:48 2006
+
+Copyright (c) 1982, 2002, Oracle Corporation.  All rights reserved.
+
+Control File:   F:\rina\solcaq\subgrupos.ctl
+Data File:      F:\RINA\SOLCAQ\subgrupos.txt
+  Bad File:     F:\RINA\SOLCAQ\subgrupos.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table SUBGRUPOS_ACTIVOS_FIJOS, loaded from every logical record.
+Insert option in effect for this table: APPEND
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+GRPACTFJO_EMP_CODIGO                FIRST     *  WHT      CHARACTER            
+GRPACTFJO_CODIGO                     NEXT     *  WHT      CHARACTER            
+CODIGO                               NEXT     *  WHT      CHARACTER            
+DESCRIPCION                          NEXT     *  WHT      CHARACTER            
+PORCENTAJE_DEPRECIACION              NEXT     *  WHT      CHARACTER            
+PORCENTAJE_REVALORIZACION            NEXT     *  WHT      CHARACTER            
+ESTADO_DE_DISPONIBILIDAD             NEXT     *  WHT      CHARACTER            
+
+
+Table SUBGRUPOS_ACTIVOS_FIJOS:
+  2262 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 115584 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:          2262
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Mar Jul 18 16:06:48 2006
+Run ended on Mar Jul 18 16:06:49 2006
+
+Elapsed time was:     00:00:01.41
+CPU time was:         00:00:00.03

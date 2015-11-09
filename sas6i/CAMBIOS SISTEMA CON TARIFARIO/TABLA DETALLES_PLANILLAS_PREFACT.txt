@@ -1,0 +1,68 @@
+-- Create table
+create table DETALLES_PLANILLA_PREFACT
+(
+  CNTS_DOCUMENTO      VARCHAR2(1) not null,
+  CNTS_DETALLE        NUMBER(3) not null,
+  CNTS_NUMERO         NUMBER(10) not null,
+  PCN_NUMERO_HC       NUMBER(7) not null,
+  PLA_NUMERO_PLANILLA NUMBER(9) not null,
+  PLA_PROMOCION       VARCHAR2(2)
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_PK primary key (CNTS_DOCUMENTO, CNTS_DETALLE, CNTS_NUMERO, PLA_NUMERO_PLANILLA)
+  using index 
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_CNTS_FK foreign key (CNTS_DOCUMENTO, CNTS_NUMERO, CNTS_DETALLE)
+  references CUENTAS (DOCUMENTO, NUMERO, DETALLE);
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_PCN_FK foreign key (PCN_NUMERO_HC)
+  references PACIENTES (NUMERO_HC);
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_PLA_FK foreign key (PLA_NUMERO_PLANILLA)
+  references PLANILLA (NUMERO_PLANILLA);
+-- Create/Recreate indexes 
+create unique index CNT_PLN on DETALLES_PLANILLA_PREFACT (CNTS_DOCUMENTO, CNTS_DETALLE, CNTS_NUMERO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index DTL_PNL on DETALLES_PLANILLA_PREFACT (PLA_NUMERO_PLANILLA)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on DETALLES_PLANILLA_PREFACT to TRABAJO_SOCIAL;

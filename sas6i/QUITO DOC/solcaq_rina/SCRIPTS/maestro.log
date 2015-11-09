@@ -1,0 +1,109 @@
+
+SQL*Loader: Release 9.2.0.1.0 - Production on Mar Jul 18 14:32:32 2006
+
+Copyright (c) 1982, 2002, Oracle Corporation.  All rights reserved.
+
+Control File:   f:\rina\solcaq\maestro.ctl
+Data File:      F:\RINA\SOLCAQ\maestro.txt
+  Bad File:     F:\RINA\SOLCAQ\maestro.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table ACTIVOS_FIJOS_MAESTRO, loaded from every logical record.
+Insert option in effect for this table: APPEND
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+DESCRIPCION                         FIRST     *   ?       CHARACTER            
+FECHA_INGRESO                        NEXT     *   ?       CHARACTER            
+VALOR_INICIAL                        NEXT     *   ?       CHARACTER            
+VALOR_ACTUAL                         NEXT     *   ?       CHARACTER            
+MARCA                                NEXT     *   ?       CHARACTER            
+MODELO                               NEXT     *   ?       CHARACTER            
+NUMERO_SERIE                         NEXT     *   ?       CHARACTER            
+VIDA_UTIL                            NEXT     *   ?       CHARACTER            
+PORCENTAJE_DEPRECIACION              NEXT     *   ?       CHARACTER            
+OBSERVACIONES                        NEXT     *   ?       CHARACTER            
+CODIGO_PROPIO                        NEXT     *   ?       CHARACTER            
+UBICACION                            NEXT     *   ?       CHARACTER            
+
+Record 1198: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 3232: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 3234: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 4859: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 11157: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12171: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12172: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12173: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12174: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12175: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12176: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12177: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12178: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12179: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12180: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12181: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+Record 12182: Rejected - Error on table ACTIVOS_FIJOS_MAESTRO.
+ORA-01400: cannot insert NULL into ("SMS"."ACTIVOS_FIJOS_MAESTRO"."FECHA_INGRESO")
+
+
+Table ACTIVOS_FIJOS_MAESTRO:
+  16731 Rows successfully loaded.
+  17 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 198144 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:         16748
+Total logical records rejected:        17
+Total logical records discarded:        0
+
+Run began on Mar Jul 18 14:32:32 2006
+Run ended on Mar Jul 18 14:32:44 2006
+
+Elapsed time was:     00:00:11.40
+CPU time was:         00:00:00.42

@@ -1,0 +1,12 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\GRUPOS_TARIFARIOS.sql
+--
+-- Generated for Oracle 9i on Fri Jun 17  14:14:41 2011 by Server Generator 6.5.96.5.6
+
+
+SPOOL GRUPOS_TARIFARIOS.lst
+
+@@GRUPOS_TARIFARIOS.tab
+@@GRUPOS_TARIFARIOS.ind
+@@GRUPOS_TARIFARIOS.con
+
+SPOOL OFF

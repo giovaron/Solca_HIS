@@ -1,0 +1,10 @@
+-- Y:\sas\guiones\cambios_solca_quito\empleados_roles_check_constraint.sqs
+--
+-- Generated for Oracle 9i on Tue Aug 08  09:15:17 2006 by Server Generator 6.5.96.5.6
+ 
+PROMPT Altering Sequence 'EMPROL_SEQ'
+ALTER SEQUENCE EMPROL_SEQ
+ CACHE 20
+NOORDER
+/
+

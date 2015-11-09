@@ -1,0 +1,38 @@
+*************** ARCHIVOS DE MANTENIMIETNOS DE LA LIBRERIAS DE OBJETOS *********************
+* Se utiliza FORM2LIB para crear la libreria de objetos
+*******************************************************************************************
+* CREADO POR: JUAN CARLOS CABRERA
+* FECHA:      25 - NOV - 1999
+* PROPOSITO:  Mantener las libreria de objetos
+* NOTAS:      Debe existir en correrse y grabarse en el regedit
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\cgenf50\form2lib\TAB1]
+"NAME"="Headstart Objects"
+"ID1"="QMSSO$"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\cgenf50\form2lib\TAB2]
+"NAME"="OFG Objects"
+"ID1"="CGSO$"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\cgenf50\form2lib\TAB3]
+"NAME"="Gouped QMS Objects"
+"ID1"="QMS$"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\cgenf50\form2lib\TAB4]
+"NAME"="Navigator Objects"
+"ID1"="NAVSO$"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\cgenf50\form2lib\TAB5]
+"NAME"="Objetos Softcase"
+"ID1"="SISSO$"
+
+* HISTORIA DE CAMBIOS
+* FECHA          QUIEN
+*                QUE
+******************************************************************************************
+FUENTE            CREACION                                              DESTINO
+---------------   --------------------------------------------------    --------------
+sisolm10.fmb      FORM2LIB -i sisolm10.fmb -o sisolb10.olb              sisolb10.olb
+sisnavolm10.fmb   FORM2LIB -i sisnavolm10.fmb -o sisolb10.olb APPEND    sisolb10.olb
+
+

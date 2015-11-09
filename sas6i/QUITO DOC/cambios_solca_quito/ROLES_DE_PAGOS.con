@@ -1,0 +1,13 @@
+-- Y:\sas\guiones\cambios_solca_quito\ROLES_DE_PAGOS.con
+--
+-- Generated for Oracle 9i on Tue Aug 08  11:16:11 2006 by Server Generator 6.5.96.5.6
+  
+
+ 
+PROMPT Creating Check Constraint on 'ROLES_DE_PAGOS'
+ALTER TABLE ROLES_DE_PAGOS
+ ADD (CONSTRAINT AVCON_1155053771_TIPO_000 CHECK (TIPO IN ('P', 'E', 'H')))
+/
+
+
+

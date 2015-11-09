@@ -1,0 +1,13 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\procedimientos_hospitalarios_tipo_tarifario.con
+--
+-- Generated for Oracle 9i on Mon Jun 20  14:22:13 2011 by Server Generator 6.5.96.5.6
+  
+
+  
+PROMPT Creating Check Constraint on 'PROCEDIMIENTOS_HOSPITALARIOS'
+ALTER TABLE PROCEDIMIENTOS_HOSPITALARIOS
+ ADD (CONSTRAINT AVCON_1308597730_TRF_T_000 CHECK (TRF_TIPO IN ('A')))
+/
+
+
+

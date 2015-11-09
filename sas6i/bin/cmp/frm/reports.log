@@ -1,0 +1,118 @@
+
+Starting report RPTINVCOMBTCTOTPRV [Tue Mar 03 15:14:07 2009] ...
+REP-0110: Unable to open file 'RPTINVCOMBTCTOTPRV'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'RPTINVCOMBTCTOTPRV'.
+End report RPTINVCOMBTCTOTPRV [Tue Mar 03 15:14:07 2009].
+
+Starting report RPTINVITMMNRSTKBDG [Wed Mar 04 08:47:48 2009] ...
+REP-0110: Unable to open file 'RPTINVITMMNRSTKBDG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'RPTINVITMMNRSTKBDG'.
+End report RPTINVITMMNRSTKBDG [Wed Mar 04 08:47:48 2009].
+
+Starting report RPTINVEMTORD [Thu Mar 05 09:17:26 2009] ...
+REP-0110: Unable to open file 'M:\SAS\FNT\CMP\RPT\RPTINVEMTORD'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'M:\SAS\FNT\CMP\RPT\RPTINVEMTORD'.
+End report RPTINVEMTORD [Thu Mar 05 09:17:28 2009].
+
+Starting report INVEMTORD [Thu Mar 05 12:03:27 2009] ...
+REP-0110: Unable to open file 'INVEMTORD'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'INVEMTORD'.
+End report INVEMTORD [Thu Mar 05 12:03:27 2009].
+
+Starting report INVEMTORD [Thu Mar 05 12:03:39 2009] ...
+REP-0110: Unable to open file 'INVEMTORD'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'INVEMTORD'.
+End report INVEMTORD [Thu Mar 05 12:03:39 2009].
+
+Starting report INVEMTORD [Thu Mar 05 12:03:41 2009] ...
+REP-0110: Unable to open file 'INVEMTORD'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'INVEMTORD'.
+End report INVEMTORD [Thu Mar 05 12:03:41 2009].
+
+Starting report rptcnsslccmp [Tue Mar 24 15:04:17 2009] ...
+REP-0110: Unable to open file 'rptcnsslccmp'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'rptcnsslccmp'.
+End report rptcnsslccmp [Tue Mar 24 15:04:17 2009].
+
+Starting report rptcnsslccmp [Tue Mar 24 15:04:20 2009] ...
+REP-0110: Unable to open file 'rptcnsslccmp'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'rptcnsslccmp'.
+End report rptcnsslccmp [Tue Mar 24 15:04:21 2009].
+
+Starting report RPTIMPCTZCMP [Fri Mar 27 12:17:51 2009] ...
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+End report RPTIMPCTZCMP [Fri Mar 27 12:17:52 2009].
+
+Starting report RPTIMPCTZCMP [Fri Mar 27 12:19:30 2009] ...
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+End report RPTIMPCTZCMP [Fri Mar 27 12:19:31 2009].
+
+Starting report RPTIMPCTZCMP [Fri Mar 27 12:30:20 2009] ...
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+End report RPTIMPCTZCMP [Fri Mar 27 12:30:20 2009].
+
+Starting report RPTIMPCTZCMP [Fri Mar 27 12:31:20 2009] ...
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'RPTIMPCTZCMP'.
+End report RPTIMPCTZCMP [Fri Mar 27 12:31:20 2009].
+
+Starting report RPTIMPCTZCMP [Fri Mar 27 12:31:54 2009] ...
+End report RPTIMPCTZCMP [Fri Mar 27 12:32:20 2009].
+
+Starting report rptcnsslccmp [Fri Mar 27 20:32:39 2009] ...
+End report rptcnsslccmp [Fri Mar 27 20:32:48 2009].
+
+Starting report CMPRPTPRVITMAUT [Tue Apr 07 19:23:31 2009] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report CMPRPTPRVITMAUT [Tue Apr 07 19:24:01 2009].
+
+Starting report CMPRPTPRVITMAUT [Tue Apr 07 19:25:54 2009] ...
+End report CMPRPTPRVITMAUT [Tue Apr 07 19:26:03 2009].
+
+Starting report INVEMTORD [Wed Apr 08 10:25:01 2009] ...
+End report INVEMTORD [Wed Apr 08 10:25:09 2009].
+
+Starting report INVEMTORD [Wed Apr 08 10:27:54 2009] ...
+End report INVEMTORD [Wed Apr 08 10:28:05 2009].
+
+Starting report INVEMTORD [Thu Apr 23 19:17:34 2009] ...
+End report INVEMTORD [Thu Apr 23 19:18:45 2009].
+
+Starting report rptcnsslccmp [Wed Apr 29 10:32:53 2009] ...
+End report rptcnsslccmp [Wed Apr 29 10:33:09 2009].
+
+Starting report rptcnsslccmp [Wed Apr 29 10:33:38 2009] ...
+End report rptcnsslccmp [Wed Apr 29 10:33:56 2009].
+
+Starting report rptcnsslccmp [Wed Apr 29 16:29:04 2009] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report rptcnsslccmp [Wed Apr 29 16:29:07 2009].
+
+Starting report rptcnsslccmp [Thu May 07 08:30:56 2009] ...
+End report rptcnsslccmp [Thu May 07 08:31:21 2009].
+
+Starting report rptcnsslccmp [Fri May 29 09:23:00 2009] ...
+End report rptcnsslccmp [Fri May 29 09:31:39 2009].
+
+Starting report rptinvegrstotsbb [Mon Jul 13 16:08:34 2009] ...
+REP-0110: Unable to open file 'rptinvegrstotsbb'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'rptinvegrstotsbb'.
+End report rptinvegrstotsbb [Mon Jul 13 16:08:35 2009].

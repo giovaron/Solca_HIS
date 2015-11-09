@@ -1,0 +1,206 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\CAMBIO_CARGOS_EMPLEADOS.lis
+
+Generated on Wed Aug 16  12:19:37 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table CARGOS_EMPLEADOS                                                                                                          
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                               Permanent
+                                         Cluster                                                                                
+                                      Index Only                                      No                                      No
+
+                                          Cached                                                                           Cache
+                            Initial Transactions                                                                               1
+                                Max Transactions                                                                             255
+                                    Percent Free                                                                               5
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           81920
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSP
+                                        Parallel                                      No                                      No
+                                         Comment                                                                                
+Column EMP_CODIGO                                                               - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                       3                                       3
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment El código de la empresa de la que es... El código de la empresa de la que es...
+Column CODIGO                                                                   - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                       5                                       5
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                        Código del Cargo                        Código del Cargo
+Column DESCRIPCION                                                              - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                      50                                      50
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                   Descripción del Cargo                   Descripción del Cargo
+Column ESTADO_DE_DISPONIBILIDAD                                                 - same -                                - same -
+                                        Datatype                                    CHAR                                VARCHAR2
+                                      Max Length                                       1                                       1
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                     'D'                                     'D'
+                                          Domain                ESTADO_DE_DISPONIBILIDAD                                         ***
+                                         Comment Si esta disponible, fuera de servici... Si esta disponible, fuera de servici...
+Column OCPEMP_CODIGO                                                       * DIFFERENT *                           * DIFFERENT *
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                      20                                      20
+                                           Scale                                                                                
+                                       Mandatory                                      No                                     Yes ***
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                  Código de la Ocupación                  Código de la Ocupación
+Column GRADO                                                                    - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                       1                                       1
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                     '1'                                     '1'
+                                          Domain                             GRADO_CARGO                                         ***
+                                         Comment                                                                                
+
+Index CRGEMP_EMP_FK_I                                                           - same -                                - same -
+                                          Unique                                      No                                      No
+                                          Global                                      No                                      No
+                                       Bitmapped                                      No                                      No
+                              Compute Statistics                                      No                    * NOT DETERMINABLE *
+                                  Index Reversed                                      No                                      No
+                                          Nosort                                      No                    * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                                                               2
+                                Max Transactions                                                                             255
+                                    Percent Free                                                                              10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           65536
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                      TBINDICESP
+                                        Parallel                                      No                                      No
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                              EMP_CODIGO                              EMP_CODIGO
+Index CRGEMP_OCPEMP_FK_I                                                        - same -                                - same -
+                                          Unique                                      No                                      No
+                                          Global                                      No                                      No
+                                       Bitmapped                                      No                                      No
+                              Compute Statistics                                      No                    * NOT DETERMINABLE *
+                                  Index Reversed                                      No                                      No
+                                          Nosort                                      No                    * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                                                               2
+                                Max Transactions                                                                             255
+                                    Percent Free                                                                              10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           24576
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSP
+                                        Parallel                                      No                                      No
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                           OCPEMP_CODIGO                           OCPEMP_CODIGO
+Primary Key CRGEMP_PK                                                           - same -                                - same -
+                                         Enabled                                     Yes                                     Yes
+                                        Deferred                                      No                                      No
+                                       Immediate                                      No                                      No
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Key Column                                  CODIGO                                  CODIGO
+                                      Key Column                              EMP_CODIGO                              EMP_CODIGO
+
+Index CRGEMP_PK                                                                                                                 
+                                          Unique                                     Yes                                     Yes
+                                          Global                                      No                                      No
+                                       Bitmapped                                      No                                      No
+                              Compute Statistics                                      No                    * NOT DETERMINABLE *
+                                         Reverse                                      No                                      No
+                                          Nosort                                      No                    * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                                                               2
+                                Max Transactions                                                                             255
+                                    Percent Free                                                                              10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           65536
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSP
+                                        Parallel                                      No                                      No
+
+Foreign Key CRGEMP_EMP_FK                                                       - same -                                - same -
+                                         Enabled                                     Yes                                     Yes
+                                        Deferred                                      No                                      No
+                                       Immediate                                      No                                      No
+                                  Cascade Delete                                RESTRICT                                RESTRICT
+                                  Cascade Update                                RESTRICT                                RESTRICT
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Join Table                                EMPRESAS                                EMPRESAS
+                                      Key Column                              EMP_CODIGO                              EMP_CODIGO
+
+                               Referenced Column                         EMPRESAS.CODIGO                         EMPRESAS.CODIGO
+
+Foreign Key CRGEMP_OCPEMP_FK                                                    - same -                                - same -
+                                         Enabled                                     Yes                                     Yes
+                                        Deferred                                      No                                      No
+                                       Immediate                                      No                                      No
+                                  Cascade Delete                                RESTRICT                                RESTRICT
+                                  Cascade Update                                RESTRICT                                RESTRICT
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Join Table                   OCUPACIONES_EMPLEADOS                   OCUPACIONES_EMPLEADOS
+                                      Key Column                           OCPEMP_CODIGO                           OCPEMP_CODIGO
+
+                               Referenced Column            OCUPACIONES_EMPLEADOS.CODIGO            OCUPACIONES_EMPLEADOS.CODIGO
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                               -------------------------------------
+                                               Table CARGOS_EMPLEADOS Differences: 3
+                                               -------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 3
+====================================================================================================================================

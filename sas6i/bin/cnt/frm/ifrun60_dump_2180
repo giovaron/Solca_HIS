@@ -1,0 +1,40 @@
+[09/04/07 12:23:30 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=2180]
+	>> ERROR: Abnormal termination, Error Code: C0000005 ACCESS_VIOLATION
+
+======================= STACK DUMP =======================
+
+Fault address:  679C33EC 01:000223EC
+Module: C:\ORANT\BIN\NLSRTL33.dll
+
+System Information:
+Operating System: Windows NT Version 5.1 Build 2600 Service Pack 2
+Command line: "C:\ORANT\BIN\ifrun60.EXE" C:\sas6I\BIN\cnt\FRM\cntGNR
+FORM/BLOCK/FIELD: SIS0012F:MDE.RUN_REPORT
+Last Trigger: WHEN-BUTTON-PRESSED - (In Progress)
+Msg: <NULL>
+Last Builtin: RUN_REPORT_OBJECT - (In Progress)
+
+Registers:
+EAX:00000000
+EBX:014ED8E0
+ECX:0012C09C
+EDX:014ED224
+ESI:00000000
+EDI:0012C0EC
+CS:EIP:001B:679C33EC
+SS:ESP:0023:0012C074  EBP:0012C078
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010246
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+0x0012c078 0044fc57 0012c09c 00000000 014ed224 014ed0d0 0x679c33ec          
+0x0012c104 004cc332 00000004 00000000 0000000b 014e50bc 0x0044fc57          
+0x0012cf6c 004c4699 01ce390c 00000003 01c41ddc 000000f7 0x004cc332          
+0x0012cf84 664b049b 01ce390c 00000003 01c41ddc 014fb9c0 0x004c4699          
+0x0012e084 6646452a 01ce390c 014fb9c0 01f1331c 00000008 0x664b049b          
+0x0012e0ec 67e28edc 014fb9c0 01ce390c 01508fe0 014edef4 0x6646452a          
+0x014fb1fc 014edef4 67deac90 67deacd0 00467ab0 00000000 0x67e28edc          
+0x01508fe0 00000001 0000000a 01509300 67fbcf2f 0041189a 0x014edef4          
+------------------- End of Stack Trace -------------------
+
+

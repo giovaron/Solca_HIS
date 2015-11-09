@@ -1,0 +1,328 @@
+/* Validacion Sri */
+PROCEDURE VALIDACION_SRI
+ (VIDVALIDACION VARCHAR2
+ ,DFECHACMPCONTABLE DATE
+ ,VRUC VARCHAR2
+ ,VTIPOCMP VARCHAR2
+ ,DFECHACMP DATE
+ ,VSERIECMP VARCHAR2
+ ,VSECNTA VARCHAR2
+ ,DFECHANTA DATE
+ ,VFACTURA VARCHAR2
+ ,VAUTORIZACION VARCHAR2
+ ,VIDCREDITO_GASTO VARCHAR2
+ ,VTIPORF VARCHAR2
+ ,VSERIENTA VARCHAR2 := NULL
+ ,VAUTORIZACIONNTA VARCHAR2 := NULL
+ )
+ IS
+BEGIN
+-- Valida que el comprobante cumpla con las normas del SRI. La validación se la hara antes de grabar el comprobante
+-- vIDValidacion sirve para indicar si el comprobante es:
+--                                                 DC -> Nota de Debito o Credito
+--                                                 RF -> Solo de Retenciones en la fuente
+--                                                 TL -> Transacciones Locales
+/*************************** QUE SE VALIDA  **********************************************
+PARA TODOS    => RUC
+TL,DC         => FECHA EMISION, TIPO COMPROBANTE, SERIE COMPROBANTE, FACTURA/COMP.
+                 NO. AUTORIZACION
+TL            => ID CREDITO/GASTO
+DC            => FECHA EMISION NOTA, NO. NOTA
+TL,RF         => ID RETENCION FUENTE
+******************************************************************************************/
+DECLARE
+  FECHA_INICIO_VALIDACION DATE := '01/01/2006';
+  vTipoRF_verificada VARCHAR2(3):= NULL;
+  EXISTE_RETENCION VARCHAR2(1):= 'F';
+  nRUC NUMBER:=0;
+  nTipoCmp NUMBER:=0;
+  nSecNta NUMBER:=0;
+  nSerieCmp NUMBER:=0;
+  nFactura NUMBER:=0;
+  nAutorizacion NUMBER:=0;
+  nIDCredito_Gasto NUMBER:=0;
+  nTipoRF NUMBER:=0;
+  nSerieNta NUMBER:=0;
+  nAutorizacionNta NUMBER:=0;
+  vParametroError VARCHAR2(200):='';
+  vMensaje VARCHAR2(2000):='';
+  MALA_CONVERSION EXCEPTION;
+  PRAGMA EXCEPTION_INIT(MALA_CONVERSION,-6502);
+  CURSOR RETENCIONES IS
+  SELECT CODIGO FROM TIPOS_RETENCIONES_SRI
+  WHERE ANIO_VALIDEZ_DESDE >= '01/04/2003';
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('************ INICIANDO VALIDACION SRI **********************');
+QMS$ERRORS.SHOW_DEBUG_INFO('ID VALIDACION '||vIDValidacion);
+  IF dFechaCmpContable<TO_DATE('01/08/2002','DD/MM/YYYY') THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('No se valida por ser comprobantes menores al 1 agosto');
+    RETURN; -- no validamos ningun comprobante menor al 1 de agosto
+  END IF;
+QMS$ERRORS.SHOW_DEBUG_INFO('FECHA CONTABLE '||TO_CHAR(dFechaCmpContable,'DD/MM/YYY'));
+QMS$ERRORS.SHOW_DEBUG_INFO('RUC '||vRUC);
+QMS$ERRORS.SHOW_DEBUG_INFO('TIPO COMPROBANTE '||vTipoCmp);
+QMS$ERRORS.SHOW_DEBUG_INFO('FECHA EMISION '||TO_CHAR(dFechaCmp,'DD/MM/YYYY'));
+QMS$ERRORS.SHOW_DEBUG_INFO('SERIE '||vSerieCmp);
+QMS$ERRORS.SHOW_DEBUG_INFO('NO NOTA '||vSecNta);
+QMS$ERRORS.SHOW_DEBUG_INFO('FECHA NOTA '||TO_CHAR(dFechaNta,'DD/MM/YYYY'));
+QMS$ERRORS.SHOW_DEBUG_INFO('FACTURA '||vFactura);
+QMS$ERRORS.SHOW_DEBUG_INFO('NO AUTORIZACION '||vAutorizacion);
+QMS$ERRORS.SHOW_DEBUG_INFO('ID CREDITO GASTO '||vIDCredito_Gasto);
+QMS$ERRORS.SHOW_DEBUG_INFO('ID RETENCION FUENTE '||vTipoRF);
+QMS$ERRORS.SHOW_DEBUG_INFO('ID RETENCION FUENTE '||vTipoRF);
+QMS$ERRORS.SHOW_DEBUG_INFO('SERIE NOTA '||vSerieNta);
+QMS$ERRORS.SHOW_DEBUG_INFO('NO AUTORIZACION NOTA '||vAutorizacionNta);
+  IF vIDValidacion NOT IN ('TL','DC','RF') THEN
+    RETURN; -- Salimos sin hacer nada si no vienen bien los indicadores
+  END IF;
+  BEGIN  /*************  VALIDAR RUC/CED/PSP      ********************/
+  -- RUC -> 13 caracteres
+  -- CDL -> 10 caracteres
+  -- PSP -> diferente de 13 o 10
+    IF LENGTH(vRUC) IN (13,10) THEN
+      nRuc:=TO_NUMBER(NVL(vRUC,'0')); -- vemos que en el RUC consten solo numeros
+      IF nRuc=0 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    END IF;
+  EXCEPTION
+    WHEN MALA_CONVERSION THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00024');  -- Mal ingresado el RUC
+  END;
+  IF vIDValidacion IN ('TL','DC') THEN
+-- Cosas comunes para Comprobantes de Transacciones Locales y Notas Debito / Credito
+    BEGIN  /*************  VALIDAR FECHA EMISION      ********************/
+      IF dFechaCmpContable<dFechaCmp THEN
+-- La fecha de comprobante contable siempre debe ser mayor que la fecha de la factura
+        IF vIDValidacion='DC' THEN
+-- La fecha de la nota de Credito/Debito debe ser mayor o igual a la del Comprobante contable
+          vParametroError:='La fecha de Comprobante Contable de Notas de Credito/Debito debe ser mayor o igual que la fecha de la factura a la cual se aplica la nota.';
+          RAISE MALA_CONVERSION;
+        ELSE
+          vParametroError:='La fecha de un Comprobante de contable debe ser mayor o igual que la de la factura/Comprobante que se esta ingresando';
+          RAISE MALA_CONVERSION;
+        END IF;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00059',vParametroError);  -- Mal ingresada el Tipo de RF
+    END;
+    BEGIN  /*************  VALIDAR TIPO COMPROBANTE      ********************/
+      nTipoCmp:=TO_NUMBER(NVL(VTipoCmp,'0')); -- vemos que el Tipo Comprobante sea valido
+      IF DFECHACMPCONTABLE<FECHA_INICIO_VALIDACION THEN 
+        IF nTipoCmp NOT IN (1,2,3,9,10,11,12,13,14,15,16,17) THEN
+-- ESTO POR COMPATIBILIDAD CON LOS ANTIGUOS
+          vMensaje:='(1,2,3,9,10,11,12,13,14,15,16,17)';
+          RAISE MALA_CONVERSION;
+        END IF;
+      ELSE
+        IF nTipoCmp NOT IN (1,2,3,10,11,12,13,14,19,20,21,41,43) THEN
+          vMensaje:='(1,2,3,10,11,12,13,14,19,20,21,41,43)';
+          RAISE MALA_CONVERSION;
+        END IF;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00058',vMensaje);  -- Mal ingresada el Tipo de Comprobante
+    END;
+    BEGIN  /*************  VALIDAR SERIE COMPROBANTE      ********************/
+-- El numero de serie del comprobante debe tener el formato 001001
+      nSerieCmp:=TO_NUMBER(NVL(vSerieCmp,'0')); -- vemos que la serie del comprobante sea valida
+      IF LENGTH(vSerieCmp)!=6 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+            /*** OTRAS VALIDACIONES DEL TIPO COMPROBANTE *****/
+      IF DFECHACMPCONTABLE<FECHA_INICIO_VALIDACION THEN
+-- ESTO POR COMPATIBILIDAD CON LOS ANTIGUOS
+        IF nTipoCmp IN (9,10,11,12,13,14,15) AND nSerieCmp!=0  THEN
+-- si los comprobantes son TIQUETES, PASAJES DE AVION, ETC
+-- La serie del comprobante debe ser cero
+          QMS$ERRORS.SHOW_MESSAGE('CNT-00073',vTipoCmp); -- la serie del comprobante debe ser cero
+        ELSIF nTipoCmp NOT IN (9,10,11,12,13,14,15) AND nSerieCmp NOT BETWEEN 1001 AND 999999 THEN
+          RAISE MALA_CONVERSION;
+        END IF;
+      ELSE
+        IF nSerieCmp NOT BETWEEN 1001 AND 999999 THEN
+          RAISE MALA_CONVERSION;
+        END IF;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00060');  -- Mal ingresada la serie del comprobante
+    END;
+    BEGIN  /*************  VALIDAR SERIE NOTA      ********************/
+-- El numero de serie del comprobante debe tener el formato 001001
+      nSerieNta:=TO_NUMBER(NVL(vSerieNta,'0')); -- vemos que la serie del comprobante sea valida
+      IF vIDValidacion='DC' AND LENGTH(vSerieNta)!=6 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00060');  -- Mal ingresada la serie del comprobante
+    END;
+    BEGIN  /*************  VALIDAR FACTURA COMPROBANTE      ********************/
+-- El numero de FACTURA/comprobante debe ser numerico
+      nFactura:=TO_NUMBER(NVL(vFactura,'0')); --
+      IF nFactura NOT BETWEEN 1 AND 9999999 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00064');  -- Mal ingresada la Factura/Comp
+    END;
+    BEGIN  /*************  VALIDAR AUTORIZACION COMPROBANTE      ********************/
+-- El numero de Autorizacion del SRI debe ser numerico
+      nAutorizacion:=TO_NUMBER(NVL(vAutorizacion,'0')); --
+       /***** OTRAS VALIDACIONES DEL TIPO COMPROBANTE ********/
+      IF DFECHACMPCONTABLE<FECHA_INICIO_VALIDACION THEN
+-- ESTO POR COMPATIBILIDAD CON LOS ANTIGUOS
+        IF nTipoCmp IN (9,10,11,12,13,14,15) AND nAutorizacion!=0 THEN
+-- El Numero de autorizacion debe ser cero
+          QMS$ERRORS.SHOW_MESSAGE('CNT-00074',vTipoCmp); -- la serie del comprobante debe ser cero
+        ELSIF nTipoCmp NOT IN (9,10,11,12,13,14,15) AND nAutorizacion NOT BETWEEN 1 AND 9999999999 THEN
+          RAISE MALA_CONVERSION;
+        END IF;
+      ELSE
+        IF nAutorizacion NOT BETWEEN 100 AND 9999999999 THEN
+          RAISE MALA_CONVERSION;
+        END IF;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00061');  -- Mal ingresada la Factura/Comp
+    END;
+    BEGIN  /*************  VALIDAR AUTORIZACION NOTA      ********************/
+-- El numero de Autorizacion del SRI debe ser numerico
+      nAutorizacionNta:=TO_NUMBER(NVL(vAutorizacionNta,'0')); --
+       /***** OTRAS VALIDACIONES DEL TIPO COMPROBANTE ********/
+      IF vIDValidacion='DC' AND nAutorizacionNta NOT BETWEEN 100 AND 9999999999 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00061');  -- Mal ingresada la Factura/Comp
+    END;
+    BEGIN  /*************  VALIDAR ID_CREDITO_GASTO      ********************/
+-- El Identificador de Credito o Gasto de la factura/Comprobante
+      nIDCredito_Gasto:=TO_NUMBER(NVL(vIDCredito_Gasto,'0')); --
+      IF nIDCredito_Gasto NOT BETWEEN 1 AND 9 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+--Ahora validamos que si es nota de venta el ID_CREDITO_GASTO sea tambien 2
+/*      IF nTipoCmp=2 AND nIDCredito_Gasto!=2 THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080');  -- Mal id credito o gasto
+      END IF;*/
+      IF nIDCredito_Gasto=1 AND nTipoCmp NOT IN (1, 3, 4, 5, 11, 12, 13, 14, 17, 21, 43) THEN
+        vMensaje:='(1, 3, 4, 5, 11, 12, 13, 14, 17, 21, 43)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=2 AND nTipoCmp NOT IN (1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 17, 19, 20, 21, 41, 43) THEN
+        vMensaje:='(1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 17, 19, 20, 21, 41, 43)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=3 AND nTipoCmp NOT IN (1, 3, 4, 5, 13, 17) THEN
+        vMensaje:='(1, 3, 4, 5, 13, 17)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=4 AND nTipoCmp NOT IN (1, 2, 3, 4, 5, 10, 13, 15, 17, 41) THEN
+        vMensaje:='(1, 2, 3, 4, 5, 10, 13, 15, 17, 41)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=5 AND nTipoCmp NOT IN (1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 17, 19, 20) THEN
+        vMensaje:='(1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 17, 19, 20)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=6 AND nTipoCmp NOT IN (1, 3, 4, 5, 13, 17, 41, 43) THEN
+        vMensaje:='(1, 3, 4, 5, 13, 17, 41, 43)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=7 AND nTipoCmp NOT IN (1, 2, 3, 4, 5, 10, 13, 15, 17, 41, 43) THEN
+        vMensaje:='(1, 2, 3, 4, 5, 10, 13, 15, 17, 41, 43)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=8 AND nTipoCmp NOT IN (1, 2, 4, 5, 17, 21) THEN
+        vMensaje:='(1, 2, 4, 5, 17, 21)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      ELSIF nIDCredito_Gasto=9 AND nTipoCmp NOT IN (1, 2, 4, 5, 41) THEN
+        vMensaje:='(1, 2, 4, 5, 41)';
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00080',nIDCredito_Gasto,vMensaje);  -- Mal id credito o gasto
+      END IF; 
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00062','(1,2,3,4,5,6,7,8,9)');  -- Mal ingresada la Factura/Comp
+    END;
+  END IF;
+  IF vIDValidacion IN ('TL','RF') THEN
+-- Cosas comunes para Comprobantes de Caja Medica y Transacciones Locales
+    BEGIN  /*************  VALIDAR TIPO RETENCION      ********************/
+      nTipoRF:=TO_NUMBER(NVL(vTipoRF,'0'));
+      IF dFechaCmpContable < FECHA_INICIO_VALIDACION THEN 
+     /*Se pueden pasar los datos ingresados antes de la fecha de validación*/
+        IF nTipoRF NOT IN  (0,302,303,304,305,306,307,308,312,315,316,317,318,319,323,325,327,337,339,407,410,411,419,421)  AND dFechaCmpContable>=TO_DATE('01/01/2002','DD/MM/YYYY') THEN
+        -- Para año 2002 en adelante
+           vParametroError:='(0,302,303,304,305,306,307,308,312,315,316,317,318,319,323,325,327,337,339,407, 410,411,419,421)';
+           RAISE MALA_CONVERSION;
+        END IF;
+        IF nTipoRF NOT IN  (0,302,303,304,305,306,307,308,310,311,312,313,314,315,316,317,318,407,410) AND dFechaCmpContable<TO_DATE('01/01/2002','DD/MM/YYYY') THEN
+        -- menores al año 2002
+          vParametroError:='(0,302,303,304,305,306,307,308,310,311,312,313,314,315,316,317,318,407,410)';
+          RAISE MALA_CONVERSION;
+        END IF;
+      END IF; --------- Datos ingresados antes de la fecha inicial de validación
+      IF dFechaCmpContable >= FECHA_INICIO_VALIDACION THEN 
+     /*Se validan con nuevos tipos de retenciones los datos ingresados luego de la fecha inicial*/
+      BEGIN
+         SELECT CODIGO INTO vTipoRF_verificada
+         FROM TIPOS_RETENCIONES_SRI
+         WHERE ANIO_VALIDEZ_DESDE >= '01/04/2003' AND
+               NVL(vTipoRF,'0') = codigo;
+         EXISTE_RETENCION := 'V';
+      EXCEPTION
+      WHEN OTHERS THEN
+         EXISTE_RETENCION:= 'F';
+      END;
+      IF EXISTE_RETENCION = 'F' AND dFechaCmpContable>=TO_DATE('01/04/2003','DD/MM/YYYY') THEN
+      -- Para año 2003 en adelante        
+         vParametroError:='(';
+         FOR RRETENCIONES IN RETENCIONES LOOP
+            vParametroError:= vParametroError||RRETENCIONES.CODIGO||',';
+         END LOOP;
+         vParametroError:=vParametroError||' )';
+         EXISTE_RETENCION := 'F';      
+         RAISE MALA_CONVERSION;
+      END IF;
+      vParametroError:= NULL;
+      IF nTipoRF NOT IN (0,302,303,304,305,306,307,308,310,311,312,313,314,315,316,317,318,407,410)  AND  dFechaCmpContable<TO_DATE('01/01/2002','DD/MM/YYYY') THEN
+      -- menores al año 2002
+         vParametroError:='(0,302,303,304,305,306,307,308,310,311,312,313,314,315,316,317,318,407,410)';
+         RAISE MALA_CONVERSION;
+      END IF;
+      END IF; --------- Datos ingresados después de la fecha inicial de validación
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00063',vParametroError);  -- Mal ingresada el Tipo de RF
+    END;
+  END IF;
+  IF vIDValidacion='DC' THEN
+    BEGIN  /*************  VALIDAR NUMERO DE NOTA  CR/DB    ********************/
+-- El numero de FACTURA/comprobante debe ser numerico
+      nSecNta:=TO_NUMBER(NVL(vSecNta,'0')); --
+      IF nSecNta <= 0 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00065');  -- Mal ingresada No Nota
+    END;
+    BEGIN  /*************  VALIDAR FECHA NOTA      ********************/
+      vParametroError:='';
+      IF dFechaCmpContable<dFechaNta THEN
+-- La fecha de comprobante contable siempre debe ser mayor que la fecha de la nota
+-- y mayor a la fecha de la factura
+        vParametroError:='La fecha del Comprobante debe ser mayor o igual que el de la Nota de Credito/Debito';
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF dFechaNta<dFechaCmp THEN
+        vParametroError:='La fecha de la Nota de Credito/Debito debe ser mayor o igual que la fecha de la factura a la cual se aplica la nota.';
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        QMS$ERRORS.SHOW_MESSAGE('CNT-00066',vParametroError);  -- Mal ingresada la fecha de la nota
+    END;
+  END IF;
+END;
+END VALIDACION_SRI;

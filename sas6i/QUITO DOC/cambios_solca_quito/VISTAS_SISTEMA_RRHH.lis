@@ -1,0 +1,80 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\VISTAS_SISTEMA_RRHH.lis
+
+Generated on Wed Aug 16  11:47:15 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View CARGOS_PERSONAL                                                                                         * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition           SELECT TO_CHAR(19) CODIGO,...                                        
+
+                                         Comment                                                                                
+Column CODIGO                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column DESCRIPCION                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+                                                -----------------------------------
+                                                View CARGOS_PERSONAL Differences: 1
+                                                -----------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View EMPLEADOS_PERSONAL                                                                                      * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition          SELECT '0102116621' CEDULA,...                                        
+
+                                         Comment                                                                                
+Column CEDULA                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column NOMBRES                                                                                               * NOT IN DATABASE * ***
+                                                                                                                                
+Column APELLIDOS                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column PARROQUIA                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column CANTON                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column PROVINCIA                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column FECHA_NACIMIENTO                                                                                      * NOT IN DATABASE * ***
+                                                                                                                                
+Column ESTADO_CIVIL                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column SEXO                                                                                                  * NOT IN DATABASE * ***
+                                                                                                                                
+Column DIRECCION                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column TELEFONO                                                                                              * NOT IN DATABASE * ***
+                                                                                                                                
+Column CARNE_SEGURO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column OBSERVACIONES                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+                                               --------------------------------------
+                                               View EMPLEADOS_PERSONAL Differences: 1
+                                               --------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View INGRESOS_SALIDAS_PERSONAL                                             * DIFFERENT *                           * DIFFERENT *
+                                     Object Type                                                                                
+                               PL/SQL Definition          SELECT '0102116621' CEDULA,...          SELECT '0102116621' CEDULA,... ***
+
+                                         Comment                                                                                
+                                           ---------------------------------------------
+                                           View INGRESOS_SALIDAS_PERSONAL Differences: 1
+                                           ---------------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 3
+====================================================================================================================================

@@ -1,0 +1,5 @@
+select codigo,apellidos||' '||nombres empleado,fecha_DE_nacimiento,TRUNC((sysdate-fecha_DE_nacimiento)/365) EDAD
+from empleados_roles
+where estado_de_disponibilidad='D'
+ORDER BY 2
+/

@@ -1,0 +1,425 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\INGRESOS_Y_SALIDAS.lis
+
+Generated on Tue Aug 08  10:08:27 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table INGRESOS_SALIDAS_EMPLEADOS                                                                             * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                                        
+                                         Cluster                                                                                
+                                      Index Only                                      No                                        
+
+                                          Cached                                No Cache                                        
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   65536                                        
+                                     Next Extent                                   65536                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                TBDATOSP                                        
+                                        Parallel                                      No                                        
+                                         Comment                                                                                
+Column EMPROL_EMP_CODIGO                                                                                     * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                       3                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column EMPROL_CODIGO                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                  NUMBER                                        
+                                      Max Length                                       6                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                        SECUENCIA NUMERO                                        
+                                         Comment                                                                                
+Column ID                                                                                                    * NOT IN DATABASE * ***
+                                        Datatype                                  NUMBER                                        
+                                      Max Length                                       6                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                        SECUENCIA NUMERO                                        
+                                         Comment                                                                                
+Column FECHA_INGRESO                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                    DATE                                        
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column FECHA_SALIDA                                                                                          * NOT IN DATABASE * ***
+                                        Datatype                                    DATE                                        
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column OBSERVACIONES                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     240                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Index INGSLDEMP_EMPROL_FK_I                                                                                  * NOT IN DATABASE * ***
+                                          Unique                                      No                                        
+                                          Global                                      No                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                  Index Reversed                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   20480                                        
+                                     Next Extent                                    5120                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                       EMPROL_EMP_CODIGO                       EMPROL_EMP_CODIGO
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                           EMPROL_CODIGO                           EMPROL_CODIGO
+Primary Key INGSLDEMP_PK                                                                                     * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                                      ID                                        
+
+Index INGSLDEMP_PK                                                                                           * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                     Yes                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   20480                                        
+                                     Next Extent                                    5120                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+Unique Key INGSLDEMP_UK2                                                                                     * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                       EMPROL_EMP_CODIGO                                        
+                                      Key Column                           EMPROL_CODIGO                                        
+                                      Key Column                            FECHA_SALIDA                                        
+Index INGSLDEMP_UK2                                                                                          * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                     Yes                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   51200                                        
+                                     Next Extent                                   51200                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+Index INGSLDEMP_UK                                                                                           * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                     Yes                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   51200                                        
+                                     Next Extent                                   51200                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+Unique Key INGSLDEMP_UK                                                                                      * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                       EMPROL_EMP_CODIGO                                        
+                                      Key Column                           EMPROL_CODIGO                                        
+                                      Key Column                           FECHA_INGRESO                                        
+Index INGSLDEMP_UK2                                                                                          * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                     Yes                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   51200                                        
+                                     Next Extent                                   51200                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+Index INGSLDEMP_UK                                                                                           * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                     Yes                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   51200                                        
+                                     Next Extent                                   51200                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+
+Foreign Key INGSLDEMP_EMPROL_FK                                                                              * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                  Cascade Delete                                RESTRICT                                        
+                                  Cascade Update                                RESTRICT                                        
+                                 Exception Table                                                                                
+                                      Join Table                         EMPLEADOS_ROLES                                        
+                                      Key Column                       EMPROL_EMP_CODIGO                                        
+                                      Key Column                           EMPROL_CODIGO                                        
+
+                               Referenced Column              EMPLEADOS_ROLES.EMP_CODIGO                                        
+                               Referenced Column                  EMPLEADOS_ROLES.CODIGO                                        
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                          -----------------------------------------------
+                                          Table INGRESOS_SALIDAS_EMPLEADOS Differences: 1
+                                          -----------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table INGRESOS_SALIDAS_EMPLEADOS_JN                                                                          * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                                        
+                                         Cluster                                                                                
+                                      Index Only                                      No                                        
+
+                                          Cached                                                                                
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                      60                                        
+                                    Percent Used                                       5                                        
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                TBDATOSP                                        
+                                        Parallel                                      No                                        
+                                         Comment Created by Oracle Designer Server Ge...                                        
+Column JN_OPERATION                                                                                          * NOT IN DATABASE * ***
+                                        Datatype                                    CHAR                                        
+                                      Max Length                                       3                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_ORACLE_USER                                                                                        * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                      30                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_DATETIME                                                                                           * NOT IN DATABASE * ***
+                                        Datatype                                    DATE                                        
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_NOTES                                                                                              * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     240                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_APPLN                                                                                              * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                      35                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_SESSION                                                                                            * NOT IN DATABASE * ***
+                                        Datatype                                  NUMBER                                        
+                                      Max Length                                      38                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column EMPROL_EMP_CODIGO                                                                                     * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                       3                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column EMPROL_CODIGO                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                  NUMBER                                        
+                                      Max Length                                       6                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column ID                                                                                                    * NOT IN DATABASE * ***
+                                        Datatype                                  NUMBER                                        
+                                      Max Length                                       6                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column FECHA_INGRESO                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                    DATE                                        
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column FECHA_SALIDA                                                                                          * NOT IN DATABASE * ***
+                                        Datatype                                    DATE                                        
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column OBSERVACIONES                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     240                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                         --------------------------------------------------
+                                         Table INGRESOS_SALIDAS_EMPLEADOS_JN Differences: 1
+                                         --------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Sequence INGSAL_SEQ                                                        * DIFFERENT *                           * DIFFERENT *
+                                           Start                                       1                                      22
+                                       Increment                                       1                                       1
+                                         Minimum                                       1                                       1
+                                         Maximum                                                     999999999999999999999999999
+                                           Cycle                                      No                                      No
+                                      Sort Order                                     Yes                                      No ***
+                                      Cache Size                                                                              20
+                                         Comment                                                                                
+                                                 ----------------------------------
+                                                 Sequence INGSAL_SEQ Differences: 1
+                                                 ----------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 3
+====================================================================================================================================

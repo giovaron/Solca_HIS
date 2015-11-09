@@ -1,0 +1,14 @@
+-- Y:\sas\guiones\cambios_solca_quito\empleados_roles.con
+--
+-- Generated for Oracle 9i on Mon Aug 07  09:22:27 2006 by Server Generator 6.5.96.5.6
+
+alter table empleados_roles
+drop constraint AVCON_1154960504_TIPO__000
+/
+  
+
+ 
+PROMPT Creating Check Constraint on 'EMPLEADOS_ROLES'
+ALTER TABLE EMPLEADOS_ROLES
+ ADD (CONSTRAINT AVCON_1154960504_TIPO__000 CHECK (TIPO_EMPLEADO IN ('P', 'H', 'E')))
+/

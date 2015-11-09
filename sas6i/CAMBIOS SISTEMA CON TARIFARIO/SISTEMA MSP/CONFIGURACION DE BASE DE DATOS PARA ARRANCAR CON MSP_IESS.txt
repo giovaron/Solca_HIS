@@ -1,0 +1,59 @@
+La variable global GENERA_HONORARIO ya no se usa., en lugar de esto se validará de acuerdo a la función devuelve convenio. para validar en los módulos si se genera o no honorarios médicos. Por ejemplo en Santa Inés  esta variable debe ir en F y en el Rio debe ir en  ‘V’
+Crear las siguientes variables globales:
+
+
+Se vuelva a estructurar las tablas msp_radiologia y la tabla mps_prestaciones_integrales y por lo tanto se cambia la vista.
+
+Añadir en tabla procedimientos_hospitalarios el campo trf_tipo
+
+AÑADIR LOS SIGUIENTES DOMINIOS
+
+'TIPO TARIFARIO'
+CODIGO_MSP
+CONDICION_CLINICA
+CIRCUNSTANCIA_CALIFICANTE
+
+
+AÑADIR EL CAMPO INTERCONSULTA Y DURACION EN PROCEDIMIENTOS REALIZADOS
+
+AÑADIR LOS CAMPOS  TIEMPO_DESDE  Y TIEMPO_HASTA EN LA TABLA TARIFARIOS
+
+
+
+Pasos para configuración de la base de datos para el funcionamiento del sistema con los tarifarios 
+del Ministerio de Salud Pública y el Tarifario del IESS.
+
+1. Comprimir y enviar todos los módulos nuevos creados en el sistema PROMOCIONES para manipular la información que
+   tiene que ver con el manejo de TARIFARIO.
+2. Exportar e importar  las tablas CONVENIOS, GRUPOS_TARIFARIOS,SUBGRUPOS_TARIFARIOS,SUBGRUPOS_1_TARIFARIOS,SUBGRUPOS_2_TARIFARIOS
+3.- Crear el área y departamenteo I,I
+4. En la base de datos del HOSPITAL DEL RIO se añaden los campos necesarios en la tabla cargos y cargos_jn
+   ALTER TABLE CARGOS 
+   ADD(ANESTESIA_IESS           VARCHAR2(1),
+       IESS                     VARCHAR2(1))
+
+
+   ALTER TABLE CARGOS_jn 
+ADD(NOMBRE_IESS              VARCHAR2(250),
+  CODIGO_IESS              VARCHAR2(50),
+  GOBIERNO                 VARCHAR2(1),
+  ANESTESIA_IESS           VARCHAR2(1),
+  IESS                     VARCHAR2(1))
+
+5. Exportar e importar la tabla CARGOS_IESS.
+
+6. Correr el script para migrar los cargos del IESS
+
+7. Crear en cg_ref_codes los datos del dominio tipo_tarifario.
+
+8. Crear tablas nuevas siguiendo los scripts del archivo tablas y vistas.txt.
+
+9. Crear los paquetes en la base de datos siguiendo el archivo paquetes.txt.
+
+10. Crear el role TRABAJO_SOCIAL
+
+11. Crear la información necesaria tomando del archivo en excel  DOMINIOS_PARAMETRO_DATOS.XLS.
+
+12. correr el script de homologación de cargos del IESS (creacion de convenios equivalencias para tarifario del iess.sql).
+	 
+

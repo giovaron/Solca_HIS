@@ -1,0 +1,19 @@
+Eco. Maria del Carmen Torres, en días anteriores de definió con el Ing. Bolivar Castillo la creación de una vista adicional en la base de datos del sistema de Recursos Humanos, la misma que concentra la información sobre los contratos de los empleados que laboran en SOLCA. Esta vista es necesaria para cumplir con el proceso de migración de datos al sistema de Roles de Pagos.
+
+La vista debe tener la siguiente estructura de acuerdo a la información que se necesita:
+
+CEDULA.- Número de Cédula del  empleado,
+DEP_CODIGO.- Código del departamento en el que labora el empleado,
+DEP_DESCRIPCION.- Descripcion del departamento en el que labora el empleado,
+CRG_CODIGO.- Códgio del cargo del empleado,
+FECHA_INGRESO.- Fecha de ingreso a Solca,
+FECHA_SALIDA.- Fecha en la que el empleado deja de laborar en SOLCA,
+TIPO_CONTRATO.- Tipo de contrato del empleado, si es posible especificar tres tipos de contrato de acuerdo a los Roles de Pagos que se maneja en el Departamento Financiero se podría utilizar la siguiente clasificación: 
+
+P para los empleados con nombramiento,
+H para los empleados contratados por horas y
+E para los empleados contratados temporalmente como es el caso de los reemplazos
+
+Actualmente se cuenta dos de las vistas solicitadas como son los datos de los empleados y los cargos de la empresa, estas se complementan con la vista de los registros de ingresos y salidas del empleado, una vez que esta vista sea creada, se podrá llevar a cabo la migración de datos del sistema de Recurso Humanos al sistema de Rol de Pagos y ponerlo en funcionamiento a dicho sistema.
+
+Att.

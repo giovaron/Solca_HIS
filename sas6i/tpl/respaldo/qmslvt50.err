@@ -1,0 +1,131 @@
+Compiling KEY-HELP trigger on form...
+Compilation error on KEY-HELP trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling KEY-MENU trigger on form...
+Compilation error on KEY-MENU trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling KEY-CLRFRM trigger on form...
+Compilation error on KEY-CLRFRM trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling ON-ERROR trigger on form...
+Compilation error on ON-ERROR trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling ON-MESSAGE trigger on form...
+Compilation error on ON-MESSAGE trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling PRE-FORM trigger on form...
+Compilation error on PRE-FORM trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling QUERY_FIND trigger on form...
+Compilation error on QUERY_FIND trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling WHEN-NEW-BLOCK-INSTANCE trigger on form...
+Compilation error on WHEN-NEW-BLOCK-INSTANCE trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling WHEN-NEW-FORM-INSTANCE trigger on form...
+Compilation error on WHEN-NEW-FORM-INSTANCE trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling WHEN-WINDOW-CLOSED trigger on form...
+Compilation error on WHEN-WINDOW-CLOSED trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling WHEN-WINDOW-ACTIVATED trigger on form...
+Compilation error on WHEN-WINDOW-ACTIVATED trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling KEY-NEXT-ITEM trigger on form...
+Compilation error on KEY-NEXT-ITEM trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_LOV' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling QMS$MENU_ITEM trigger on form...
+Compilation error on QMS$MENU_ITEM trigger on form:
+PL/SQL ERROR 201 at line 6, column 4
+identifier 'QMS$EVENT_MENU' must be declared
+PL/SQL ERROR 0 at line 6, column 4
+Statement ignored
+
+Compiling WHEN-WINDOW-RESIZED trigger on form...
+Compilation error on WHEN-WINDOW-RESIZED trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compilation errors have occurred.

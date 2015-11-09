@@ -1,0 +1,28 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\NOVEDADES_PERSONAL.lis
+
+Generated on Sat Aug 19  09:01:15 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View NOVEDADES_PERSONAL                                                    * DIFFERENT *                           * DIFFERENT *
+                                     Object Type                                                                                
+                               PL/SQL Definition          SELECT '0301187555' CEDULA,...          SELECT '0301187555' CEDULA,... ***
+
+                                         Comment                                                                                
+                                               --------------------------------------
+                                               View NOVEDADES_PERSONAL Differences: 1
+                                               --------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

@@ -1,0 +1,211 @@
+DECLARE
+vNOMBRE SUBAUXILIARES_3.NOMBRE%TYPE;
+vTIPO_DE_CUENTA SUBAUXILIARES_3.TIPO_DE_CUENTA%TYPE;
+vCUENTA_DE_DIARIO SUBAUXILIARES_3.CUENTA_DE_DIARIO%TYPE;
+vESTADO_DE_DISPONIBILIDAD SUBAUXILIARES_3.ESTADO_DE_DISPONIBILIDAD%TYPE:='D';
+vMONEDA_DE_TRABAJO SUBAUXILIARES_3.MONEDA_DE_TRABAJO%TYPE:='DLAR';
+vTITULO_DOCUMENTO_ASOCIADO SUBAUXILIARES_3.TITULO_DOCUMENTO_ASOCIADO%TYPE;
+vDOCUMENTO_ASOCIADO SUBAUXILIARES_3.DOCUMENTO_ASOCIADO%TYPE;
+/**********************************************************************
+CREADO POR: Juan Carlos Cabrera Coellar
+PROPOSITO:  Crear los subniveles de todas la cuentas que tengan movimientos
+NOTAS: Debe ser llamado desde el trigger POST-INSERT o POST-UPDATE
+***********************************************************************/
+vTabla VARCHAR2(40);
+vEMP_CODIGO EMPRESAS.CODIGO%TYPE;
+vMYR_CODIGO MAYORES.CODIGO%TYPE;
+vCNT_CODIGO CUENTAS_PLAN.CODIGO%TYPE;
+vSCNT_CODIGO SUBCUENTAS.CODIGO%TYPE;
+vAXL_CODIGO AUXILIARES.CODIGO%TYPE;
+vSAXL_CODIGO SUBAUXILIARES.CODIGO%TYPE;
+vSAXL2_CODIGO SUBAUXILIARES_2.CODIGO%TYPE;
+  CURSOR cCtas is
+   SELECT *
+   FROM PLAN_DE_CUENTAS_COMPLETO
+   WHERE NIVEL>1 AND NIVEL<7
+   ORDER BY CODIGO;
+  CURSOR cCtaHijas(vCod VARCHAR2) IS
+   SELECT MAX(NIVEL)
+   FROM PLAN_DE_CUENTAS_COMPLETO
+   WHERE codigo like vCod||'%';
+  CURSOR cCtasDro IS
+   SELECT PC.*
+   FROM PLAN_DE_CUENTAS_COMPLETO pc, plan_de_cuentas p
+   WHERE pc.cuenta_de_diario='F' and p.codigo=pc.codigo;
+  nTemp NUMBER;
+  nCont NUMBER:=0;
+BEGIN
+-- ACTUALIZAMOS TODOS LOS SUBAUXILIARES COMO DE DIARIO
+  UPDATE SUBAUXILIARES_3
+  SET CUENTA_DE_DIARIO='V'
+  WHERE CUENTA_DE_DIARIO='F';
+  dbms_output.put_line('Se actualizaron con cuenta de diario '||sql%rowcount||' registros');
+-- Recorremos las cuentas hasta encontrar la cuentas de diario a crear
+  FOR rCtas IN cCtas LOOP
+   IF rCtas.nivel=2 THEN
+     vTabla:='CUENTAS_PLAN';
+   ELSIF rCtas.nivel=3 THEN
+     vTabla:='SUBCUENTAS';
+   ELSIF rCtas.nivel=4 THEN
+     vTabla:='AUXILIARES';
+   ELSIF rCtas.nivel=5 THEN
+     vTabla:='SUBAUXILIARES';
+   ELSIF rCtas.nivel=6 THEN
+     vTabla:='SUBAUXILIARES_2';
+   END IF;
+   vEMP_CODIGO:=rCtas.EMP_CODIGO;
+   vMYR_CODIGO:=rCtas.MYR_CODIGO;
+   vCNT_CODIGO:=rCtas.CNT_CODIGO;
+   vSCNT_CODIGO:=rCtas.SCNT_CODIGO;
+   vAXL_CODIGO:=rCtas.AXL_CODIGO;
+   vSAXL_CODIGO:=rCtas.SAXL_CODIGO;
+   vSAXL2_CODIGO:=rCtas.SAXL2_CODIGO;
+   vNOMBRE:=rCtas.NOMBRE;
+   vTIPO_DE_CUENTA:=rCtas.TIPO_DE_CUENTA;
+   vESTADO_DE_DISPONIBILIDAD:='D';
+   vMONEDA_DE_TRABAJO:='DLAR';
+   vTITULO_DOCUMENTO_ASOCIADO:=rCtas.TITULO_DOCUMENTO_ASOCIADO;
+   vDOCUMENTO_ASOCIADO:=rCtas.DOCUMENTO_ASOCIADO;
+   OPEN cCtaHijas(rCtas.CODIGO);
+   FETCH cCtaHijas INTO nTemp;
+   CLOSE cCtaHijas;
+   IF nTemp!=rCtas.NIVEL THEN
+     -- Si no es cuenta de diario no hacemos nada
+     NULL;
+   ELSE
+--  dbms_output.put_line('Se crea cta diario '||rCtas.codigo);
+     nCont:=nCont+1;
+     vCUENTA_DE_DIARIO:='V';
+-- si es nueva fila de diario creamos un nueva fila en la tabla de subcuentas
+    IF vTabla='CUENTAS_PLAN' THEN
+      INSERT INTO SUBCUENTAS
+      VALUES (vEMP_CODIGO,vMYR_CODIGO,vCNT_CODIGO,'00000',
+            vNOMBRE,vTIPO_DE_CUENTA,vCUENTA_DE_DIARIO,vESTADO_DE_DISPONIBILIDAD,
+            vMONEDA_DE_TRABAJO,vTITULO_DOCUMENTO_ASOCIADO,
+            vDOCUMENTO_ASOCIADO);
+      vTabla:='SUBCUENTAS';
+      vSCNT_CODIGO:='00000';
+    END IF;
+    IF vTabla='SUBCUENTAS' THEN
+      INSERT INTO AUXILIARES
+      VALUES (vEMP_CODIGO,vMYR_CODIGO,vCNT_CODIGO,vSCNT_CODIGO,'00000',
+            vNOMBRE,vTIPO_DE_CUENTA,vCUENTA_DE_DIARIO,vESTADO_DE_DISPONIBILIDAD,
+            vMONEDA_DE_TRABAJO,vTITULO_DOCUMENTO_ASOCIADO,
+            vDOCUMENTO_ASOCIADO);
+      vTabla:='AUXILIARES';
+      vAXL_CODIGO:='00000';
+    END IF;
+    IF vTabla='AUXILIARES' THEN
+      INSERT INTO SUBAUXILIARES
+      VALUES (vEMP_CODIGO,vMYR_CODIGO,vCNT_CODIGO,vSCNT_CODIGO,vAXL_CODIGO
+            ,'00000',vNOMBRE,vTIPO_DE_CUENTA,vCUENTA_DE_DIARIO,vESTADO_DE_DISPONIBILIDAD,
+            vMONEDA_DE_TRABAJO,vTITULO_DOCUMENTO_ASOCIADO,
+            vDOCUMENTO_ASOCIADO);
+      vTabla:='SUBAUXILIARES';
+      vSAXL_CODIGO:='00000';
+    END IF;
+    IF vTabla='SUBAUXILIARES' THEN
+      INSERT INTO SUBAUXILIARES_2
+      VALUES (vEMP_CODIGO,vMYR_CODIGO,vCNT_CODIGO,vSCNT_CODIGO,vAXL_CODIGO,
+            vSAXL_CODIGO,'00000',vNOMBRE,vTIPO_DE_CUENTA,vCUENTA_DE_DIARIO,vESTADO_DE_DISPONIBILIDAD,
+            vMONEDA_DE_TRABAJO,vTITULO_DOCUMENTO_ASOCIADO,
+            vDOCUMENTO_ASOCIADO);
+      vTabla:='SUBAUXILIARES_2';
+      vSAXL2_CODIGO:='00000';
+    END IF;
+    IF vTabla='SUBAUXILIARES_2' THEN
+      INSERT INTO SUBAUXILIARES_3
+      VALUES (vEMP_CODIGO,vMYR_CODIGO,vCNT_CODIGO,vSCNT_CODIGO,vAXL_CODIGO,
+            vSAXL_CODIGO,vSAXL2_CODIGO,'00000',vNOMBRE,vTIPO_DE_CUENTA,
+            vCUENTA_DE_DIARIO,vESTADO_DE_DISPONIBILIDAD,vMONEDA_DE_TRABAJO,
+            vTITULO_DOCUMENTO_ASOCIADO,vDOCUMENTO_ASOCIADO);
+      vTabla:='SUBAUXILIARES_3';
+    END IF;
+   END IF;
+  END LOOP;
+  dbms_output.put_line('Se crearon '||ncont||' registros de cuentas de diario');
+-- Actualizamos las cuentas de diario en cada tabla.
+  nCont:=0;
+  FOR rCtas IN cCtasDro LOOP
+   IF rCtas.nivel=2 THEN
+     vTabla:='CUENTAS_PLAN';
+   ELSIF rCtas.nivel=3 THEN
+     vTabla:='SUBCUENTAS';
+   ELSIF rCtas.nivel=4 THEN
+     vTabla:='AUXILIARES';
+   ELSIF rCtas.nivel=5 THEN
+     vTabla:='SUBAUXILIARES';
+   ELSIF rCtas.nivel=6 THEN
+     vTabla:='SUBAUXILIARES_2';
+   END IF;
+   vEMP_CODIGO:=rCtas.EMP_CODIGO;
+   vMYR_CODIGO:=rCtas.MYR_CODIGO;
+   vCNT_CODIGO:=rCtas.CNT_CODIGO;
+   vSCNT_CODIGO:=rCtas.SCNT_CODIGO;
+   vAXL_CODIGO:=rCtas.AXL_CODIGO;
+   vSAXL_CODIGO:=rCtas.SAXL_CODIGO;
+   vSAXL2_CODIGO:=rCtas.SAXL2_CODIGO;
+--  dbms_output.put_line('Se crea cta diario '||rCtas.codigo);
+-- si es nueva fila de diario creamos un nueva fila en la tabla de subcuentas
+--   dbms_output.put_line('Tabla '||vTabla);
+--   dbms_output.put_line('cuenta '||vEMP_CODIGO||vMYR_CODIGO||vCNT_CODIGO||vSCNT_CODIGO||vAXL_CODIGO||vSAXL_CODIGO||vSAXL2_CODIGO);
+    IF vTabla='CUENTAS_PLAN' THEN
+      UPDATE CUENTAS_PLAN
+      SET CUENTA_DE_DIARIO='V'
+      WHERE MYR_EMP_CODIGO=vEMP_CODIGO AND
+            MYR_CODIGO=vMYR_CODIGO AND
+            CODIGO=vCNT_CODIGO AND CUENTA_DE_DIARIO='F';
+      IF SQL%ROWCOUNT=1 THEN
+        nCont:=nCont+1;
+      END IF;
+    ELSIF vTabla='SUBCUENTAS' THEN
+      UPDATE SUBCUENTAS
+      SET CUENTA_DE_DIARIO='V'
+      WHERE CNT_MYR_EMP_CODIGO=vEMP_CODIGO AND
+            CNT_MYR_CODIGO=vMYR_CODIGO AND
+            CNT_CODIGO=vCNT_CODIGO AND
+            CODIGO=vSCNT_CODIGO AND CUENTA_DE_DIARIO='F';
+      IF SQL%ROWCOUNT=1 THEN
+        nCont:=nCont+1;
+      END IF;
+    ELSIF vTabla='AUXILIARES' THEN
+      UPDATE AUXILIARES
+      SET CUENTA_DE_DIARIO='V'
+      WHERE SC_CNT_MYR_EMP_CODIGO=vEMP_CODIGO AND
+            SC_CNT_MYR_CODIGO=vMYR_CODIGO AND
+            SC_CNT_CODIGO=vCNT_CODIGO AND
+            SC_CODIGO=vSCNT_CODIGO AND
+            CODIGO=vAXL_CODIGO AND CUENTA_DE_DIARIO='F';
+      IF SQL%ROWCOUNT=1 THEN
+        nCont:=nCont+1;
+      END IF;
+    ELSIF vTabla='SUBAUXILIARES' THEN
+      UPDATE SUBAUXILIARES
+      SET CUENTA_DE_DIARIO='V'
+      WHERE A_SC_CNT_MYR_EMP_CODIGO=vEMP_CODIGO AND
+            A_SC_CNT_MYR_CODIGO=vMYR_CODIGO AND
+            A_SC_CNT_CODIGO=vCNT_CODIGO AND
+            A_SC_CODIGO=vSCNT_CODIGO AND
+            A_CODIGO=vAXL_CODIGO AND
+            CODIGO=vSAXL_CODIGO AND CUENTA_DE_DIARIO='F';
+      IF SQL%ROWCOUNT=1 THEN
+        nCont:=nCont+1;
+      END IF;
+    ELSIF vTabla='SUBAUXILIARES_2' THEN
+      UPDATE SUBAUXILIARES_2
+      SET CUENTA_DE_DIARIO='V'
+      WHERE S_A_SC_CNT_MYR_EMP_CODIGO=vEMP_CODIGO AND
+            S_A_SC_CNT_MYR_CODIGO=vMYR_CODIGO AND
+            S_A_SC_CNT_CODIGO=vCNT_CODIGO AND
+            S_A_SC_CODIGO=vSCNT_CODIGO AND
+            S_A_CODIGO=vAXL_CODIGO AND
+            S_CODIGO=vSAXL_CODIGO AND
+            CODIGO=vSAXL2_CODIGO AND CUENTA_DE_DIARIO='F';
+      IF SQL%ROWCOUNT=1 THEN
+        nCont:=nCont+1;
+      END IF;
+    END IF;
+  END LOOP;
+  dbms_output.put_line('Se actualizaron '||ncont||' registros como cuentas de diario');
+--  rollback;
+END;

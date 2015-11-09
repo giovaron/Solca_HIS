@@ -1,0 +1,156 @@
+-- MATERNIDAD
+DECLARE
+-- SE CORRIJE EL VALOR DEL IECE Y DEL SECAP QUE NO INCLUYO EL SOBRESUELDO
+vEmp VARCHAR2(3):='CSI';
+nNumRol NUMBER:=18;
+VParnvo VARCHAR2(5):='P0400';  --DSCTO MAT SUELDO
+VParVjo VARCHAR2(5):='P0023';  -- SUELDO FIJO
+vPrmDias VARCHAR2(5):='P0067'; -- DIAS MATERNIDAD, P0064 DIAS ENFERMEDAD
+nConst NUMBER:=0.75; -- constante descto maternidad
+vTipo CHAR(1):='H'; -- D -> DEBE    H -> HABER
+CURSOR cEmpCrear IS
+SELECT PRMROL_EMP_CODIGO,EMPROL_CODIGO,PRMROL_CODIGO,VALOR
+  FROM MOVIMIENTOS_ROLES
+  WHERE PRMROL_EMP_CODIGO=vEmp AND
+    PRMROL_CODIGO=vPrmDias AND
+    ROLPGS_NUMERO=nNumRol AND VALOR>0 and estado='N';
+CURSOR cPrmRel(vEmpRolcod VARCHAR2,nValorFrm NUMBER) IS
+SELECT PRMROL_EMP_CODIGO,EMPROL_CODIGO,PRMROL_CODIGO,((VALOR/30)*nValorFrm*nConst) VALOR
+  FROM MOVIMIENTOS_ROLES
+  WHERE PRMROL_EMP_CODIGO=vEmp AND
+    PRMROL_CODIGO=vParVjo AND
+    EMPROL_CODIGO=vEmpRolCod AND
+    EMPROL_EMP_CODIGO=vEmp AND
+    ROLPGS_NUMERO=nNumRol AND VALOR>0  and estado='N';
+CURSOR cCorreccion(vEmpRol VARCHAR2,vPrm VARCHAR2,nDebe NUMBER,nHaber NUMBER,nValor NUMBER) IS
+SELECT ROLPGS_NUMERO          ,
+ROLPGS_EMP_CODIGO      ,
+EMPROL_EMP_CODIGO      ,
+EMPROL_CODIGO          ,
+PRMROL_EMP_CODIGO      ,
+vPrm PARAMETRO_CREAR        ,
+'XXX',                 
+FECHA ,                 
+nDebe HABER   ,                
+nHaber DEBE,                  
+nValor VALOR                  ,
+ESTADO                 
+  FROM MOVIMIENTOS_ROLES
+  WHERE PRMROL_CODIGO=VParVjo
+  AND ESTADO='N'
+  AND EMPROL_CODIGO=vEmpRol
+  AND EMPROL_EMP_CODIGO=vEmp
+  AND ROLPGS_EMP_CODIGO=vEmp
+  AND ROLPGS_NUMERO=nNumRol;
+nHab NUMBER;
+nDeb NUMBER;
+BEGIN
+FOR rEmpCrear IN cEmpCrear LOOP
+ FOR rPrmRel IN cPrmRel(rEmpCrear.EMPROL_CODIGO,rEmpCrear.VALOR) LOOP
+  IF vTipo='H' THEN
+    nDeb:=rPrmRel.valor;
+    nHab:=null;
+  ELSE
+    nHab:=rPrmRel.valor;
+    nDeb:=null;
+  END IF;
+  FOR rCorreccion in cCorreccion(rEmpCrear.EMPROL_CODIGO,VParnvo,nDeb,nHab,rPrmRel.valor) LOOP
+    DBMS_OUTPUT.PUT_LINE('Creando el empleado '||rCorreccion.EMPROL_CODIGO);
+    DBMS_OUTPUT.PUT_LINE('Nuevo Prm '||VParnvo);
+    DBMS_OUTPUT.PUT_LINE('DEBE '||rCorreccion.DEBE);
+    DBMS_OUTPUT.PUT_LINE('HABER '||rCorreccion.HABER);
+    INSERT INTO MOVIMIENTOS_ROLES (ROLPGS_NUMERO,ROLPGS_EMP_CODIGO,EMPROL_EMP_CODIGO,
+                                   EMPROL_CODIGO,PRMROL_EMP_CODIGO,PRMROL_CODIGO,
+                                   NUMERO,FECHA,DEBE,HABER,VALOR,ESTADO)
+    VALUES (rCorreccion.ROLPGS_NUMERO,rCorreccion.ROLPGS_EMP_CODIGO,rCorreccion.EMPROL_EMP_CODIGO,
+            rCorreccion.EMPROL_CODIGO,rCorreccion.PRMROL_EMP_CODIGO,rCorreccion.PARAMETRO_CREAR,
+            MOVROL_SEQ.NEXTVAL,rCorreccion.FECHA,rCorreccion.DEBE,rCorreccion.HABER,
+            rCorreccion.VALOR,rCorreccion.ESTADO);
+    IF sql%rowcount!=1 THEN
+      DBMS_OUTPUT.PUT_LINE('Error Parametro '||VParnvo||' en el empleado '||rCorreccion.EMPROL_CODIGO);
+      RAISE DUP_VAL_ON_INDEX;
+    END IF;
+  END LOOP;
+ END LOOP;
+END LOOP;
+END;
+/
+
+
+-- ENFERMEDAD
+DECLARE
+-- SE CORRIJE EL VALOR DEL IECE Y DEL SECAP QUE NO INCLUYO EL SOBRESUELDO
+vEmp VARCHAR2(3):='CSI';
+nNumRol NUMBER:=21;
+VParnvo VARCHAR2(5):='P0450';  --SUB ENF SUELDO
+VParVjo VARCHAR2(5):='P0023';  -- SUELDO FIJO
+vPrmDias VARCHAR2(5):='P0064'; -- DIAS MATERNIDAD, P0064 DIAS ENFERMEDAD
+nConst NUMBER:=0.25; -- constante descto maternidad
+vTipo CHAR(1):='D'; -- D -> DEBE    H -> HABER
+CURSOR cEmpCrear IS
+SELECT PRMROL_EMP_CODIGO,EMPROL_CODIGO,PRMROL_CODIGO,VALOR
+  FROM MOVIMIENTOS_ROLES
+  WHERE PRMROL_EMP_CODIGO=vEmp AND
+    PRMROL_CODIGO=vPrmDias AND
+    ROLPGS_NUMERO=nNumRol AND VALOR>0 and estado='N';
+CURSOR cPrmRel(vEmpRolcod VARCHAR2,nValorFrm NUMBER) IS
+SELECT PRMROL_EMP_CODIGO,EMPROL_CODIGO,PRMROL_CODIGO,((VALOR/30)*nValorFrm*nConst) VALOR
+  FROM MOVIMIENTOS_ROLES
+  WHERE PRMROL_EMP_CODIGO=vEmp AND
+    PRMROL_CODIGO=vParVjo AND
+    EMPROL_CODIGO=vEmpRolCod AND
+    EMPROL_EMP_CODIGO=vEmp AND
+    ROLPGS_NUMERO=nNumRol AND VALOR>0  and estado='N';
+CURSOR cCorreccion(vEmpRol VARCHAR2,vPrm VARCHAR2,nDebe NUMBER,nHaber NUMBER,nValor NUMBER) IS
+SELECT ROLPGS_NUMERO          ,
+ROLPGS_EMP_CODIGO      ,
+EMPROL_EMP_CODIGO      ,
+EMPROL_CODIGO          ,
+PRMROL_EMP_CODIGO      ,
+vPrm PARAMETRO_CREAR        ,
+'XXX',                 
+FECHA ,                 
+nDebe HABER   ,                
+nHaber DEBE,                  
+nValor VALOR                  ,
+ESTADO                 
+  FROM MOVIMIENTOS_ROLES
+  WHERE PRMROL_CODIGO=VParVjo
+  AND ESTADO='N'
+  AND EMPROL_CODIGO=vEmpRol
+  AND EMPROL_EMP_CODIGO=vEmp
+  AND ROLPGS_EMP_CODIGO=vEmp
+  AND ROLPGS_NUMERO=nNumRol;
+nHab NUMBER;
+nDeb NUMBER;
+BEGIN
+FOR rEmpCrear IN cEmpCrear LOOP
+ FOR rPrmRel IN cPrmRel(rEmpCrear.EMPROL_CODIGO,rEmpCrear.VALOR) LOOP
+  IF vTipo='H' THEN
+    nDeb:=rPrmRel.valor;
+    nHab:=null;
+  ELSE
+    nHab:=rPrmRel.valor;
+    nDeb:=null;
+  END IF;
+  FOR rCorreccion in cCorreccion(rEmpCrear.EMPROL_CODIGO,VParnvo,nDeb,nHab,rPrmRel.valor) LOOP
+    DBMS_OUTPUT.PUT_LINE('Creando el empleado '||rCorreccion.EMPROL_CODIGO);
+    DBMS_OUTPUT.PUT_LINE('Nuevo Prm '||VParnvo);
+    DBMS_OUTPUT.PUT_LINE('DEBE '||rCorreccion.DEBE);
+    DBMS_OUTPUT.PUT_LINE('HABER '||rCorreccion.HABER);
+    INSERT INTO MOVIMIENTOS_ROLES (ROLPGS_NUMERO,ROLPGS_EMP_CODIGO,EMPROL_EMP_CODIGO,
+                                   EMPROL_CODIGO,PRMROL_EMP_CODIGO,PRMROL_CODIGO,
+                                   NUMERO,FECHA,DEBE,HABER,VALOR,ESTADO)
+    VALUES (rCorreccion.ROLPGS_NUMERO,rCorreccion.ROLPGS_EMP_CODIGO,rCorreccion.EMPROL_EMP_CODIGO,
+            rCorreccion.EMPROL_CODIGO,rCorreccion.PRMROL_EMP_CODIGO,rCorreccion.PARAMETRO_CREAR,
+            MOVROL_SEQ.NEXTVAL,rCorreccion.FECHA,rCorreccion.DEBE,rCorreccion.HABER,
+            rCorreccion.VALOR,rCorreccion.ESTADO);
+    IF sql%rowcount!=1 THEN
+      DBMS_OUTPUT.PUT_LINE('Error Parametro '||VParnvo||' en el empleado '||rCorreccion.EMPROL_CODIGO);
+      RAISE DUP_VAL_ON_INDEX;
+    END IF;
+  END LOOP;
+ END LOOP;
+END LOOP;
+END;
+/

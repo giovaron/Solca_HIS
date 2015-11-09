@@ -1,0 +1,16 @@
+-- Y:\sas\guiones\cambios_solca_quito\EMPLEADOS_NUEVOS.grt
+--
+-- Generated for Oracle 9i on Thu Aug 17  09:51:09 2006 by Server Generator 6.5.96.5.6
+ 
+
+PROMPT Granting Object Privileges
+GRANT SELECT ON EMPLEADOS_NUEVOS TO CONSULTAS_ROL
+/
+
+GRANT SELECT ON EMPLEADOS_NUEVOS TO ADMINISTRADOR_ROL
+/
+
+GRANT SELECT ON EMPLEADOS_NUEVOS TO USUARIO_ROL
+/
+
+

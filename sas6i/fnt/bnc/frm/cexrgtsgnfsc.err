@@ -1,0 +1,23 @@
+Compiling procedure CGUV$CHK_SGNVTL_PK... 
+Compilation error on procedure CGUV$CHK_SGNVTL_PK:
+PL/SQL ERROR 201 at line 10, column 17
+identifier 'SIGNOS_VITALES' must be declared
+PL/SQL ERROR 0 at line 9, column 9
+SQL Statement ignored
+PL/SQL ERROR 320 at line 9, column 17
+the declaration of the type of this expression is incomplete or malformed
+PL/SQL ERROR 0 at line 15, column 7
+SQL Statement ignored
+
+Compiling procedure CGUI$GET_NEXT_DTLEXMFSC_SEQ... 
+Compilation error on procedure CGUI$GET_NEXT_DTLEXMFSC_SEQ:
+PL/SQL ERROR 201 at line 7, column 15
+identifier 'DTLEXMFSC_SEQ.NEXTVAL' must be declared
+PL/SQL ERROR 0 at line 7, column 7
+SQL Statement ignored
+PL/SQL ERROR 320 at line 7, column 29
+the declaration of the type of this expression is incomplete or malformed
+PL/SQL ERROR 0 at line 11, column 5
+SQL Statement ignored
+
+Compilation errors have occurred.

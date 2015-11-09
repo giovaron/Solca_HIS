@@ -1,0 +1,5 @@
+FRM-30443: Advertencia: Valor Más Alto Autorizado ignorado para artículo modelo subordinado NTS.ANT_NUMERO.
+FRM-30444: Advertencia: Valor Más Bajo Autorizado ignorado para artículo modelo subordinado NTS.ANT_NUMERO.
+FRM-30431: Advertencia: Duplicar nombre de columna ANT_NUMERO en bloque NTS.
+
+Se ha creado un archivo de pantalla C:\sms\fnt\fct\frm\fctgnrfct.fmx

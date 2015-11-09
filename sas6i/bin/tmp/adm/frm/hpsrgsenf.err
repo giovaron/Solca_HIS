@@ -1,0 +1,70 @@
+Compiling package specification CG$HPSRGSENF_GLOBALS... 
+   No compilation errors.
+
+Compiling procedure CGSF$CLR_PRMATN_PRMATN_PCN_FK... 
+   No compilation errors.
+
+Compiling procedure CGFK$QRY_PRMATN_PRMATN_PCN_FK... 
+   No compilation errors.
+
+Compiling procedure CGSF$CLR_RGSENF_RGSENF_DPR_FK... 
+   No compilation errors.
+
+Compiling procedure CGSF$CLR_RGSENF_RGSENF_PRS_FK... 
+   No compilation errors.
+
+Compiling procedure CGFK$QRY_RGSENF_RGSENF_DPR_FK... 
+   No compilation errors.
+
+Compiling procedure CGFK$QRY_RGSENF_RGSENF_PRS_FK... 
+   No compilation errors.
+
+Compiling procedure CGSF$CLR_RGSENF_RGSENF_DMN_DK... 
+   No compilation errors.
+
+Compiling procedure CGFK$QRY_RGSENF_RGSENF_DMN_DK... 
+   No compilation errors.
+
+Compiling function CGTE$CHECK_CONSTRAINT_VIO... 
+   No compilation errors.
+
+Compiling procedure CGTE$PRMATN_ERRORS... 
+   No compilation errors.
+
+Compiling procedure CGTE$LSTRGSENF_ERRORS... 
+   No compilation errors.
+
+Compiling procedure CGTE$RGSENF_ERRORS... 
+   No compilation errors.
+
+Compiling procedure CGBS$TOGGLE... 
+   No compilation errors.
+
+Compiling function CALCULAR_VALOR... 
+Compilation error on function CALCULAR_VALOR: 
+PL/SQL ERROR 103 at line 1, column 105
+Encountered the symbol "(" when expecting one of the following:
+
+   := . ) , @ % default character
+The symbol ":=" was substituted for "(" to continue.
+
+PL/SQL ERROR 103 at line 13, column 8
+Encountered the symbol "FOR" when expecting one of the following:
+
+   loop
+The symbol "loop was inserted before "FOR" to continue.
+
+
+Compiling procedure LLENAR_OBSERVACIONES... 
+   No compilation errors.
+
+Compiling procedure VALIDA_TIPO_DATO... 
+   No compilation errors.
+
+Compiling procedure VALIDAR_INGRESO_DE_REGISTROS... 
+   No compilation errors.
+
+Compiling procedure FORMATEA_FECHA... 
+   No compilation errors.
+
+Compilation errors have occurred.

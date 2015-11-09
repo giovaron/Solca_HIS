@@ -1,0 +1,3473 @@
+CREATE OR REPLACE PACKAGE BODY "GNRL" IS
+
+/* Validar el RUC y la cedula */
+FUNCTION VALIDAR_RUC_Y_CEDULA
+ (VID VARCHAR2
+ ,VIDVALIDACION VARCHAR2 := NULL
+ ,VTIPOCMP VARCHAR2 := NULL
+ ,VMOSTRAROESCRIBIR CHAR := NULL
+ )
+ RETURN NUMBER
+ IS
+BEGIN
+-- Valida el RUC y la cedula
+-- Devuelve:
+--		0 -> Error
+--		1 -> RUC
+--		2 -> Cedula
+--		3 -> Pasaporte
+-- Los siguientes valores son devueltos si el vIDValidacion es VT (Ventas)
+--		4 -> Venta Cliente con RUC
+--		5 -> Venta Cliente con Cedula
+--		6 -> Venta Cliente con Pasaporte
+--		7 -> Venta Cliente consumidor final
+--		-1 -> Transaccion al exterior
+--		-4 -> No se ha fijado ningun valor
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Si vMostrarOEscribir = M, Muestra los mensajes de Error utilizando QMS$ERRORS.SHOW_MESSAGE
+-- Si vMostrarOEscribir = E, Escribe los errores utilizando GNRL.Escribir_Errores
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Si es Venta (vIDValidacion = VT) cualquier error se convierte automaticamente en pasaporte
+-- Valida el RUC y la cedula
+-- Devuelve:
+--		0 -> Error
+--		1 -> RUC
+--		2 -> Cedula
+--		3 -> Pasaporte
+-- Los siguientes valores son devueltos si el vIDValidacion es VT (Ventas)
+--		4 -> Venta Cliente con RUC
+--		5 -> Venta Cliente con Cedula
+--		6 -> Venta Cliente con Pasaporte
+--		7 -> Venta Cliente consumidor final
+--		-1 -> Transaccion al exterior
+--		-4 -> No devuelve ningun valor
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Si vMostrarOEscribir = M, Muestra los mensajes de Error utilizando QMS$ERRORS.SHOW_MESSAGE
+-- Si vMostrarOEscribir = E, Escribe los errores utilizando GNRL.Escribir_Errores
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Si es Venta (vIDValidacion = VT) cualquier error se convierte automaticamente en pasaporte
+DECLARE
+  nLongitudID NUMBER:=LENGTH (vId);
+  nTercerDigito NUMBER:=0;
+  vTresUltimosDigitos VARCHAR2(3):=NULL;
+  nDosPrimerosDigitos NUMBER:=0;
+  TYPE ArregloCoeficientes IS TABLE OF NUMBER INDEX BY BINARY_INTEGER;
+  nModulo NUMBER;
+  nResiduo NUMBER:=0;
+  ACoeficientes ArregloCoeficientes;
+  nResultado NUMBER:=0;
+  nTemp INTEGER:=0;
+  nVerificador NUMBER:=0;
+  nIndiceVer NUMBER;
+  nDev NUMBER;
+  vMensaje VARCHAR2(1000);
+  nTipoCmp NUMBER;
+  MALA_CONVERSION EXCEPTION;
+  PROVINCIA_NO_VALIDA EXCEPTION;
+  TERCER_DIGITO EXCEPTION;
+  RUC_EN_001 EXCEPTION;
+  ERROR_EMPRESA_PUBLICA EXCEPTION;
+  TERCER_DIGITO_NI_7_NI_8 EXCEPTION;
+  DIGITO_VERIFICADOR EXCEPTION;
+  SOLO_0000000000001 EXCEPTION;
+  ERROR_VERIFICANDO_TIPO EXCEPTION;
+  PRAGMA EXCEPTION_INIT(MALA_CONVERSION,-6502);
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('Funcion validando Ruc/Cedula/PSP '||vID||' ID Validacion '||NVL(vIDValidacion,'NULO')||' Tipo Cmp '||NVL(VTIPOCMP,'NO'));
+QMS$ERRORS.SHOW_DEBUG_INFO('VIDVALIDACION '||VIDVALIDACION);
+QMS$ERRORS.SHOW_DEBUG_INFO('vID '||vID);
+  nTipoCmp:=TO_NUMBER(vTipoCmp);
+  nDev:=-4;
+  IF vIDValidacion='TX' THEN
+-- Es transaccion al exterior
+    RETURN -1;
+  END IF;
+  IF nTipoCmp=15 AND vID!='0000000000001' THEN
+    RAISE SOLO_0000000000001;
+  END IF;
+QMS$ERRORS.SHOW_DEBUG_INFO('Longitud id '||nLongitudID);
+  IF nLongitudID NOT IN (10,13) THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Pasaporte (ni 10 ni 13 caracteres) ndev='||nDev);
+    nDev:=3; -- No es cedula ni ruc sino pasaporte
+  ELSIF nLongitudID=13 AND vID='0000000000001' THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Pasaporte ndev='||nDev);
+    nDev:=3; -- Es pasaporte
+  ELSIF nLongitudID=13 AND vID='9999999999999' AND vIDValidacion='VT' THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Consumidor Final ndev='||nDev);
+    nDev:=7; -- Consumidor Final
+  ELSE
+QMS$ERRORS.SHOW_DEBUG_INFO('Procesamiento Normal de validacion');
+-- Ahora procedemos a validar Cedula y RUC, si es venta y falla la validacion
+-- atomaticamente se convierte en pasaporte
+    nDosPrimerosDigitos:=TO_NUMBER(SUBSTR(vId,1,2));
+    IF nDosPrimerosDigitos NOT BETWEEN 1 AND 22 THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Provincia no valida');
+      RAISE PROVINCIA_NO_VALIDA;
+    END IF;
+    nTercerDigito:=TO_NUMBER(SUBSTR(vId,3,1));
+    IF nLongitudID = 13 THEN
+      vTresUltimosDigitos:=SUBSTR(vId,11,3);
+    ELSE
+      vTresUltimosDigitos:='001';
+      IF nTercerDigito>=6 THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Tercer digito erroneo');
+        RAISE TERCER_DIGITO;
+      END IF;
+    END IF;
+    IF vTresUltimosDigitos!='001' THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Ruc debe terminar en 001');
+      RAISE RUC_EN_001;
+    END IF;
+    IF nTercerDigito=9 THEN
+-- Es empresa privada
+      ACoeficientes(1):=4;
+      ACoeficientes(2):=3;
+      ACoeficientes(3):=2;
+      ACoeficientes(4):=7;
+      ACoeficientes(5):=6;
+      ACoeficientes(6):=5;
+      ACoeficientes(7):=4;
+      ACoeficientes(8):=3;
+      ACoeficientes(9):=2;
+      nModulo:=11;
+      nIndiceVer:=10;
+      nDev:=1;
+    ELSIF nTercerDigito=6 THEN
+-- Es empresa pubica
+      ACoeficientes(1):=3;
+      ACoeficientes(2):=2;
+      ACoeficientes(3):=7;
+      ACoeficientes(4):=6;
+      ACoeficientes(5):=5;
+      ACoeficientes(6):=4;
+      ACoeficientes(7):=3;
+      ACoeficientes(8):=2;
+      ACoeficientes(9):=0;
+      nModulo:=11;
+      IF SUBSTR(vID,10,1)!=0 THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Error en Empresa RUC Empresa Publica');
+        RAISE ERROR_EMPRESA_PUBLICA;
+      END IF;
+      nIndiceVer:=9;
+      nDev:=1;
+    ELSIF nTercerDigito<6 THEN
+-- Es cedula
+      ACoeficientes(1):=2;
+      ACoeficientes(2):=1;
+      ACoeficientes(3):=2;
+      ACoeficientes(4):=1;
+      ACoeficientes(5):=2;
+      ACoeficientes(6):=1;
+      ACoeficientes(7):=2;
+      ACoeficientes(8):=1;
+      ACoeficientes(9):=2;
+      nModulo:=10;
+      nIndiceVer:=10;
+      nDev:=2;
+    ELSE
+QMS$ERRORS.SHOW_DEBUG_INFO('Tercer no puede ser 7 ni 8');
+      RAISE TERCER_DIGITO_NI_7_NI_8;
+    END IF;
+    FOR i IN 1..9 LOOP
+      nTemp:=TO_NUMBER(substr(vID,i,1));
+-- Multiplicamos cada numero por el respectivo coeficiente
+      nTemp:=ACoeficientes(i)*nTemp;
+      IF nTercerDigito<6 AND nTemp>9 THEN
+-- cuando es cedula al multiplicar el coeficiente por el numero
+-- si es mayor que 9 se debe restar 9 para tener el valor a sumar
+        nTemp:=nTemp-9;
+      END IF;
+      nResultado:=nResultado+nTemp;
+    END LOOP;
+    nTemp:=TRUNC(nResultado/nModulo); -- solo cogemos la parte entera
+    nResiduo:=nResultado-(nTemp*nModulo);
+    IF nResiduo=0 THEN
+      nVerificador:=0;
+    ELSE
+      nVerificador:=nModulo-nResiduo;
+    END IF;
+    nTemp:=TO_NUMBER(SUBSTR(vId,nIndiceVer,1));
+    IF nVerificador!=nTemp THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('Digito verificador deberia ser '||nVerificador||' y es '||nTemp);
+      RAISE DIGITO_VERIFICADOR;
+    END IF;
+  END IF;
+  IF vIDValidacion='RF' AND nDev<4 THEN
+    IF nDev=2 AND nLongitudID=13 THEN
+-- si la longitud es de 13 caracteres debemos devolver como RUC (1)
+      nDev:=1;
+    END IF;
+  ELSIF vIDValidacion='VT' AND nDev<4 THEN
+    nDev:=nDev+3; -- Devolvemos los valores para ventas
+    IF nDev=5 AND nLongitudID=13 THEN
+-- si la longitud es de 13 caracteres debemos devolver como RUC (4)
+      nDev:=4;
+    END IF;
+  ELSIF vIDValidacion IN ('TL','DC') THEN
+-- Si es Transacion Local (TL) o Notas de Credito/Debito (DC)
+-- validamos que nDev devuelva lo correcto
+    vMensaje:='';
+    IF nDev=2 AND nLongitudID=13 AND vTresUltimosDigitos='001' THEN
+-- Asi sea Cedula si termina en 001 es considerado RUC
+      nDev:=1;
+    END IF;
+    IF nTipoCmp IN (1,2,6,8,9,10,11,12,13,14,19,20) THEN
+      IF nDev!=1 THEN
+        vMensaje:='Si el tipo comprobante es '||vTipoCmp||' la identificacion solo puede terminar en 001 y ser un RUC valido.';
+        RAISE ERROR_VERIFICANDO_TIPO;
+      END IF;
+    END IF;
+    IF nTipoCmp=3 THEN
+--      return 1;
+      IF nDev NOT IN (2,3) THEN
+        vMensaje:='Si el tipo comprobante es '||vTipoCmp||' la identificacion solo puede ser CEDULA o PASAPORTE';
+        RAISE ERROR_VERIFICANDO_TIPO;
+      END IF;
+    END IF;
+  END IF;
+--RAISE_APPLICATION_ERROR(-20100,nDev);
+QMS$ERRORS.SHOW_DEBUG_INFO('Valor devuelto por funcion Validar Ruc '||nDev);
+  RETURN nDev;
+EXCEPTION
+  WHEN ERROR_VERIFICANDO_TIPO THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01008',vMensaje); -- Error verificando tipo de comprobante
+      RETURN 0; -- Hubo Error;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01008',vMensaje); -- Error verificando tipo de comprobante
+    END IF;
+  WHEN SOLO_0000000000001 THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01007'); -- Solo es valido 0000000000001
+      RETURN 0; -- Hubo Error;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01007'); -- Solo es valido 0000000000001
+    END IF;
+  WHEN PROVINCIA_NO_VALIDA THEN
+    IF vIDValidacion='VT' THEN
+      RETURN 6; -- Si es venta y hay un error en Cedula/Ruc lo convertimos a Pasaporte
+    END IF;
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01004'); -- No es codigo provincia valido
+      RETURN 0; -- HUBO ERROR
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01004'); -- No es codigo provincia valido
+    END IF;
+  WHEN TERCER_DIGITO THEN
+    IF vIDValidacion='VT' THEN
+      RETURN 6; -- Si es venta y hay un error en Cedula/Ruc lo convertimos a Pasaporte
+    END IF;
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01003'); -- tercer digito menor que 6 si cedula
+      RETURN 0; -- HUBO ERROR
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01003'); -- tercer digito menor que 6 si cedula
+    END IF;
+  WHEN RUC_EN_001 THEN
+    IF vIDValidacion='VT' THEN
+      RETURN 6; -- Si es venta y hay un error en Cedula/Ruc lo convertimos a Pasaporte
+    END IF;
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01000'); -- el ruc debe terminar en 001
+      RETURN 0; -- Hubo Error;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01000'); -- el ruc debe terminar en 001
+    END IF;
+  WHEN ERROR_EMPRESA_PUBLICA THEN
+    IF vIDValidacion='VT' THEN
+      RETURN 6; -- Si es venta y hay un error en Cedula/Ruc lo convertimos a Pasaporte
+    END IF;
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01002',SUBSTR(vID,10,1)); -- Error empresa publica 10mo digito
+      RETURN 0; -- Hubo Error;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01002',SUBSTR(vID,10,1)); -- Error empresa publica 10mo digito
+    END IF;
+  WHEN TERCER_DIGITO_NI_7_NI_8 THEN
+    IF vIDValidacion='VT' THEN
+      RETURN 6; -- Si es venta y hay un error en Cedula/Ruc lo convertimos a Pasaporte
+    END IF;
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01006'); -- El tercer digito no puede ser 7 y 8
+      RETURN 0; -- Hubo Error;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01006'); -- El tercer digito no puede ser 7 y 8
+    END IF;
+  WHEN DIGITO_VERIFICADOR THEN
+    IF vIDValidacion='VT' THEN
+      RETURN 6; -- Si es venta y hay un error en Cedula/Ruc lo convertimos a Pasaporte
+    END IF;
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01001',nTemp,nVerificador); -- Error en el digito verificador
+      RETURN 0; -- Hubo Error;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01001',nTemp,nVerificador); -- Error en el digito verificador
+    END IF;
+  WHEN MALA_CONVERSION THEN
+    IF vIDValidacion='VT' THEN
+ QMS$ERRORS.SHOW_DEBUG_INFO('Mala conversion en ventas se hace pasaporte');
+     RETURN 6; -- Si es venta y hay un error en Cedula/Ruc lo convertimos a Pasaporte
+    END IF;
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('ADM-01005'); -- Error de conversion
+      RETURN 0; -- Hubo Error;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01005'); -- Error de conversion
+    END IF;
+  WHEN OTHERS THEN
+      QMS$ERRORS.UNHANDLED_EXCEPTION('GNRLVLDRUCCED - Validar_Ruc_y_Cedula');
+END;
+END VALIDAR_RUC_Y_CEDULA;
+
+/* Devuelve si esta contabilizada la factura, cuota, etc en esa fecha */
+FUNCTION VER_SI_CONTABILIZADO
+ (DFECHA DATE,
+  vSistema VARCHAR2:=NULL
+ )
+ RETURN CHAR
+ IS
+BEGIN
+-- Devuelve si esta contabilizada la fecha que se esta fijando
+DECLARE
+--QMS$ERRORS.Show_debug_info('VER_SI_CONTABILIZADO '||DFECHA);
+  CURSOR cFechaCnt IS
+    SELECT COUNT(*)
+    FROM CONTABILIZACION_INGRESOS
+    WHERE dFecha BETWEEN FECHA_DESDE AND FECHA_HASTA AND TIPO_CONTABILIZACION='__';
+  CURSOR cFechaCntCM IS
+    SELECT COUNT(*)
+    FROM CONTABILIZACION_INGRESOS_CM
+    WHERE dFecha BETWEEN FECHA_DESDE AND FECHA_HASTA AND TIPO_CONTABILIZACION='H_';
+  nTemp NUMBER;
+  vTemp CHAR:='F';
+BEGIN
+    QMS$ERRORS.SHOW_DEBUG_INFO('VER_SI_CONTABILIZADO '||DFECHA||' SISTEMA '||NVL(vSistema,'FCT'));
+  IF NVL(vSistema,'FCT')='FCT' THEN
+    OPEN cFechaCnt;
+    FETCH cFechaCnt INTO nTemp;
+    CLOSE cFechaCnt;
+    IF nTemp>0 THEN
+      vTemp:='V';
+    ELSE
+      vTemp:='F';
+    END IF;
+  ELSE
+    OPEN cFechaCntCM;
+    FETCH cFechaCntCM INTO nTemp;
+    CLOSE cFechaCntCM;
+    IF nTemp>0 THEN
+      vTemp:='V';
+    ELSE
+      vTemp:='F';
+    END IF;
+  END IF;    
+IF ((Sysdate-DFECHA)>=2 AND NVL(vSistema,'FCT')='FCT') AND NOT GNRL.ROL_HABILITADO('SIS_ADMIN') THEN
+    vTemp:='V'; -- no permitimos anular nada con mas de 2 dias
+  END IF;
+  RETURN vTemp;
+END;
+END VER_SI_CONTABILIZADO;
+
+-- Sub-Program Units
+PROCEDURE RENOVAR_FECHA_TERMINO_PCN
+ (NHC NUMBER
+ ,VCLSF VARCHAR2
+ )
+ IS
+BEGIN
+DECLARE
+  CURSOR cPcn(vAsg VARCHAR2) IS
+    SELECT FECHA_TERMINO
+    FROM PACIENTES
+    WHERE NUMERO_HC=nHc AND ASEGURADO=vAsg
+    FOR UPDATE NOWAIT;
+  dFechaTermino DATE;
+  nNuevoAnyo NUMBER;
+  dFechaAct DATE:=SYSDATE;
+  vAsg CHAR:='V';
+  REG_OCUPADO EXCEPTION ;
+  PRAGMA EXCEPTION_INIT(REG_OCUPADO,-54);
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('Empezando el procedimiento RENOVAR_FECHA_TERMINO_PCN');
+QMS$ERRORS.SHOW_DEBUG_INFO('HC '||TO_CHAR(nHC)||' Clasificacion '||vClsf);
+  IF vClsf='TRD' THEN
+-- solo cuando sea tarjeta descuento y se renova la fecha, tiene que no estar asegurado
+    vAsg:='F';
+  END IF;
+QMS$ERRORS.SHOW_DEBUG_INFO('Asegurado = '||vAsg);
+QMS$ERRORS.SHOW_DEBUG_INFO('Abriendo el cursor');
+    OPEN cPcn(vAsg);
+    FETCH cPcn INTO dFechaTermino;
+    CLOSE cPcn;
+QMS$ERRORS.SHOW_DEBUG_INFO('Fecha Termino original '||TO_CHAR(dFechaTermino,'DD/MM/YYYY'));
+    IF dFechaTermino IS NOT NULL AND TRUNC(dFechaAct,'DD')>dFechaTermino THEN
+-- Si la fecha actual es mayor que la fecha termino se fija la actual como la anterior
+      dFechaTermino:=TRUNC(dFechaAct,'DD');
+QMS$ERRORS.SHOW_DEBUG_INFO('Fijamos la Fecha Actual para actualizar '||TO_CHAR(dFechaTermino,'DD/MM/YYYY'));
+    END IF;
+    nNuevoAnyo:=TO_NUMBER(TO_CHAR(dFechaTermino,'YYYY'))+1;
+QMS$ERRORS.SHOW_DEBUG_INFO(nNuevoAnyo);
+QMS$ERRORS.SHOW_DEBUG_INFO('Nueva fecha '||(''''||TO_CHAR(dFechaTermino,'DD/MM')||'/'||LTRIM(RTRIM(TO_CHAR(nNuevoAnyo)))||''''/*,'DD/MM/YYYY'*/));
+    dFechaTermino:=TO_DATE(TO_CHAR(dFechaTermino,'DD/MM')||'/'||LTRIM(RTRIM(TO_CHAR(nNuevoAnyo))),'DD/MM/YYYY');
+    UPDATE PACIENTES
+    SET FECHA_TERMINO=dFechaTermino
+    WHERE NUMERO_HC=nHc AND FECHA_TERMINO IS NOT NULL;
+    IF SQL%ROWCOUNT!=1 THEN
+      QMS$ERRORS.SHOW_MESSAGE('ADM-00011','El cliente no tiene fecha termino fijada para poder renovar la tarjeta');
+    END IF;
+EXCEPTION
+  WHEN REG_OCUPADO THEN
+    QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Registro bloqueado no se puede renovar la tarjeta de descuento');
+  WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION('GNRLRNVFCHTRMPCN - Renovar_Fecha_Termino_Pcn');
+END;
+END RENOVAR_FECHA_TERMINO_PCN;
+
+/* Calcular el valor por ventas a domicilio */
+FUNCTION CALCULAR_VALOR_DOMICILIO
+ (VA_DOMICILIO VARCHAR2
+ ,VAPLICARVENTASDOMICILIO VARCHAR2
+ ,NTOTAL NUMBER
+ )
+ RETURN NUMBER
+ IS
+-- Program Data
+NDEV NUMBER := 0;
+
+-- PL/SQL Block
+BEGIN
+BEGIN
+  IF vA_Domicilio='F' OR vAplicarVentasDomicilio='F' THEN
+    RETURN 0;
+  END IF;
+  IF ROUND(nTotal,2) BETWEEN 0 AND 5 THEN
+    nDev:=1;
+  ELSIF ROUND(nTotal,2) BETWEEN 5.01 AND 10 THEN
+    nDev:=0.5;
+  ELSE
+    nDev:=0.01;
+  END IF;
+  RETURN nDev;
+END;
+END CALCULAR_VALOR_DOMICILIO;
+
+/* Pasar de dos decimales a fracciones de centésima 24/100 */
+FUNCTION CENTAVOS_A_FRACCIONES
+ (NNUMERO IN NUMBER
+ ,VETIQUETAPLURAL IN VARCHAR2
+ ,VETIQUETASINGULAR IN VARCHAR2
+ )
+ RETURN CHARACTER
+ IS
+ BEGIN
+/*CENTAVOS_A_FRACCIONES*/
+/*  Función que realiza la parte*/
+/*  de pasar dos dígitos decimales a letras*/
+/*PARAMETROS*/
+/* nNumero el numero de DOS dígitos que hay que pasar.*/
+/* vEtiquetaPlural   la etiqueta, centavos por defecto.*/
+/* vEtiquetaSingular   la etiqueta, centavos por defecto.*/
+
+DECLARE
+vDevolver VARCHAR2(200);
+vNumero VARCHAR2(4);
+vEtiqueta  VARCHAR2(100);
+BEGIN
+ vNumero:=RTRIM(LTRIM(TO_CHAR(TRUNC(nNumero),'09'),' '),' ');
+ IF vNumero='1' THEN
+   vEtiqueta := vEtiquetaSingular;
+ ELSE
+   vEtiqueta := vEtiquetaPlural;
+ END IF;
+ IF vEtiqueta IS NOT NULL THEN
+   vDevolver := vNumero||'/100 '||vEtiqueta;
+ ELSE
+   vDevolver := vNumero||'/100';
+ END IF;
+ RETURN VdEVOLVER;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en Centavos_A_Fracción.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END CENTAVOS_A_FRACCIONES;
+
+/* Realizar la función básica de 3 cifras a letras. */
+FUNCTION  NUMERO_3_CIFRAS_A_LETRAS
+  (NNUMERO  IN  NUMBER
+  ,VETIQUETA  IN  VARCHAR2
+  )
+  RETURN  VARCHAR2
+  IS
+ BEGIN
+/*Función que realiza la parte
+  mas básica de pasar de numeros a letras
+  se recibe un número de tres dígitos, y
+  se pasa este a letras.
+PARAMETROS
+ nNumero el numero de tres dígitos que hay que pasar.
+ vEtiqueta la etiqueta que hay que pasar
+            con el numero, millones, miles, cientos.*/
+
+
+DECLARE
+vDevolver VARCHAR2(200);
+vNumero VARCHAR2(4);
+nLargo NUMBER;
+vDigito VARCHAR2(1);
+vDigitoAux VARCHAR2(1);
+vRequiere_Y VARCHAR2(2);
+vDigCentenas VARCHAR2(1);
+vDigDecenas VARCHAR2(1);
+i NUMBER;
+BEGIN
+ vNumero:=LTRIM(TO_CHAR(nNumero,'999'),' ');
+ nLargo := LENGTH(vNumero);
+ i:=0;
+ vRequiere_Y:='F';
+ vDigCentenas := NULL;
+ vDigDecenas := NULL;
+ WHILE nlargo>0
+ LOOP
+   i:= i+1;
+   vDigito := SUBSTR(vNumero,i,1);
+   IF nLargo = 3 THEN
+       vRequiere_Y:='F';
+       vDigCentenas := Vdigito;
+     /*en la columna de las centenas*/
+       IF vDigito = '1' THEN
+         IF vNumero<>'100' THEN
+          vDevolver := 'CIENTO ';
+         ELSE
+          vDevolver := 'CIEN';
+         END IF;
+       ELSIF vDigito = '2' THEN vDevolver := 'DOSCIENTOS ';
+       ELSIF vDigito = '3' THEN vDevolver := 'TRESCIENTOS ';
+       ELSIF vDigito = '4' THEN vDevolver := 'CUATROCIENTOS ';
+       ELSIF vDigito = '5' THEN vDevolver := 'QUINIENTOS ';
+       ELSIF vDigito = '6' THEN vDevolver := 'SEISCIENTOS ';
+       ELSIF vDigito = '7' THEN vDevolver := 'SETECIENTOS ';
+       ELSIF vDigito = '8' THEN vDevolver := 'OCHOCIENTOS ';
+       ELSIF vDigito = '9' THEN vDevolver := 'NOVECIENTOS ';
+       END IF;
+   ELSIF nLargo=2 THEN
+     --en la columna de las decenas
+       IF (Vdigito NOT IN ('1','0'))THEN
+          vRequiere_Y:='V';
+       ELSE
+           vRequiere_Y:='F';
+       END IF;
+       IF vDigito = '1' THEN
+          i:=i+1;
+          vDigitoAux := SUBSTR(vNumero,i,1);
+          nLargo:=nLargo-1;
+           IF vDigitoAux = '0' THEN vDevolver := vDevolver||'DIEZ';
+           ELSIF vDigitoAux = '1' THEN vDevolver := vDevolver||'ONCE';
+           ELSIF vDigitoAux = '2' THEN vDevolver := vDevolver||'DOCE';
+           ELSIF vDigitoAux = '3' THEN vDevolver := vDevolver||'TRECE';
+           ELSIF vDigitoAux = '4' THEN vDevolver := vDevolver||'CATORCE';
+           ELSIF vDigitoAux = '5' THEN vDevolver := vDevolver||'QUINCE';
+           ELSIF vDigitoAux = '6' THEN vDevolver := vDevolver||'DIECISEIS';
+           ELSIF vDigitoAux = '7' THEN vDevolver := vDevolver||'DIECISIETE';
+           ELSIF vDigitoAux = '8' THEN vDevolver := vDevolver||'DIECIOCHO';
+           ELSIF vDigitoAux = '9' THEN vDevolver := vDevolver||'DIECINUEVE';
+           END IF;
+       ELSIF vDigito = '2' THEN vDevolver := vDevolver||'VEINTE';
+       ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TREINTA';
+       ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUARENTA';
+       ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCUENTA';
+       ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SESENTA';
+       ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SETENTA';
+       ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHENTA';
+       ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NOVENTA';
+       END IF;
+   ELSIF nLargo=1 THEN
+       IF (vREQUIERE_Y ='V') AND (vDigito<>0) THEN
+        vDevolver := vDevolver||' Y ';
+       END IF;
+       IF vDigito='1' THEN vDevolver :=vDevolver|| 'UN';
+       ELSIF vDigito = '2' THEN vDevolver :=vDevolver|| 'DOS';
+       ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TRES';
+       ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUATRO';
+       ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCO';
+       ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SEIS';
+       ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SIETE';
+       ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHO';
+       ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NUEVE';
+       END IF;
+   END IF;
+   NLARGO:= NLARGO - 1;
+ END LOOP;
+ IF nNumero=0 OR vEtiqueta IS NULL THEN
+   RETURN vDevolver;
+ ELSE
+   RETURN vDevolver||' '||vEtiqueta;
+ END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en NMR3CFR_LTR.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END NUMERO_3_CIFRAS_A_LETRAS;
+
+/* Pasar de centavos a letras. */
+FUNCTION  CENTAVOS_A_LETRAS
+  (NNUMERO  IN  NUMBER
+  ,VETIQUETAPLURAL  IN  VARCHAR  :=  'CENTAVOS'
+  ,VETIQUETASINGULAR  IN  VARCHAR2  :=  'CENTAVO'
+  )
+  RETURN  VARCHAR2
+  IS
+ BEGIN
+/*CENTAVOS_A_LETRAS*/
+/*  Función que realiza la parte*/
+/*  de pasar dos dígitos decimales a letras*/
+/*PARAMETROS*/
+/* nNumero el numero de DOS dígitos que hay que pasar.*/
+/* vEtiquetaPlural   la etiqueta, centavos por defecto.*/
+/* vEtiquetaSingular   la etiqueta, centavos por defecto.*/
+
+DECLARE
+vDevolver VARCHAR2(200);
+vNumero VARCHAR2(4);
+nLargo NUMBER;
+vDigito VARCHAR2(1);
+vDigitoAux VARCHAR2(1);
+vRequiere_Y VARCHAR2(2);
+vDigDecenas VARCHAR2(1);
+vEtiqueta  VARCHAR2(100);
+i NUMBER;
+BEGIN
+ vNumero:=LTRIM(TO_CHAR(TRUNC(nNumero),'99'),' ');
+ IF vNumero='1' THEN
+   vEtiqueta := vEtiquetaSingular;
+ ELSE
+   vEtiqueta := vEtiquetaPlural;
+ END IF;
+IF vNumero<>0 THEN
+  nLargo := LENGTH(vNumero);
+  i:=0;
+  vRequiere_Y:='F';
+  vDigDecenas := NULL;
+  WHILE nlargo>0
+  LOOP
+    i:= i+1;
+    vDigito := SUBSTR(vNumero,i,1);
+    IF nLargo=2 THEN
+      /*en la columna de las decenas*/
+        IF (Vdigito<>'1') THEN
+           vRequiere_Y:='V';
+        ELSE
+           vRequiere_Y:='F';
+        END IF;
+        IF vDigito = '1' THEN
+           i:=i+1;
+           vDigitoAux := SUBSTR(vNumero,i,1);
+           nLargo:=nLargo-1;
+            IF vDigitoAux = '0' THEN vDevolver := vDevolver||'DIEZ';
+            ELSIF vDigitoAux = '1' THEN vDevolver := vDevolver||'ONCE';
+            ELSIF vDigitoAux = '2' THEN vDevolver := vDevolver||'DOCE';
+            ELSIF vDigitoAux = '3' THEN vDevolver := vDevolver||'TRECE';
+            ELSIF vDigitoAux = '4' THEN vDevolver := vDevolver||'CATORCE';
+            ELSIF vDigitoAux = '5' THEN vDevolver := vDevolver||'QUINCE';
+            ELSIF vDigitoAux = '6' THEN vDevolver := vDevolver||'DIECISEIS';
+            ELSIF vDigitoAux = '7' THEN vDevolver := vDevolver||'DIECISIETE';
+            ELSIF vDigitoAux = '8' THEN vDevolver := vDevolver||'DIECIOCHO';
+            ELSIF vDigitoAux = '9' THEN vDevolver := vDevolver||'DIECINUEVE';
+            END IF;
+        ELSIF vDigito = '2' THEN vDevolver := vDevolver||'VEINTE';
+        ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TREINTA';
+        ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUARENTA';
+        ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCUENTA';
+        ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SESENTA';
+        ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SETENTA';
+        ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHENTA';
+        ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NOVENTA';
+        END IF;
+    ELSIF nLargo=1 THEN
+        IF (vREQUIERE_Y ='V') AND (vDigito<>0) THEN
+         vDevolver := vDevolver||' Y ';
+        END IF;
+        IF vDigito='1' THEN vDevolver :=vDevolver|| 'UN ';
+        ELSIF vDigito = '2' THEN vDevolver :=vDevolver|| 'DOS';
+        ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TRES';
+        ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUATRO';
+        ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCO';
+        ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SEIS';
+        ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SIETE';
+        ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHO';
+        ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NUEVE';
+        END IF;
+    END IF;
+    NLARGO:= NLARGO - 1;
+ END LOOP;
+ELSE
+ vDevolver := 'CERO';
+END IF;
+ IF vEtiqueta IS NOT NULL THEN
+   RETURN VdEVOLVER||' '||vEtiqueta;
+ ELSE
+   RETURN VdEVOLVER;
+ END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en CNT_LTR.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END CENTAVOS_A_LETRAS;
+
+/* Recibe un número, y devuelve en formato de letras. */
+FUNCTION  NUMERO_A_LETRAS
+  (NNUMERO  IN  NUMBER
+  ,VMONEDAPLURAL  IN  VARCHAR2
+  ,VMONEDASINGULAR  IN  VARCHAR2
+  ,VDECIMALESPLURAL  IN  VARCHAR2
+  ,VDECIMALESSINGULAR  IN  VARCHAR2
+  ,VCENTAVOS_EN_FRACCION  IN  VARCHAR2
+  )
+  RETURN  VARCHAR2
+  IS
+ BEGIN
+/*Numeros a LETRAS
+ PARAMETROS
+ nNumero Número que sera transformado
+ vMonedaPlural moneda en la que esta el valor en plural dolares, sucres.
+ vMonedaSingular moneda en la que se trabaja en unidad o singular dólar, sucre.
+ vCentavos_En_Fraccion (V/F), Indica si los centavos del número se presentarán
+                       en fracción, o en letras.
+                        25/100
+                       veinte y cinco centavos.
+ */
+DECLARE
+ vNumero VARCHAR2(100);
+ vDevolver VARCHAR2(250);
+ vDecimales VARCHAR2(100);
+ nPosicionPunto NUMBER;
+ vParteEntera VARCHAR2(100);
+ vParteDecimal VARCHAR2(100);
+ nContador NUMBER;
+ nAux NUMBER;
+ vParte NUMBER;
+ vEtiqueta VARCHAR2(100);
+ vEtiqueta_Moneda VARCHAR2(100);
+ i NUMBER;
+BEGIN
+ vNumero:=TO_CHAR(TRUNC(nNumero,2),'999999990D00');
+ nPosicionPunto := INSTR(vNumero,'.');
+ vParteEntera:=LTRIM(RTRIM(SUBSTR(vNumero,1,nPosicionPunto - 1)));
+ IF vParteEntera <> '0' THEN
+  IF nNumero < 10 AND vParteEntera='1' THEN
+    vEtiqueta_Moneda := vMonedaSingular;
+  ELSE
+    vEtiqueta_Moneda := vMonedaPlural;
+  END IF;
+  nContador := TRUNC(LENGTH(vParteEntera)/3);
+  nAux := LENGTH(vParteEntera) - (nContador * 3);
+  IF nAux>0 THEN
+     vParte := SUBSTR(vParteEntera,1,nAux);
+     IF nContador = 2 THEN
+        vEtiqueta := 'MILLONES';
+     ELSIF nContador = 1 THEN
+        vEtiqueta := 'MIL';
+     ELSIF nContador = 0 THEN
+        vEtiqueta := '';
+     END IF;
+     IF nNumero < 10 AND vParteEntera='1' THEN
+       vDevolver:='UNO';
+     ELSE
+       vDevolver := GNRL.NUMERO_3_CIFRAS_A_LETRAS(TO_NUMBER(vParte,'990'),vEtiqueta);
+     END IF;
+  END IF;
+  ncontador := ncontador -1;
+  i:=0;
+  WHILE nContador>=0
+    LOOP
+    IF nContador = 2 THEN
+        vEtiqueta := 'MILLONES';
+     ELSIF nContador = 1 THEN
+        vEtiqueta := 'MIL';
+     ELSIF nContador = 0 THEN
+        vEtiqueta := '';
+     END IF;
+     vparte:=SUBSTR(vParteEntera,nAux+(3*i)+1,3);
+     vDevolver := vDevolver ||' ' ||GNRL.NUMERO_3_CIFRAS_A_LETRAS(TO_NUMBER(vParte,'990'),vEtiqueta);
+     i:=i+1;
+     nContador:=ncontador-1;
+    END LOOP;
+ ELSE
+   vDevolver := 'CERO '||vMonedaPlural;
+ END IF;
+ vParteDecimal := SUBSTR(vNumero,nPosicionPunto+1,2);
+ IF vCentavos_En_Fraccion = 'F' THEN
+   vDecimales := GNRL.CENTAVOS_A_LETRAS(TO_NUMBER(vParteDecimal),vDecimalesPlural,vDecimalesSingular);
+ ELSE
+   vDecimales := GNRL.CENTAVOS_A_FRACCIONES(TO_NUMBER(vParteDecimal),vDecimalesPlural,vDecimalesSingular);
+ END IF;
+ RETURN vDevolver||vEtiqueta_Moneda||' CON '|| vDecimales;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en NMR_LTR.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END NUMERO_A_LETRAS;
+
+/* Devuelve el total que debe el paciente */
+FUNCTION  TOTAL_DEUDA_PACIENTE
+  (NHC  CUENTAS.PCN_NUMERO_HC%TYPE
+  )
+  RETURN  NUMBER
+  IS
+-- Program Data
+NSUM NUMBER;
+
+-- PL/SQL Block
+ BEGIN
+-- Devuelve la deuda total pendiente de pago del paciente
+BEGIN
+  SELECT SUM(CANTIDAD*VALOR*PORCENTAJE_PROMOCION)--SUM(DESCUENTO_OTORGADO)
+  INTO nSum
+  FROM CUENTAS
+  WHERE PCN_NUMERO_HC=nHC
+  AND ESTADO='PND';
+  RETURN NVL(nSum,0);
+END;
+END TOTAL_DEUDA_PACIENTE;
+
+
+/* Devuelve la ultima promocion a la que pertenece el paciente */
+FUNCTION  DEVOLVER_ULTIMA_PROMOCION
+  (NHC  IN  PACIENTES.NUMERO_HC%TYPE
+  ,DFECHA  IN  DATE  :=  NULL
+  )
+  RETURN  VARCHAR2
+  IS
+-- Program Data
+DFECHATMP DATE;
+VDESC PROMOCIONES.DESCRIPCION%TYPE;
+
+-- PL/SQL Block
+ BEGIN
+-- Devolvemos la ultima promocion del paciente
+IF dFecha IS NULL THEN
+  dFechaTmp:=TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY')||'23:59:59','DD/MM/YYYY HH24:MI:SS');
+ELSE
+  dFechaTmp:=TO_DATE(TO_CHAR(dFecha,'DD/MM/YYYY')||'23:59:59','DD/MM/YYYY HH24:MI:SS');
+END IF;
+SELECT PRM.DESCRIPCION
+  INTO vDesc
+  FROM PROMOCIONES_PACIENTES PRMPCN,PROMOCIONES PRM
+  WHERE PCN_NUMERO_HC=nHC
+  AND PRMPCN.FECHA=(
+    SELECT MAX(FECHA)
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=nHC
+    and fecha<=dFechaTmp)
+  AND PRM.CODIGO=PRMPCN.PRM_CODIGO;
+RETURN vDesc;
+END DEVOLVER_ULTIMA_PROMOCION;
+
+/* Devuelve la ultima promocion a la que pertenece el paciente */
+FUNCTION  DEVOLVER_COD_ULTIMA_PROMOCION
+  (NHC  IN  PACIENTES.NUMERO_HC%TYPE
+  ,DFECHA  IN  DATE  :=  NULL
+  )
+  RETURN  VARCHAR2
+  IS
+-- Program Data
+DFECHATMP DATE;
+VDESC PROMOCIONES.DESCRIPCION%TYPE;
+
+-- PL/SQL Block
+ BEGIN
+-- Devolvemos la ultima promocion del paciente
+IF dFecha IS NULL THEN
+  dFechaTmp:=TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY')||'23:59:59','DD/MM/YYYY HH24:MI:SS');
+ELSE
+  dFechaTmp:=TO_DATE(TO_CHAR(dFecha,'DD/MM/YYYY')||'23:59:59','DD/MM/YYYY HH24:MI:SS');
+END IF;
+SELECT PRM.CODIGO
+  INTO vDesc
+  FROM PROMOCIONES_PACIENTES PRMPCN,PROMOCIONES PRM
+  WHERE PCN_NUMERO_HC=nHC
+  AND PRMPCN.FECHA=(
+    SELECT MAX(FECHA)
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=nHC
+    and fecha<=dFechaTmp)
+  AND PRM.CODIGO=PRMPCN.PRM_CODIGO;
+RETURN vDesc;
+END DEVOLVER_COD_ULTIMA_PROMOCION;
+
+/* Devolver datos de la internación de un paciente */
+PROCEDURE  DEVOLVER_DATOS_INTERNACION
+  (NINTERNACION  IN  PERMANENCIAS_Y_ATENCIONES.NUMERO%TYPE
+  ,VPACIENTE  OUT  VARCHAR2
+  ,DFECHAING  OUT  DATE
+  ,DFECHAALT  OUT  DATE
+  )
+  IS
+ BEGIN
+  SELECT DECODE(NVL(PRMATN.PCNTMP_PCNTMP_ID,0),0,
+         PCN.APELLIDO_PATERNO||' '||PCN.APELLIDO_MATERNO||' '||
+         PCN.PRIMER_NOMBRE||' '||PCN.SEGUNDO_NOMBRE,
+         PCNTMP.APELLIDO||' '||PCNTMP.APELLIDOM||' '||
+         PCNTMP.NOMBRE||' '||PCNTMP.SNOMBRE),PRMATN.FECHA_INGRESO,PRMATN.FECHA_ALTA
+  INTO vPaciente,dFechaIng,dFechaAlt
+  FROM PERMANENCIAS_Y_ATENCIONES PRMATN,PACIENTES PCN,PACIENTES_TEMPORALES PCNTMP
+  WHERE PRMATN.NUMERO=nInternacion
+  AND PRMATN.PCN_NUMERO_HC=PCN.NUMERO_HC
+  AND PRMATN.PCNTMP_PCNTMP_ID=PCNTMP.PCNTMP_ID(+);
+END;
+
+/* Ver si el rol esta habilitado o no */
+FUNCTION  ROL_HABILITADO
+  (VROL  VARCHAR2  :=  NULL
+  ,DFECHA  DATE  :=  NULL
+  ,NDIAS  NUMBER  :=  NULL
+  )
+  RETURN  BOOLEAN
+  IS
+-- Program Data
+NDIAST NUMBER := NVL(nDias,15);
+DPARAMFECHA DATE := NULL;
+DFECHAACT DATE := sysdate;
+DFECHAHASTA DATE := NULL;
+
+-- PL/SQL Block
+ BEGIN
+-- CREADO: 16 - MARZO - 2000
+-- Devuelve TRUE si la fecha o el rol del usuario actual es modificable. Por lo
+-- general debera ser llamado en el PRE-RECORD o WHEN-NEW-RECORD-INSTANCE del
+-- archivo maestro que se desea ver si puede ser modificado.
+-- del rango de fecha para cambio, o es el rol dueño del sistema médico
+-- Si dFECHA viene en nulo, solo verifica el vROL.
+-- Si se no se fija vROL al llamar la funcion, verá que sea del ROL general
+-- El valor por defecto para modificar será 10 días
+-- Parámetros:  vRol-> El rol para el que será modificable
+--              dFecha-> La fecha con la que se desea compara la fecha actual y el rango máximo
+--              nDias-> Número máximo de dias para modificar
+--                    Hasta 15 diás maximo despues devolvera que es modificable el registro por defecto
+  IF DBMS_SESSION.IS_ROLE_ENABLED('SIS_ADMIN') OR DBMS_SESSION.IS_ROLE_ENABLED('ESTADISTA') THEN
+-- Si el rol es el dueño del sistema medico, siempre sera modificable
+    RETURN TRUE;
+  END IF;
+  IF dFecha IS NOT NULL THEN
+     dParamFecha:=TO_DATE(TO_CHAR(dFecha,'DD/MM/YYYY'),'DD/MM/YYYY');
+     dFechaHasta:=TO_DATE(TO_CHAR(dParamFecha,'DD/MM/YYYY')||' 23:59','DD/MM/YYYY HH24:MI') + nDiasT;
+  END IF;
+-- raise_application_error(-20100,TO_CHAR(dFechaAct)||' dparm '||TO_CHAR(dParamFecha)||' dfechhasta '||TO_CHAR(dFechaHasta));
+  IF dParamFecha IS NOT NULL AND (dFechaAct BETWEEN dParamFecha  AND dFechaHasta) AND
+    DBMS_SESSION.IS_ROLE_ENABLED(vRol) THEN
+-- Verificamos la fecha y el rol del usuario
+    RETURN TRUE;
+  ELSIF dFecha IS NULL AND DBMS_SESSION.IS_ROLE_ENABLED(vRol) THEN
+    RETURN TRUE;
+  END IF;
+  RETURN FALSE;
+END ROL_HABILITADO;
+
+/* DEVUELVE LA CLASIFICACION DEL PACIENTE */
+FUNCTION  CLASIFICACION_PACIENTE
+  (NHC  PACIENTES.CLASIFICACION%TYPE
+  )
+  RETURN  VARCHAR2
+  IS
+-- Program Data
+VCLSFPCN PACIENTES.CLASIFICACION%TYPE;
+
+-- PL/SQL Block
+ BEGIN
+BEGIN
+  SELECT CLASIFICACION
+  INTO vClsfPcn
+  FROM PACIENTES
+  WHERE NUMERO_HC=nHC;
+  RETURN vClsfPcn;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Paciente no existente');
+END;
+END CLASIFICACION_PACIENTE;
+
+/* Actualizar las secuencias de los code controls. */
+PROCEDURE  ACTUALIZA_SECUENCIA
+  (P_CC_DOMAIN  VARCHAR2
+  ,P_CC_TARGET  IN  OUT  NUMBER
+  )
+  IS
+  Tablas_Bloqueadas EXCEPTION;
+  PRAGMA EXCEPTION_INIT(Tablas_Bloqueadas,-54);
+ BEGIN
+  DECLARE
+    CURSOR C IS
+      SELECT  CC_NEXT_VALUE
+      FROM    CG_CODE_CONTROLS
+      WHERE   CC_DOMAIN = P_CC_DOMAIN
+      FOR UPDATE OF  CC_NEXT_VALUE NOWAIT;
+  BEGIN
+    OPEN C;
+    FETCH C
+    INTO    P_CC_TARGET;
+    IF C%NOTFOUND THEN
+      CLOSE C;
+      RAISE NO_DATA_FOUND;
+    END IF;
+    CLOSE C;
+  END;
+  UPDATE  CG_CODE_CONTROLS
+  SET     CC_NEXT_VALUE = CC_NEXT_VALUE + CC_INCREMENT
+  WHERE   CC_DOMAIN = P_CC_DOMAIN;
+EXCEPTION  
+WHEN Tablas_Bloqueadas THEN
+  RAISE Tablas_Bloqueadas;
+WHEN OTHERS THEN
+  QMS$ErrorS.Unhandled_Exception ('procedimiento ACTUALIZA_SECUENCIA');
+END;
+
+/* Devuelve la cama en la que se encuentra internado el paciente */
+FUNCTION  DEVUELVE_CAMA
+  (NHC  IN  PACIENTES.NUMERO_HC%TYPE
+  ,DFECHA  DATE  :=  SYSDATE
+  )
+  RETURN  VARCHAR2
+  IS
+ BEGIN
+-- Devuelve la sala y cama en la que se encuentra el paciente internado
+DECLARE
+   vTmpSala TURNOS_CAMAS.cmahsp_sala%TYPE:= '';
+   vTmpCama TURNOS_CAMAS.cmahsp_cama%TYPE:= '';
+   CURSOR CTrnCma IS
+      SELECT cmahsp_sala, cmahsp_cama
+      FROM TURNOS_CAMAS
+   WHERE
+      ((prm_pcn_numero_hc=nHC AND
+            TO_CHAR(fecha, 'hh24:mi') = '00:00') AND
+         /* buscamos solo en los turnos de los pacientes internados */
+         Fecha BETWEEN(dFecha-1) AND dFecha)
+      ORDER BY Fecha DESC;
+BEGIN
+   OPEN CTrnCma;
+   FETCH CTrnCma INTO vTmpSala, vTmpCama;
+   RETURN vTmpSala||vTmpCama;
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+   RETURN ' ';
+   -- No esta internado
+   WHEN OTHERS THEN
+   RAISE_APPLICATION_ERROR(-20100, 'Error: '||SQLERRM);
+END;
+END DEVUELVE_CAMA;
+
+/* Centralización de la carga de la cuenta */
+PROCEDURE  CARGAR_CUENTA
+  (P_NUMERO  IN  CUENTAS.NUMERO%TYPE
+  ,P_DETALLE  IN  CUENTAS.DETALLE%TYPE
+  ,P_ARA_GENERADORA  IN  CUENTAS.DPR_ARA_CODIGO%TYPE
+  ,P_DPR_GENERADORA  IN  CUENTAS.DPR_CODIGO%TYPE
+  ,P_CANTIDAD  IN  CUENTAS.CANTIDAD%TYPE
+  ,P_CRG_TIPO  IN  CUENTAS.CRG_TIPO%TYPE
+  ,P_CODIGO  IN  CUENTAS.CRG_CODIGO%TYPE
+  ,P_DOCUMENTO  IN  CUENTAS.DOCUMENTO%TYPE
+  ,P_PCN_NUMERO_HC  IN  CUENTAS.PCN_NUMERO_HC%TYPE
+  ,P_INS_OR_UPD  IN  VARCHAR2
+  ,P_PRECIO_VENTA  IN  NUMBER  :=  NULL
+  ,P_FECHA  IN  DATE  :=  NULL
+ ,P_OBSERVACION IN VARCHAR2 := NULL
+  )
+  IS
+-- Program Data
+VDPR_CDG_PRT_A DEPARTAMENTOS.CODIGO%TYPE;
+NPRECIO_DE_VENTA CUENTAS.VALOR%TYPE;
+NDESCUENTO_OTORGADO CUENTAS.DESCUENTO_OTORGADO%TYPE;
+NIVA CUENTAS.IVA%TYPE;
+DFECHA DATE;
+VPRMPCN PROMOCIONES.CODIGO%TYPE;
+NPORCENTAJE_PROMOCION DETALLES_PROMOCIONES.PORCENTAJE_PROMOCION%TYPE;
+VDPR_ARA_CDG_PRT_A AREAS.CODIGO%TYPE;
+nValor_Fijado EXCEPCIONES_PROMOCIONES.VALOR_FIJADO%TYPE;
+/*JCABRERA        27/ABRIL/2010
+                  - SE AÑADE EL CAMPO VALOR_FIJO A LA PROMOCION
+                    PARA EL CASO DEL IESS
+  */
+-- PL/SQL Block
+BEGIN
+DECLARE
+-- cursor que devuelve la ultima promoción de un paciente
+  CURSOR CPrm IS
+    SELECT PRM_CODIGO
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=p_PCN_NUMERO_HC
+    AND FECHA=(SELECT MAX(FECHA)
+             FROM PROMOCIONES_PACIENTES
+             WHERE PCN_NUMERO_HC=p_PCN_NUMERO_HC);
+-- cursor que devuelve el porcentaje promoción del departamento según la promoción
+  CURSOR cDetPrm (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM DETALLES_PROMOCIONES
+    WHERE prm_codigo=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept;
+-- cursor que devuelve el porcentaje promoción del cargo según la promoción
+  CURSOR cPrmExc (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE,
+                  vTipo CARGOS.TIPO%TYPE,
+                  vCargo CARGOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION,VALOR_FIJADO
+    FROM PROMOCIONES_EXCEPCIONES
+    WHERE PRM_CODIGO=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept
+    AND CRG_TIPO=vTipo
+    AND CRG_CODIGO=vCargo;
+  PACIENTE_SIN_PROMOCION EXCEPTION;
+  ITEM_NO_EXISTENTE EXCEPTION;
+  YA_FACTURADO EXCEPTION;
+BEGIN
+  BEGIN
+    IF p_CRG_TIPO IN ('M','I','U') THEN
+-- Si es item (insumo,medicamento,suministro) fijamos siempre el deparmento
+-- F -> Farmacia
+-- B -> Economato/Bodega
+      SELECT PRECIO_DE_VENTA,IVA
+      INTO nPRECIO_DE_VENTA,nIVA
+      FROM ITEMS
+      WHERE TIPO =p_CRG_TIPO
+      AND SBS_SCC_CODIGO = SUBSTR(p_CODIGO,1,2)
+      AND SBS_CODIGO = SUBSTR(p_CODIGO,3,2)
+      AND CODIGO = SUBSTR(p_CODIGO,5,3);
+      vDPR_ARA_CDG_PRT_A := 'A';
+      IF p_Crg_Tipo='S' THEN
+        vDPR_CDG_PRT_A := 'B';
+      ELSE
+        vDPR_CDG_PRT_A := 'F';
+      END IF;
+    ELSE
+-- Si es cargo (procedimiento, servicio) leemos el departamento desde el cargo
+      SELECT DPR_ARA_CODIGO,DPR_CODIGO,COSTO,IVA
+      INTO vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A,nPrecio_de_Venta,nIVA
+      FROM CARGOS
+      WHERE TIPO =p_CRG_TIPO
+      AND CODIGO = p_Codigo;
+      IF p_Precio_Venta IS NOT NULL THEN
+        nPrecio_de_Venta:=p_Precio_Venta;
+      END IF;
+    END IF;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RAISE ITEM_NO_EXISTENTE;
+  END;
+  nPORCENTAJE_PROMOCION := 1;
+  BEGIN
+    OPEN CPrm;
+    FETCH CPrm INTO vPrmPcn;
+    IF CPrm%NOTFOUND THEN
+      RAISE PACIENTE_SIN_PROMOCION;
+    END IF;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RAISE PACIENTE_SIN_PROMOCION;
+  END;
+  BEGIN
+    OPEN CDetPrm (vPrmPcn,vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A);
+    FETCH CDetPrm INTO nPORCENTAJE_PROMOCION;
+    -- Si el area y departamento tienen una promocion, vemos si es una excepcion
+    OPEN CPrmExc (vPrmPcn,vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A,p_CRG_TIPO,p_CODIGO);
+    FETCH CPrmExc INTO nPorcentaje_Promocion,nValor_Fijado;
+-- AÑADIDO JCABRERA PARA LO DEL IESS, EN BASE AL VALOR FIJO fija el Porcentaje Promocion    
+    IF nvl(nValor_Fijado,0) > 0 THEN
+      nPorcentaje_Promocion := nValor_Fijado/nPRECIO_DE_VENTA;
+    END IF;
+  EXCEPTION
+     WHEN NO_DATA_FOUND THEN
+      NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+  END;
+  IF P_Fecha IS NULL THEN
+-- Si viene sin fecha, ingresamos la fecha del dia de hoy
+    dFecha:=SYSDATE;
+  ELSE
+    dFecha:=p_Fecha;
+  END IF;
+-- añadido el 23 abril para no cargar papanicolao si cobrado en caja
+  DECLARE
+    nTemp NUMBER;
+    CURSOR cTrnPgd IS
+     SELECT COUNT(*)
+     FROM TURNOS_CE
+     WHERE PCN_NUMERO_HC=p_PCN_NUMERO_HC AND
+           FECHA=trunc(dFecha,'dd') AND PRS_CODIGO IN ('MDP1','MDP2','MDP3') AND
+           ESTADO='P' AND FCT_CAJA IS NOT NULL;
+  BEGIN
+    IF p_CODIGO='P0024' THEN
+    -- SOLO VEMOS PARA PAPANICOLAOS
+      OPEN cTrnPgd;
+      FETCH cTrnPgd INTO nTemp;
+      CLOSE cTrnPgd;
+      IF nTemp>0 THEN
+    -- si ya tiene un turno de pap, no cargar nada 
+        nPRECIO_DE_VENTA:=0;
+      END IF;
+   END IF;
+  END;
+-- fin cambio  
+  IF p_ins_or_upd = 'I' AND nPRECIO_DE_VENTA>0  THEN
+    nDESCUENTO_OTORGADO := 0;
+    INSERT INTO cuentas
+      (documento, numero, detalle,
+      estado,fecha,cantidad,valor,crg_tipo,crg_codigo,porcentaje_promocion,
+      descuento_otorgado,iva,dpr_ara_codigo,dpr_codigo,pcn_numero_hc,
+      dpr_ara_codigo_perteneciente_a,dpr_codigo_perteneciente_a,prm_codigo)
+    VALUES
+      (p_DOCUMENTO,p_NUMERO,p_DETALLE,
+      'PND',dFECHA,p_CANTIDAD,nPRECIO_DE_VENTA,p_CRG_TIPO,p_CODIGO,nPorcentaje_Promocion,
+      nDESCUENTO_OTORGADO,nIVA,p_Ara_Generadora,p_Dpr_Generadora,p_PCN_NUMERO_HC,
+      vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A,vPrmPcn);
+  ELSIF p_ins_or_upd = 'U' AND nPRECIO_DE_VENTA>0 THEN
+-- La actualización puede afectar el costo o el porcentaje promoción, la cantidad
+-- el tipo de cargo y el código del cargo
+    UPDATE CUENTAS
+    SET prm_codigo=vPrmPcn,valor=nPRECIO_DE_VENTA,
+        cantidad=P_CANTIDAD,porcentaje_promocion=nPorcentaje_Promocion,
+        crg_tipo=p_Crg_tipo,crg_codigo=p_CODIGO
+    WHERE documento=p_Documento AND numero=p_Numero AND detalle=p_Detalle
+        AND estado!='FCT';
+    IF SQL%ROWCOUNT!=1 THEN
+        RAISE YA_FACTURADO;
+    END IF;
+  END IF;
+EXCEPTION
+  WHEN PACIENTE_SIN_PROMOCION THEN
+    RAISE_APPLICATION_ERROR(-20210,'Cuenta no insertada/actualizada. El paciente '||p_PCN_NUMERO_HC||' no tiene promoción asociada');
+  WHEN ITEM_NO_EXISTENTE THEN
+    RAISE_APPLICATION_ERROR(-20211,'Cuenta no insertada/actualizada. El item con codigo '||p_Codigo||' no existe');
+  WHEN YA_FACTURADO THEN
+    RAISE_APPLICATION_ERROR(-20212,'Una cuenta ya facturada no puede ser cambiada');
+  WHEN OTHERS THEN
+    RAISE_APPLICATION_ERROR(-20213,'La cuenta del paciente no pudo ser insertada/actualizado por el error '||SQLERRM);
+END;
+END CARGAR_CUENTA;
+
+/* Fija la promoción del paciente */
+PROCEDURE  FIJAR_PROMOCION_PACIENTE
+  (NHC  PROMOCIONES_PACIENTES.PCN_NUMERO_HC%TYPE
+  ,VPRMCOD  PROMOCIONES_PACIENTES.PRM_CODIGO%TYPE
+  ,VPRSCOD  PROMOCIONES_PACIENTES.PRS_CODIGO%TYPE
+  ,VOBS  PROMOCIONES_PACIENTES.OBSERVACION%TYPE
+  )
+  IS
+-- Program Data
+NTEMP NUMBER(4, 0);
+
+-- PL/SQL Block
+ BEGIN
+SELECT COUNT(*)
+INTO nTemp
+FROM PROMOCIONES
+WHERE CODIGO=vPrmCod
+AND ESTADO_DE_DISPONIBILIDAD='D';
+IF nTemp=1 THEN
+  SELECT COUNT(*)
+  INTO nTemp
+  FROM PROMOCIONES_PACIENTES
+  WHERE PCN_NUMERO_HC=nHC
+  AND PRM_CODIGO=vPrmCod
+  AND FECHA=(
+    SELECT MAX(FECHA)
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=nHC);
+-- Insertamos la nueva fila de la promoción despues de revisar que no tenga una fila con la misma promoción
+  IF nTemp=0 THEN
+    INSERT INTO PROMOCIONES_PACIENTES(PRMPCN_ID,FECHA,PCN_NUMERO_HC,PRM_CODIGO,PRS_CODIGO,OBSERVACION)
+    VALUES (PRMPCN_SEQ.NEXTVAL,SYSDATE,nHC,vPrmCod,vPrsCod,vObs);
+  END IF;
+ELSE
+  RAISE_APPLICATION_ERROR(-20213,'La promoción '||vPrmCod||' no esta disponible actualmente.');
+END IF;
+END FIJAR_PROMOCION_PACIENTE;
+
+/* Escribe el error en la tabla de errores */
+PROCEDURE ESCRIBIR_ERRORES
+ (P_MESG IN VARCHAR2
+ ,P_PARAM0 IN VARCHAR2 := NULL
+ ,P_PARAM1 IN VARCHAR2 := NULL
+ ,P_PARAM2 IN VARCHAR2 := NULL
+ ,P_PARAM3 IN VARCHAR2 := NULL
+ ,P_PARAM4 IN VARCHAR2 := NULL
+ ,P_PARAM5 IN VARCHAR2 := NULL
+ ,P_PARAM6 IN VARCHAR2 := NULL
+ ,P_PARAM7 IN VARCHAR2 := NULL
+ ,P_PARAM8 IN VARCHAR2 := NULL
+ ,P_PARAM9 IN VARCHAR2 := NULL
+ )
+ IS
+BEGIN
+DECLARE
+  CURSOR cSes IS
+    SELECT USERENV('SESSIONID')
+    FROM SYS.DUAL;
+  vSesion ERRORES.SESION%TYPE;
+  CURSOR cMaxErr(vSesId VARCHAR2) IS
+    SELECT NVL(MAX(LINEA),0)+1
+    FROM ERRORES
+    WHERE SESION=vSesid;
+  nLin NUMBER;
+  v_errorrec   hil_message.message_rectype;
+
+BEGIN
+  OPEN cSes;
+  FETCH cSes INTO vSesion;
+  CLOSE cSes;
+  IF p_mesg='000000' THEN
+    DELETE ERRORES
+    WHERE SESION=vSesion;
+    RETURN; -- si viene 000000 significa que se encere los errores
+  END IF;
+  OPEN cMaxErr(vSesion);
+  FETCH cMaxErr INTO nLin;
+  CLOSE cMaxErr;
+
+   -- Get Error message
+   hil_message.Get_Message (v_errorrec, p_mesg);
+
+   -- replace parameters
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p1>', p_param0);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p2>', p_param1);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p3>', p_param2);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p4>', p_param3);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p5>', p_param4);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p6>', p_param5);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p7>', p_param6);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p8>', p_param7);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p9>', p_param8);
+   v_errorrec.msg_text := REPLACE (v_errorrec.msg_text, '<p10>', p_param9);
+
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p1>', p_param0);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p2>', p_param1);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p3>', p_param2);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p4>', p_param3);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p5>', p_param4);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p6>', p_param5);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p7>', p_param6);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p8>', p_param7);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p9>', p_param8);
+   v_errorrec.help_text := REPLACE (v_errorrec.help_text, '<p10>', p_param9);
+
+  INSERT INTO Errores (ERR_ID,SESION,LINEA,MENSAJE)
+    VALUES (ERR_SEQ.NEXTVAL,vSesion,nLin,P_MESG||'. '||v_errorrec.msg_text);
+EXCEPTION
+  WHEN OTHERS THEN
+    QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error inesperado en procedimiento GNRL.Esciribir_Errores por error '||SQLERRM);
+END;
+END ESCRIBIR_ERRORES;
+/* Centralización de la carga de honorarios médicos */
+PROCEDURE CARGAR_HONORARIO
+ (P_NUMERO IN CUENTAS.NUMERO%TYPE
+ ,P_BENEFICIARIO IN PERSONAL.CODIGO%TYPE
+ ,P_ID IN CUENTAS.DETALLE%TYPE
+ ,P_CANTIDAD IN CUENTAS.CANTIDAD%TYPE
+ ,P_DOCUMENTO IN CUENTAS.DOCUMENTO%TYPE
+ ,P_PCN_NUMERO_HC IN CUENTAS.PCN_NUMERO_HC%TYPE
+ ,P_INS_OR_DEL IN VARCHAR2
+ ,P_FECHA IN DATE := NULL
+ ,P_TIPO_REMUNERACION IN VARCHAR2 := 'HNR'
+ ,P_EVLCLN IN HOJAS_DE_EVOLUCION.NUMERO%TYPE
+ ,P_PRCHSP_CODIGO IN PROCEDIMIENTOS_HOSPITALARIOS.CODIGO%TYPE
+ ,P_LATERALIDAD IN PROCEDIMIENTOS_REALIZADOS.LATERALIDAD%TYPE
+ ,P_CASO IN NUMBER := 4
+ ,P_CONDICION IN NUMBER  := 1
+ ,P_DIVISOR IN NUMBER := 1
+ ,P_POOL IN NUMBER := 0
+ )
+ IS
+
+VPRMPCN PROMOCIONES.CODIGO%TYPE;
+DFECHA DATE;
+VESTADO_AUDITORIA VARCHAR2(1);
+VESTADO_CUENTA VARCHAR2(3);
+VESTADO_GENERAR VARCHAR2(3);
+VESTADO_AUDITORIA_I VARCHAR2(1);
+VESTADO_GENERAR_I VARCHAR2(3);
+VDPR_ARA_CDG_PRT_A AREAS.CODIGO%TYPE;
+VDPR_CDG_PRT_A DEPARTAMENTOS.CODIGO%TYPE;
+VMSTBNF_CODIGO ENTIDADES_BENEFICIARIAS.MSTBNF_CODIGO%TYPE;
+VUVR PROCEDIMIENTOS_HOSPITALARIOS.UVR%TYPE;
+VPUNTOS PROCEDIMIENTOS_HOSPITALARIOS.PUNTOS%TYPE;
+VCRG_TIPO CARGOS.TIPO%TYPE;
+VCRG_CODIGO CARGOS.CODIGO%TYPE;
+VVALOR_HONORARIO NUMBER := 0;
+VPORCENTAJE_HONORARIO NUMBER :=0;
+VPORCENTAJE_CALCULADO NUMBER := 0;
+VENTBNF_CODIGO ENTIDADES_BENEFICIARIAS.CODIGO%TYPE;
+NPORCENTAJE_PROMOCION DETALLES_PROMOCIONES.PORCENTAJE_PROMOCION%TYPE;
+VINC_LATERALIDAD NUMBER := 0;
+NPLANILLA PLANILLAS_HONORARIOS_MDC.NUMERO%TYPE := NULL;
+NVALOR_PLANILLA NUMBER:=0;
+  --DOCUMENTO:
+  -- 0 es para procedimientos quirúrgicos
+  -- G es para procedimiento menor
+  -- M es para visita médica
+  -- R es para interconsultas
+  -- Y es para atención en emeregencia y para sedaciones en imagen
+  -- V es para Valoraciónes cardiológicas
+  -- # es para honorarios manuales
+  -- Y es para honorarios que se generan automáticamente.
+  CURSOR CPrm IS
+    SELECT PRM_CODIGO
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=p_PCN_NUMERO_HC
+    AND FECHA=(SELECT MAX(FECHA)
+             FROM PROMOCIONES_PACIENTES
+             WHERE PCN_NUMERO_HC=p_PCN_NUMERO_HC);
+-- cursor que devuelve el porcentaje promoción del departamento según la promoción
+  CURSOR cDetPrm (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM DETALLES_PROMOCIONES
+    WHERE prm_codigo=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept;
+-- cursor que devuelve el porcentaje promoción del cargo según la promoción
+  CURSOR cPrmExc (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE,
+                  vTipo CARGOS.TIPO%TYPE,
+                  vCargo CARGOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM PROMOCIONES_EXCEPCIONES
+    WHERE PRM_CODIGO=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept
+    AND CRG_TIPO=vTipo
+    AND CRG_CODIGO=vCargo;  
+  PACIENTE_SIN_PROMOCION EXCEPTION;
+  CARGO_NO_EXISTENTE EXCEPTION;
+  YA_FACTURADO EXCEPTION;  
+  SIN_PROCEDIMIENTO EXCEPTION;     
+  SIN_TIPO_REMUNERACION EXCEPTION;
+  SIN_BENEFICIARIO EXCEPTION;
+  HONORARIO_NO_EXISTENTE EXCEPTION;
+  ERROR_HONORARIOS EXCEPTION;
+  HONORARIO_SIN_PUNTOS EXCEPTION;
+BEGIN                 
+   QMS$ERRORS.SHOW_DEBUG_INFO('Entra al proceso de generación de honorarios');                                         
+   QMS$ERRORS.SHOW_DEBUG_INFO('El tipo de remuneración es '||p_tipo_remuneracion);                                         
+   nPORCENTAJE_PROMOCION := 1;    
+   IF p_tipo_remuneracion is not null THEN  --con el tipo de remuneración se puede obtener el cargo para los honorarios
+      IF P_DOCUMENTO  = 'Y' THEN
+        VESTADO_AUDITORIA_I := 'A';
+        VESTADO_GENERAR_I:= 'PLN';
+        ACTUALIZA_SECUENCIA('PLNHNRMDC_SEQ',NPLANILLA);
+      END IF;   
+   BEGIN    
+     SELECT TIPO,CODIGO INTO VCRG_TIPO,VCRG_CODIGO
+     FROM CARGOS
+     WHERE TIPO_HONORARIO =  p_tipo_remuneracion;
+   EXCEPTION
+     WHEN NO_DATA_FOUND THEN
+--          VCRG_TIPO := NULL;
+--          VCRG_CODIGO := NULL;
+        RAISE CARGO_NO_EXISTENTE; 
+     WHEN OTHERS THEN       -- si no encuentra un cargo asociado es porque no se va a cargar a  la cuenta del paciente  
+          --VCRG_TIPO := NULL;
+          --VCRG_CODIGO := NULL;
+        RAISE ERROR_HONORARIOS;
+   END;  
+   qms$errors.show_debug_info('Cargo '||vcrg_tipo||vcrg_codigo);
+   END IF;
+   IF VCRG_TIPO  IS NOT NULL AND VCRG_TIPO NOT IN ('M','I','U') THEN
+   BEGIN    
+     SELECT DPR_ARA_CODIGO,DPR_CODIGO
+     INTO vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A
+     FROM CARGOS
+     WHERE TIPO =VCRG_TIPO 
+     AND CODIGO = VCRG_Codigo;
+   EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+         RAISE CARGO_NO_EXISTENTE;
+      WHEN OTHERS THEN
+        RAISE ERROR_HONORARIOS;
+   END;
+   END IF;   
+   qms$errors.show_debug_info('Area y Dep '||vDPR_ARA_CDG_PRT_A||vDPR_CDG_PRT_A);
+   nPORCENTAJE_PROMOCION := 1;
+   BEGIN
+    OPEN CPrm;
+    FETCH CPrm INTO vPrmPcn;
+    IF CPrm%NOTFOUND THEN
+      RAISE PACIENTE_SIN_PROMOCION;
+    END IF;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RAISE PACIENTE_SIN_PROMOCION;
+  END;
+  qms$errors.show_debug_info('PROMOCION PACIENTE '||vPrmPcn);    
+  IF vDPR_ARA_CDG_PRT_A IS NOT NULL AND vDPR_CDG_PRT_A IS NOT NULL AND VCRG_TIPO IS NOT NULL AND VCRG_CODIGO IS NOT NULL THEN
+  BEGIN     
+    OPEN CDetPrm (vPrmPcn,vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A);
+    FETCH CDetPrm INTO nPORCENTAJE_PROMOCION;
+    -- Si el area y departamento tienen una promocion, vemos si es una excepcion
+    OPEN CPrmExc (vPrmPcn,vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A,VCRG_TIPO,VCRG_CODIGO);
+    FETCH CPrmExc INTO nPorcentaje_Promocion;
+  EXCEPTION
+     WHEN NO_DATA_FOUND THEN
+      NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+  END;
+  END IF;
+  IF P_Fecha IS NULL THEN
+-- Si viene sin fecha, ingresamos la fecha del dia de hoy
+    dFecha:=SYSDATE;
+  ELSE
+    dFecha:=p_Fecha;
+  END IF;     
+  qms$errors.show_debug_info('FECHAR '||TO_CHAR(DFECHA,'DD/MM/YYYY HH24:MI'));    
+  -- obtienen el porcentaje según el tipo de remuneración
+  BEGIN    
+  IF p_tipo_remuneracion is not null  then
+     BEGIN
+--        select to_number(RV_HIGH_VALUE)/100 into vporcentaje_honorario
+        select to_number(RV_HIGH_VALUE) into vporcentaje_honorario
+        from cg_ref_codes
+        where rv_domain =  'TIPO REMUNERACION' and
+              rv_low_value = p_tipo_remuneracion;    
+        VINC_LATERALIDAD := 0;
+        IF NVL(P_LATERALIDAD,'X') = 'U' THEN   -- si el procedimiento es unilateral la remuneración se mantiente
+           VINC_LATERALIDAD := 0;    
+        ELSE                          -- si el procedimiento es bilateral la remuneración se incrementa en el 75%
+--           VINC_LATERALIDAD := 0.75;              
+        VINC_LATERALIDAD := 75;
+        END IF;    
+        IF P_CASO = 1 THEN   
+        -- Si existe más de un  procedimiento y la via de acceso es la misma  y es realizado
+        -- por el mismo especialista la remuneración del procedimiento màs costos se mantiene
+        -- y la remuenración de los otros procedimientos se paga  el 55% del costo
+           IF P_CONDICION = 1 THEN
+--              vporcentaje_honorario := vporcentaje_honorario + VINC_LATERALIDAD;              
+              VPORCENTAJE_CALCULADO := vporcentaje_honorario + (vporcentaje_honorario*VINC_LATERALIDAD)/100;              
+           ELSE                                                                
+--              vporcentaje_honorario := 0.55 + VINC_LATERALIDAD;
+              VPORCENTAJE_CALCULADO := (vporcentaje_honorario*(55 + VINC_LATERALIDAD))/100;              
+           END IF;       
+        ELSIF P_CASO = 2 THEN      
+        -- Si existe más de un  procedimiento y la via de acceso es diferente  y es realizado
+        -- por el mismo especialista la remuneración del procedimiento màs costos se mantiene
+        -- y la remuenración de los otros procedimientos se paga  el 65% del costo
+           IF P_CONDICION = 1 THEN
+--              vporcentaje_honorario := vporcentaje_honorario + VINC_LATERALIDAD;              
+              VPORCENTAJE_CALCULADO := vporcentaje_honorario + (vporcentaje_honorario*VINC_LATERALIDAD)/100;              
+           ELSE                                                                
+--              vporcentaje_honorario := 0.65 + VINC_LATERALIDAD;
+              VPORCENTAJE_CALCULADO := (vporcentaje_honorario*(65 + VINC_LATERALIDAD))/100;
+           END IF;                                   
+        ELSIF P_CASO = 3 THEN
+        -- Si existe más de un  procedimiento y es realizado por más de un  especialista,
+        -- sin importar la via de acceso, la remuneración del procedimiento màs costos se mantiene para cada especialista
+        -- y la remuenración de los otros procedimientos se paga  el 40% del costo
+           IF P_CONDICION = 1 THEN
+--              vporcentaje_honorario := vporcentaje_honorario + VINC_LATERALIDAD;              
+              VPORCENTAJE_CALCULADO := vporcentaje_honorario + (vporcentaje_honorario*VINC_LATERALIDAD)/100;              
+           ELSE                                                
+--              vporcentaje_honorario := 0.40 + VINC_LATERALIDAD;                           
+              VPORCENTAJE_CALCULADO := (vporcentaje_honorario*(40 + VINC_LATERALIDAD))/100;
+           END IF;                                               
+        ELSIF P_CASO = 5 THEN                                                                          
+        -- Si el caso es 5 entonces es Pediatría
+           VPORCENTAJE_CALCULADO := 1000;
+        ELSE                                                                           
+        -- Si no es ninguno de los casos anteriores simplemente se considera la remuneraciòn del procedimiento
+        -- tomando en cuenta la lateralidad (VINC_LATERALIDAD) y el número de profesionales que interviene (p_divisor)    
+           IF p_divisor > 1 then
+--              VPORCENTAJE_CALCULADO := (vporcentaje_honorario + VINC_LATERALIDAD)/p_divisor;    
+              VPORCENTAJE_CALCULADO := (vporcentaje_honorario + (vporcentaje_honorario*(VINC_LATERALIDAD+vporcentaje_honorario/2))/100)/p_divisor;
+           else
+--              VPORCENTAJE_CALCULADO := (vporcentaje_honorario + VINC_LATERALIDAD)/p_divisor;    
+              VPORCENTAJE_CALCULADO := vporcentaje_honorario + (vporcentaje_honorario*VINC_LATERALIDAD)/100;
+           end if;              
+        END IF;                                                                  
+     EXCEPTION
+     WHEN OTHERS THEN
+        RAISE SIN_TIPO_REMUNERACION;
+     END;
+     qms$errors.show_debug_info('El porcentaje de honorario es '||TO_CHAR(vporcentaje_honorario));    
+     qms$errors.show_debug_info('El procedimiento hospitalario es '||P_PRCHSP_CODIGO);         
+     if VPORCENTAJE_CALCULADO = 1000 THEN
+     BEGIN
+        VPORCENTAJE_CALCULADO:=100;
+        SELECT PUNTOS,UVR INTO vpuntos,vuvr
+        FROM PROCEDIMIENTOS_HOSPITALARIOS
+        WHERE CODIGO = '090285';
+        IF  VPUNTOS>0 AND VUVR >0 THEN
+        --redondeamos a 2 decimales hecho por JUAN CABRERA
+           VVALOR_HONORARIO := round(vpuntos*vuvr,2);    
+        ELSIF VPUNTOS<= 0 THEN
+           RAISE HONORARIO_SIN_PUNTOS;  
+        END IF;        
+     EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+           VVALOR_HONORARIO :=0;  
+--        WHEN OTHERS THEN
+--        RAISE SIN_PROCEDIMIENTO;
+     END;      
+     ELSE
+     BEGIN
+        SELECT PUNTOS,UVR INTO vpuntos,vuvr
+        FROM PROCEDIMIENTOS_HOSPITALARIOS
+        WHERE CODIGO = P_PRCHSP_CODIGO;
+        IF VPORCENTAJE_CALCULADO > 0  AND VPUNTOS>0 AND VUVR >0 THEN
+        --redondeamos a 2 decimales hecho por JUAN CABRERA
+           VVALOR_HONORARIO := round(vpuntos*vuvr*VPORCENTAJE_CALCULADO/100,2);    
+        ELSIF VPUNTOS<= 0 THEN
+           RAISE HONORARIO_SIN_PUNTOS;  
+        END IF;        
+     EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+           VVALOR_HONORARIO :=0;  
+--        WHEN OTHERS THEN
+--        RAISE SIN_PROCEDIMIENTO;
+     END;      
+     END IF;
+     qms$errors.show_debug_info('Los puntos y UVR  y el valor del honorario es:'||TO_CHAR(vpuntos)||to_char(vuvr)||to_char(vvalor_honorario));              
+  end if;                
+  END;                 
+  BEGIN  -- Se obtiene el beneficiario del honorario.
+     IF P_BENEFICIARIO IS NOT NULL THEN
+     qms$errors.show_debug_info('El beneficiario inicial es: '||P_BENEFICIARIO);                                   
+     BEGIN   
+        SELECT MSTBNF_CODIGO,CODIGO INTO VMSTBNF_CODIGO,VENTBNF_CODIGO        
+        FROM ENTIDADES_BENEFICIARIAS
+        WHERE PRS_CODIGO = P_BENEFICIARIO;
+     EXCEPTION   
+     WHEN NO_DATA_FOUND THEN
+        RAISE SIN_BENEFICIARIO;         
+     WHEN OTHERS THEN
+        RAISE SIN_BENEFICIARIO;   
+     END;   
+     END IF;  
+  END;      
+qms$errors.show_debug_info('El beneficiario es :'||VMSTBNF_CODIGO||to_char(VENTBNF_CODIGO));                                   
+qms$errors.show_debug_info('p_ins_or_upd '||p_ins_or_del);
+qms$errors.show_debug_info('HC/doc/num/detalle '||p_PCN_NUMERO_HC||' '||p_DOCUMENTO||' '||p_NUMERO||' '||p_ID);
+qms$errors.show_debug_info('Tipo rem/porcentaje '||p_tipo_remuneracion||' '||to_char(vporcentaje_honorario));
+qms$errors.show_debug_info('crg '||vcrg_tipo||vcrg_codigo);
+qms$errors.show_debug_info('CANTIDAD '||TO_CHAR(P_cANTIDAD));
+qms$errors.show_debug_info('PORCENTAJE PROMOCION '||TO_CHAR(nPorcentaje_Promocion));  
+QMS$ERRORS.SHOW_DEBUG_INFO('VPORCENTAJE_CALCULADO '||TO_CHAR(VPORCENTAJE_CALCULADO));
+QMS$ERRORS.SHOW_DEBUG_INFO('nPorcentaje_Promocion '||TO_CHAR(nPorcentaje_Promocion));
+  IF p_ins_or_DEL = 'I'  THEN
+     IF NVL(P_POOL,0) = 0 THEN 
+       INSERT INTO HONORARIOS_MEDICOS 
+       (NUMERO,DOCUMENTO,ID,HJAEVL_NUMERO,TIPO_HONORARIO,CRG_TIPO,CRG_CODIGO,
+       PRCHSP_CODIGO,CANTIDAD,FECHA,PUNTOS,PUNTOS_AUDITORIA,UVR,PORCENTAJE,PORCENTAJE_AUDITORIA,
+       PORCENTAJE_CALCULADO,PORCENTAJE_PROMOCION,VALOR,VALOR_AUDITORIA,ESTADO,ESTADO_AUDITORIA,PLNHNR_NUMERO,
+       ENTBNF_CODIGO,ENTBNF_MSTBNF_CODIGO,PCN_NUMERO_HC,PRM_CODIGO,CREADO_POR)
+       VALUES
+         (p_NUMERO,p_DOCUMENTO,p_ID,P_EVLCLN,P_TIPO_REMUNERACION,
+          VCRG_TIPO,VCRG_CODIGO,P_PRCHSP_CODIGO,P_CANTIDAD,dFECHA,vpuntos,vpuntos,vuvr,
+          vporcentaje_honorario,VPORCENTAJE_CALCULADO,VPORCENTAJE_CALCULADO,
+          nPorcentaje_Promocion,VVALOR_HONORARIO,VVALOR_HONORARIO,NVL(VESTADO_GENERAR_I,'PND'),
+          NVL(VESTADO_AUDITORIA_I,'N'),NPLANILLA,VENTBNF_CODIGO,VMSTBNF_CODIGO,P_PCN_NUMERO_HC,
+          vPrmPcn,USER);
+     ELSE
+       INSERT INTO HONORARIOS_MEDICOS 
+       (NUMERO,DOCUMENTO,ID,HJAEVL_NUMERO,TIPO_HONORARIO,CRG_TIPO,CRG_CODIGO,
+       PRCHSP_CODIGO,CANTIDAD,FECHA,PUNTOS,PUNTOS_AUDITORIA,UVR,PORCENTAJE,PORCENTAJE_AUDITORIA,
+       PORCENTAJE_CALCULADO,PORCENTAJE_PROMOCION,VALOR,VALOR_AUDITORIA,ESTADO,ESTADO_AUDITORIA,PLNHNR_NUMERO,
+       ENTBNF_CODIGO,ENTBNF_MSTBNF_CODIGO,PCN_NUMERO_HC,PRM_CODIGO,CREADO_POR,
+       ENTBNF_CODIGO_GRUPAL,ENTBNF_MSTBNF_GRUPAL)
+       VALUES
+         (p_NUMERO,p_DOCUMENTO,p_ID,P_EVLCLN,P_TIPO_REMUNERACION,
+          VCRG_TIPO,VCRG_CODIGO,P_PRCHSP_CODIGO,P_CANTIDAD,dFECHA,vpuntos,vpuntos,vuvr,
+          vporcentaje_honorario,VPORCENTAJE_CALCULADO,VPORCENTAJE_CALCULADO,
+          nPorcentaje_Promocion,VVALOR_HONORARIO,VVALOR_HONORARIO,NVL(VESTADO_GENERAR_I,'PND'),
+          NVL(VESTADO_AUDITORIA_I,'N'),NPLANILLA,VENTBNF_CODIGO,VMSTBNF_CODIGO,P_PCN_NUMERO_HC,
+          vPrmPcn,USER,P_POOL,'POO');     
+     END IF;     
+  ELSIF p_ins_or_DEL = 'D' THEN
+-- Si se elimina el procedimiento que generó el honorario, se elimina tambien el honorario médico generado
+-- y si el honorario ya fue planillado se elimina también de la cuenta y de la planilla.        
+  QMS$ERRORS.SHOW_DEBUG_INFO('Entra a reversar los honorarios médicos con id'||to_Char(p_ID));
+  QMS$ERRORS.SHOW_DEBUG_INFO('El tipo de honorario es '||P_TIPO_REMUNERACION);    
+  BEGIN
+    SELECT ESTADO,ESTADO_AUDITORIA,PLNHNR_NUMERO,NVL(ENTBNF_MSTBNF_GRUPAL,ENTBNF_MSTBNF_CODIGO),
+           NVL(ENTBNF_CODIGO_GRUPAL,ENTBNF_CODIGO),
+           PUNTOS_AUDITORIA*UVR*PORCENTAJE_AUDITORIA/100*CANTIDAD * PORCENTAJE_PROMOCION INTO VESTADO_GENERAR,VESTADO_AUDITORIA,
+                                                                                              NPLANILLA,VMSTBNF_CODIGO,
+                                                                                              VENTBNF_CODIGO,NVALOR_PLANILLA 
+    FROM HONORARIOS_MEDICOS
+    WHERE documento=p_Documento AND numero=p_Numero AND ID=p_ID AND ESTADO <> 'ANL' AND
+          TIPO_HONORARIO = P_TIPO_REMUNERACION AND
+          PCN_NUMERO_HC = P_PCN_NUMERO_HC;                        
+    QMS$ERRORS.SHOW_DEBUG_INFO('Obtuvo los datos para  reversar los honorarios médicos ');       
+    IF VESTADO_GENERAR IN ('PLN','PND') THEN
+       DELETE FROM HONORARIOS_MEDICOS
+--    SET ESTADO = 'ANL',
+--        ESTADO_AUDITORIA = 'N'
+       WHERE documento=p_Documento AND numero=p_Numero AND ID=p_ID;             
+    /*IF VESTADO_GENERAR = 'PLN' THEN  -- Si ya se generó la planilla y se cargó a la cuenta se anula en las dos partes
+       IF VCRG_TIPO IS NOT NULL AND VCRG_CODIGO IS NOT NULL THEN -- si se cargó a la cuenta se anula de la cuenta.
+          SELECT DISTINCT C.ESTADO INTO VESTADO_CUENTA
+          FROM CUENTAS C
+          WHERE C.documento=p_Documento AND C.numero=p_Numero AND C.detalle=p_ID;
+          IF VESTADO_CUENTA = 'PND' THEN
+             DELETE FROM  CUENTAS
+             WHERE documento=p_Documento AND numero=p_Numero AND detalle=p_ID AND estado = 'PND';         
+             IF NPLANILLA IS NOT NULL THEN     --ya existe una planilla de honorarios generada               
+               UPDATE DETALLES_HONORARIOS_MEDICOS           --actualiza los honorarios, restado el valor reversado
+               SET VALOR = VALOR - NVALOR_PLANILLA
+               WHERE ESTADO = 'NRM' AND           
+                   PLNHNRMDC_NUMERO = NPLANILLA AND
+                   ENTBNF_MSTBNF_CODIGO = VMSTBNF_CODIGO AND
+                   ENTBNF_CODIGO = VENTBNF_CODIGO AND
+                   REMUNERACION_POR = P_TIPO_REMUNERACION;
+               UPDATE PLANILLAS_HONORARIOS_MDC   -- actualiza el total de la planilla
+               SET TOTAL = TOTAL - NVALOR_PLANILLA,
+                   SALDO = SALDO - NVALOR_PLANILLA
+               WHERE PRMATN_PCN_NUMERO_HC = P_PCN_NUMERO_HC AND
+                   NUMERO = NPLANILLA;      
+               SELECT VALOR INTO NVALOR_PLANILLA 
+               FROM DETALLES_HONORARIOS_MEDICOS           
+               WHERE ESTADO = 'NRM' AND           
+                     PLNHNRMDC_NUMERO = NPLANILLA AND
+                     ENTBNF_MSTBNF_CODIGO = VMSTBNF_CODIGO AND
+                     ENTBNF_CODIGO = VENTBNF_CODIGO AND
+                     REMUNERACION_POR = P_TIPO_REMUNERACION;     
+               IF NVALOR_PLANILLA <= 0 THEN -- verifica si la planilla se quedó en cero para anularla
+                  UPDATE DETALLES_HONORARIOS_MEDICOS           
+                  SET ESTADO = 'ANL'
+                  WHERE ESTADO = 'NRM' AND           
+                        PLNHNRMDC_NUMERO = NPLANILLA AND
+                        ENTBNF_MSTBNF_CODIGO = VMSTBNF_CODIGO AND
+                        ENTBNF_CODIGO = VENTBNF_CODIGO AND
+                        REMUNERACION_POR = P_TIPO_REMUNERACION;
+               END IF;      
+            END IF; 
+         ELSE   
+           RAISE YA_FACTURADO;
+         END IF;      
+       END IF;         
+    END IF;*/   
+    ELSE    
+        RAISE YA_FACTURADO;
+    END IF;                                    
+  EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+      RAISE HONORARIO_NO_EXISTENTE;
+  END;    
+  END IF;
+EXCEPTION
+  WHEN PACIENTE_SIN_PROMOCION THEN
+     RAISE_APPLICATION_ERROR(-20210,'Honorario no insertada/anulado. El paciente '||p_PCN_NUMERO_HC||' no tiene promoción asociada ');
+  WHEN CARGO_NO_EXISTENTE THEN
+     RAISE_APPLICATION_ERROR(-20211,'Honorario no insertada/anulado. El cargo con codigo '||vcrg_Codigo||' no existe ');
+  WHEN YA_FACTURADO THEN
+     RAISE_APPLICATION_ERROR(-20212,'Un honorario ya planillado no puede ser eliminado ');
+  WHEN SIN_PROCEDIMIENTO THEN                                                          
+     RAISE_APPLICATION_ERROR(-20213,'No se puede registrar honorarios si no hay un procedimiento hospitalario ');
+  WHEN SIN_TIPO_REMUNERACION THEN                                                     
+     RAISE_APPLICATION_ERROR(-20214,'No se puede registrar honorarios sin un tipo de remuneración ');
+  WHEN SIN_BENEFICIARIO THEN                                                          
+     RAISE_APPLICATION_ERROR(-20215,'No se puede registrar honorarios sin un beneficiario en Caja Médica, cominicarse con Auditoría Médica ');
+  WHEN HONORARIO_NO_EXISTENTE THEN                                                          
+     RAISE_APPLICATION_ERROR(-20217,'El honorario que se quiere eliminar no existe ');      
+  WHEN ERROR_HONORARIOS THEN
+     RAISE_APPLICATION_ERROR(-20217,'Existe más de un cargo creado con el tipo HNR Honorarios Médicos');           
+  WHEN HONORARIO_SIN_PUNTOS THEN
+     RAISE_APPLICATION_ERROR(-20217,'El procedimiento realizado no tiene fijado un valor por honorarios');    
+  WHEN OTHERS THEN
+     RAISE_APPLICATION_ERROR(-20216,'El honorario no pudo ser insertada/actualizado por el error '||P_POOL||' '||SQLERRM);
+END;
+
+/* Genera los honorarios médicos de acuerdo a los proceidmientos realizad */
+PROCEDURE CARGAR_HONORARIO_POR_PROCEDIMI
+ (P_NUMPARTE IN NUMBER
+ ,P_DOCUMENTO IN CUENTAS.DOCUMENTO%TYPE
+ ,P_PCN_NUMERO_HC IN CUENTAS.PCN_NUMERO_HC%TYPE
+ ,P_BENEFICIARIO IN PERSONAL.CODIGO%TYPE := NULL
+ ,P_FECHA IN DATE := NULL
+ ,P_TIPO_REMUNERACION IN VARCHAR2 := 'HNR'
+ ,P_EVLCLN IN HOJAS_DE_EVOLUCION.NUMERO%TYPE
+ ,P_INS_OR_DEL IN VARCHAR2
+ ,P_POOL IN NUMBER := 0
+ )
+ IS
+
+NCONT NUMBER(3) := 0;
+NPROCED NUMBER := 1;
+VTIPO_REM VARCHAR2(240);
+NDIVISOR NUMBER(2);
+VFUNCION VARCHAR2(2);
+--CASO via de acceso 
+--1 igual via de acceso
+--2  diferente via de acceso
+--3 más de un profesional
+
+--CONDICION más de un procedimiento  
+-- 1 el procedimiento principal con puntaje mayor;
+-- 2 el procedimiento principal con puntaje menor;
+cursor proc is  -- Procedimientos que se ha realizado al paciente;
+select PR.PRCHSP_CODIGO prchsp_codigo,PH.PUNTOS,PR.NUMERO_DE_VECES cantidad,
+       PR.LATERALIDAD LATERALIDAD,PR.VIA_DE_ACCESO VIA_ACCESO,0 CASO,0 CONDICION
+from PROCEDIMIENTOS_REALIZADOS PR,PROCEDIMIENTOS_HOSPITALARIOS PH
+WHERE PH.CODIGO = PR.PRCHSP_CODIGO AND 
+      EPC_PRMATN_PCN_NUMERO_HC = P_PCN_NUMERO_HC AND
+      ((PRTOPRSLC_NUMERO = P_NUMPARTE AND P_DOCUMENTO = 'O') OR 
+       (PRCMNR_NUMERO = P_NUMPARTE AND P_DOCUMENTO = 'G'))
+ORDER BY PH.PUNTOS,PR.VIA_DE_ACCESO;
+cursor proc1 is  -- Procedimientos que se ha realizado al paciente;
+select PR.PRCHSP_CODIGO prchsp_codigo,PH.PUNTOS,PR.NUMERO_DE_VECES cantidad,
+       PR.LATERALIDAD LATERALIDAD,PR.VIA_DE_ACCESO VIA_ACCESO,0 CASO,0 CONDICION
+from PROCEDIMIENTOS_REALIZADOS PR,PROCEDIMIENTOS_HOSPITALARIOS PH
+WHERE PH.CODIGO = PR.PRCHSP_CODIGO AND 
+      EPC_PRMATN_PCN_NUMERO_HC = P_PCN_NUMERO_HC AND
+      ((PRTOPRSLC_NUMERO = P_NUMPARTE AND P_DOCUMENTO = 'O') OR 
+       (PRCMNR_NUMERO = P_NUMPARTE AND P_DOCUMENTO = 'G'))
+ORDER BY PH.PUNTOS,PR.VIA_DE_ACCESO;
+TYPE PROCTABTYP IS TABLE OF PROC%ROWTYPE INDEX BY BINARY_INTEGER;
+PROC_TAB PROCTABTYP;
+i BINARY_INTEGER := 0;                   
+J BINARY_INTEGER := 0;
+k BINARY_INTEGER := 0;                  
+CURSOR equipo  is  -- Equipo operatorio que ha realizado el o los proceidmientos quirúrgicos 
+  select e.prs_codigo,e.funcion,e.pool
+  from equipos_operatorios e
+  where e.prtoprslc_pcn_numero_hc = P_PCN_NUMERO_HC and  
+        e.prtoprslc_numero = P_NUMPARTE AND
+        e.pagar = 'V' AND
+        P_DOCUMENTO = 'O'
+  order by e.funcion; 
+CURSOR equipo1  is  -- Equipo operatorio que ha realizado el o los proceidmientos quirúrgicos 
+  select e.prs_codigo,e.funcion,e.pool
+  from equipos_operatorios e
+  where e.prtoprslc_pcn_numero_hc = P_PCN_NUMERO_HC and  
+        e.prtoprslc_numero = P_NUMPARTE AND
+        e.pagar = 'V' AND        
+        P_DOCUMENTO = 'O'
+  order by e.funcion;   
+  TYPE EQUIPOTABTYP IS TABLE OF EQUIPO%ROWTYPE INDEX BY BINARY_INTEGER;  
+  EQUIPO_TAB EQUIPOTABTYP;
+  SIN_PROCEDIMIENTO EXCEPTION;    
+  SIN_TIPO_REMUNERACION EXCEPTION;
+BEGIN
+-- Primero verifico si es un solo procedimiento o varios.
+   QMS$ERRORS.SHOW_DEBUG_INFO('El parte es: '|| to_Char(P_NUMPARTE));   
+   BEGIN
+      SELECT COUNT(*) INTO nproced
+      FROM PROCEDIMIENTOS_REALIZADOS
+      WHERE EPC_PRMATN_PCN_NUMERO_HC = P_PCN_NUMERO_HC AND
+            ((PRTOPRSLC_NUMERO = P_NUMPARTE AND P_DOCUMENTO = 'O') OR 
+              (PRCMNR_NUMERO = P_NUMPARTE AND P_DOCUMENTO = 'G'));
+      EXCEPTION 
+      WHEN OTHERS THEN
+      RAISE SIN_PROCEDIMIENTO;
+   END;     
+   QMS$ERRORS.SHOW_DEBUG_INFO('Está en el proceso para generar honorarios con los siguientes parámetros');
+   QMS$ERRORS.SHOW_DEBUG_INFO('Número de procedimiento, documento '||to_char(P_NUMPARTE)||P_DOCUMENTO);
+   QMS$ERRORS.SHOW_DEBUG_INFO('Historia clínica '||to_char(P_PCN_NUMERO_HC));
+   QMS$ERRORS.SHOW_DEBUG_INFO('Beneficiario '||P_BENEFICIARIO);
+   QMS$ERRORS.SHOW_DEBUG_INFO('Fecha '||P_FECHA);
+   QMS$ERRORS.SHOW_DEBUG_INFO('Tipo rem.'||P_TIPO_REMUNERACION);
+   QMS$ERRORS.SHOW_DEBUG_INFO('Evolución '||to_char(P_EVLCLN));
+   NCONT := 1;  
+   QMS$ERRORS.SHOW_DEBUG_INFO('El número de procedimientos es :' ||to_char(nproced));
+   -- Si se trata de varios procedimientos, se verifica si es son procedimietos quirúrgicos o procedimientos menores   
+   IF nproced > 1 then   -- Se trata de varios procedimientos        
+      QMS$ERRORS.SHOW_DEBUG_INFO('Existe más de un procedimiento');   
+      OPEN PROC; 
+      LOOP
+         i := i + 1;
+         FETCH PROC INTO PROC_TAB(i);
+         EXIT WHEN PROC%NOTFOUND;   
+         QMS$ERRORS.SHOW_DEBUG_INFO('Carga el proceso '||to_Char(i));                     
+         PROC_TAB(i).CASO := 2;        -- incia siempre como si fuera diferente via de acceso
+         PROC_TAB(i).CONDICION := 1;   -- incia siempre como si fuera el procedimiento principal con puntaje mayor;
+         QMS$ERRORS.SHOW_DEBUG_INFO('Carga el proceso '||to_Char(i)||' con valores iniciales');                     
+         FOR RPROC IN PROC1 LOOP
+            QMS$ERRORS.SHOW_DEBUG_INFO('Revisa los procedimientos para poner el caso');            
+            IF RPROC.PRCHSP_CODIGO <> PROC_TAB(i).PRCHSP_CODIGO THEN
+               IF NVL(RPROC.VIA_ACCESO,'OTRA') = NVL(PROC_TAB(i).VIA_ACCESO,'OTRA') THEN
+                  PROC_TAB(i).CASO := 1;  -- Tiene la misma via de acceso
+               END IF;                                             
+               IF PROC_TAB(i).PUNTOS < RPROC.PUNTOS THEN
+                  PROC_TAB(i).CONDICION := 2;  -- El procedimiento tiene puntaje menor al procedimiento principal 
+               END IF;
+               QMS$ERRORS.SHOW_DEBUG_INFO('Cargado el proceso '||to_Char(i)||' con caso y condicion');                              
+            END IF;                                                            
+         END LOOP;         
+      END LOOP;   
+      CLOSE PROC;
+      i:= i-1;        
+      FOR J IN 1..I LOOP  
+      --Una vez fijado el caso y la condicion de los  procedimientos
+      --se generan los honorarios de acuerdo al beneficiario.          
+         IF P_DOCUMENTO = 'O' THEN -- Se carga honorarios por procedimientos quirúrgicos                                    
+            OPEN EQUIPO; 
+            LOOP
+               k:=k + 1;           
+               FETCH EQUIPO INTO EQUIPO_TAB(k);
+               EXIT WHEN EQUIPO%NOTFOUND;   
+               QMS$ERRORS.SHOW_DEBUG_INFO('El valor de k es '||to_char(k));                                                                 
+               IF EQUIPO_TAB(k).PRS_CODIGO IS NOT NULL AND EQUIPO_TAB(k).FUNCION IS NOT NULL THEN
+               QMS$ERRORS.SHOW_DEBUG_INFO('El valor de k luego es '||to_char(k));                                                                 
+                  FOR REQUIPO IN EQUIPO1 LOOP
+                     IF REQUIPO.PRS_CODIGO <> EQUIPO_TAB(k).PRS_CODIGO THEN
+                        IF EQUIPO_TAB(k).FUNCION = REQUIPO.FUNCION THEN 
+                        -- si se trata de más de un profesional en el mismo procedimiento se convierte en caso 3    
+                            PROC_TAB(j).CASO := 3;  
+                        END IF;    
+                     END IF;                                             
+                  END LOOP;                                                      
+                  BEGIN                                        
+                     vfuncion := EQUIPO_TAB(k).FUNCION;
+                     QMS$ERRORS.SHOW_DEBUG_INFO('Va a buscar el tipo de remuneración para '||vfuncion);                                           
+                     SELECT RV_ABBREVIATION INTO VTIPO_REM
+                     FROM CG_REF_CODES
+                     WHERE RV_DOMAIN = 'EQUIPOS_OPERATORIOS.FUNCION' AND
+                           RV_LOW_VALUE = EQUIPO_TAB(k).FUNCION;               
+                     QMS$ERRORS.SHOW_DEBUG_INFO('El tipo de remuneración es '||VTIPO_REM);                                                  
+                     IF VTIPO_REM <> 'HOR' THEN
+                        GNRL.CARGAR_HONORARIO(P_NUMPARTE,EQUIPO_TAB(k).PRS_CODIGO,NCONT,PROC_TAB(j).CANTIDAD,
+                                              P_DOCUMENTO,P_PCN_NUMERO_HC,P_INS_OR_DEL,NULL,Vtipo_rem,P_EVLCLN,PROC_TAB(j).PRCHSP_CODIGO,
+                                              PROC_TAB(j).LATERALIDAD,PROC_TAB(j).CASO,PROC_TAB(j).CONDICION,1,EQUIPO_TAB(k).POOL);
+                        QMS$ERRORS.SHOW_DEBUG_INFO('Ingresó el honorario '||Vtipo_rem);                                           
+                        NCONT:= NCONT+1;                       
+                        QMS$ERRORS.SHOW_DEBUG_INFO('El contador es '||to_char(ncont));                                           
+                     ELSE
+                        GNRL.CARGAR_HONORARIO(P_NUMPARTE,EQUIPO_TAB(k).PRS_CODIGO,NCONT,PROC_TAB(j).CANTIDAD,
+                                              P_DOCUMENTO,P_PCN_NUMERO_HC,P_INS_OR_DEL,NULL,Vtipo_rem,P_EVLCLN,PROC_TAB(j).PRCHSP_CODIGO,
+                                              PROC_TAB(j).LATERALIDAD,5,1,1,EQUIPO_TAB(k).POOL);
+                        QMS$ERRORS.SHOW_DEBUG_INFO('Ingresó el honorario '||Vtipo_rem);                                           
+                        NCONT:= NCONT+1;                       
+                        QMS$ERRORS.SHOW_DEBUG_INFO('El contador es '||to_char(ncont));                                           
+                     END IF;   
+                  EXCEPTION    
+                  WHEN NO_DATA_FOUND THEN                
+                     RAISE SIN_TIPO_REMUNERACION;                        
+                  WHEN OTHERS THEN
+                     RAISE_APPLICATION_ERROR(-20216,'No se pudor insertar/borrar el honorario del procedimiento quirúrgico'||SQLERRM);
+                  END;                                        
+               END IF;    
+            END LOOP;
+            CLOSE EQUIPO;
+            QMS$ERRORS.SHOW_DEBUG_INFO('Se ha insertado el procedimiento '||to_char(j));                                                                
+            k:=0;
+         ELSE  -- Se carga honorarios por procedimientos menores o interconsultas     
+            BEGIN   
+               QMS$ERRORS.Show_debug_info('***** Va a cargar**** '||to_char(P_NUMPARTE)||to_char(ncont)||P_DOCUMENTO);
+               GNRL.CARGAR_HONORARIO(P_NUMPARTE,P_BENEFICIARIO,NCONT,PROC_TAB(j).CANTIDAD,
+                                     P_DOCUMENTO,P_PCN_NUMERO_HC,P_INS_OR_DEL,NULL,P_TIPO_REMUNERACION,P_EVLCLN,PROC_TAB(j).PRCHSP_CODIGO,
+                                     PROC_TAB(j).LATERALIDAD,PROC_TAB(j).CASO,PROC_TAB(j).CONDICION,1,P_POOL);
+               NCONT:= NCONT+1; 
+           EXCEPTION                                                                            
+            WHEN OTHERS THEN
+               RAISE_APPLICATION_ERROR(-20216,'No se pudor insertar/borrar el honorario del procedimiento menor o interconsulta '||SQLERRM);
+            END;
+         END IF;
+      END LOOP;   
+   ELSIF nproced = 1 THEN   -- Un sólo procedimiento
+   FOR RPROC IN PROC LOOP
+      IF P_DOCUMENTO = 'O' THEN -- Se carga honorarios por procedimiento quirúrgico         OPEN EQUIPO;                                     
+         OPEN EQUIPO;       
+         LOOP
+            k:=k + 1;           
+            FETCH EQUIPO INTO EQUIPO_TAB(k);
+            EXIT WHEN EQUIPO%NOTFOUND;   
+            IF EQUIPO_TAB(k).PRS_CODIGO IS NOT NULL AND EQUIPO_TAB(k).FUNCION IS NOT NULL THEN
+               NDIVISOR:=1; 
+               FOR REQUIPO IN EQUIPO1 LOOP
+                  IF REQUIPO.PRS_CODIGO <> EQUIPO_TAB(k).PRS_CODIGO THEN
+                     IF EQUIPO_TAB(k).FUNCION = REQUIPO.FUNCION THEN 
+                     -- si se trata de más de un profesional en el mismo procedimiento se convierte en caso 3    
+                        NDIVISOR:= NDIVISOR+1;  
+                     END IF;    
+                  END IF;                                             
+               END LOOP;                                                      
+               BEGIN                                        
+                  vfuncion := EQUIPO_TAB(k).FUNCION;                  
+                  SELECT RV_ABBREVIATION INTO VTIPO_REM
+                  FROM CG_REF_CODES
+                  WHERE RV_DOMAIN = 'EQUIPOS_OPERATORIOS.FUNCION' AND
+                        RV_LOW_VALUE = EQUIPO_TAB(k).FUNCION;             
+                  QMS$ERRORS.SHOW_DEBUG_INFO('Va a cargar un procedimiento quirurgico');                          
+                  IF VTIPO_REM <> 'HOR' THEN
+                     GNRL.CARGAR_HONORARIO(P_NUMPARTE,EQUIPO_TAB(k).PRS_CODIGO,NCONT,RPROC.CANTIDAD,
+                                           P_DOCUMENTO,P_PCN_NUMERO_HC,P_INS_OR_DEL,NULL,Vtipo_rem,
+                                           P_EVLCLN,RPROC.PRCHSP_CODIGO,RPROC.LATERALIDAD,4,1,NDIVISOR,
+                                           EQUIPO_TAB(k).POOL);
+                     NCONT:= NCONT+1;                       
+                  ELSE
+                     GNRL.CARGAR_HONORARIO(P_NUMPARTE,EQUIPO_TAB(k).PRS_CODIGO,NCONT,RPROC.CANTIDAD,
+                                           P_DOCUMENTO,P_PCN_NUMERO_HC,P_INS_OR_DEL,NULL,Vtipo_rem,
+                                           P_EVLCLN,RPROC.PRCHSP_CODIGO,RPROC.LATERALIDAD,5,1,1,
+                                           EQUIPO_TAB(k).POOL);
+                     NCONT:= NCONT+1;                       
+                  END IF;   
+                  EXCEPTION    
+                  WHEN NO_DATA_FOUND THEN                
+                     RAISE SIN_TIPO_REMUNERACION;                        
+--                  WHEN OTHERS THEN
+--                     RAISE_APPLICATION_ERROR(-20216,'No se pudor insertar/borrar el honorario del procedimiento quirúrgico'||SQLERRM);
+                  END;                                        
+            END IF;    
+         END LOOP;
+         CLOSE EQUIPO;
+         k:=0;
+      ELSE      -- Se carga honorarios por procedimiento menor              
+         QMS$ERRORS.SHOW_DEBUG_INFO('Va a cargar el procedimiento menor');
+         QMS$ERRORS.Show_debug_info('***** Va a cargar**** '||to_char(P_NUMPARTE)||to_char(ncont)||P_DOCUMENTO);
+         GNRL.CARGAR_HONORARIO(P_NUMPARTE,P_BENEFICIARIO,NCONT,RPROC.CANTIDAD,
+                               P_DOCUMENTO,P_PCN_NUMERO_HC,P_INS_OR_DEL,NULL,
+                               P_TIPO_REMUNERACION,P_EVLCLN,RPROC.PRCHSP_CODIGO,
+                               RPROC.LATERALIDAD,4,1,1,P_POOL);
+         NCONT:= NCONT+1;                                   
+      END IF;     
+   END LOOP;   
+   ELSE
+      RAISE SIN_PROCEDIMIENTO;
+   END IF ;
+EXCEPTION
+WHEN SIN_PROCEDIMIENTO THEN                                                          
+   RAISE_APPLICATION_ERROR(-20213,'No se puede registrar honorarios si no hay un procedimiento hospitalario ');
+WHEN SIN_TIPO_REMUNERACION THEN                                                                               
+   RAISE_APPLICATION_ERROR(-20214,'No se puede registrar honorarios si no hay un tipo de remuneracion para la funcion '||vfuncion);
+--WHEN OTHERS THEN
+  --  RAISE_APPLICATION_ERROR(-20216,'El honorario no pudo ser generado por el error '||SQLERRM);   
+END;
+/* Devuelve el IVA para esa fecha */
+FUNCTION DEVUELVE_IVA
+ (DFECHA DATE := NULL
+ )
+ RETURN NUMBER
+ IS
+BEGIN
+-- Devuelve el valor del IVA para esa fecha
+-- Esta funcion se utiliza para las vistas del SRI basicamente
+DECLARE
+  dFechaIVA DATE;
+  nDev NUMBER:=0.12;
+BEGIN
+  dFechaIVA:=NVL(dFecha,SYSDATE);
+  IF dFechaIVA<TO_DATE('01/01/2000 00:00','DD/MM/YYYY HH24:MI') THEN
+-- 10% DE IVA HASTA DICIEMBRE DE 1999
+    nDev:=0.10;
+  ELSIF dFechaIVA BETWEEN TO_DATE('01/01/2000 00:00','DD/MM/YYYY HH24:MI') AND
+-- 12% DESDE ENERO DEL 2000 HASTA MAYO DEL 2001
+    TO_DATE('31/05/2001 23:59','DD/MM/YYYY HH24:MI') THEN
+    nDev:=0.12;
+  ELSIF dFechaIVA BETWEEN TO_DATE('01/06/2001 00:00','DD/MM/YYYY HH24:MI') AND
+    TO_DATE('31/08/2001 23:59','DD/MM/YYYY HH24:MI') THEN
+-- 14% DESDE JUNIO DEL 2001 HASTA AGOSTO 2001
+    nDev:=0.14;
+  ELSE
+-- 12% DESDE SEPTIEMBRE DEL 2001
+    nDev:=0.12;
+  END IF;
+  RETURN nDev;
+END;
+END DEVUELVE_IVA;
+
+FUNCTION VALIDAR_DATOS_SRI
+ (VIDVALIDACION VARCHAR2
+ ,DFECHACMPCONTABLE DATE
+ ,VRUC VARCHAR2
+ ,VTIPOCMP VARCHAR2
+ ,DFECHACMP DATE
+ ,VSERIECMP VARCHAR2
+ ,VSECNTA VARCHAR2
+ ,DFECHANTA DATE
+ ,VFACTURA VARCHAR2
+ ,VAUTORIZACION VARCHAR2
+ ,VIDCREDITO_GASTO VARCHAR2
+ ,VTIPORF VARCHAR2
+ ,VSERIENTA VARCHAR2 := NULL
+ ,VAUTORIZACIONNTA VARCHAR2 := NULL
+ ,VCMPCNT VARCHAR2 := NULL
+ ,VMOSTRAROESCRIBIR VARCHAR2 := NULL
+ )
+ RETURN NUMBER
+ IS
+BEGIN
+-- Valida que el comprobante cumpla con las normas del SRI. La validacion se la hara antes de  grabar el comprobante
+-- vIDValidacion sirve para indicar si el comprobante es:
+--                                                 DC -> Nota de Debito o Credito
+--                                                 RF -> Solo de Retenciones en la fuente
+--                                                 TL -> Transacciones Locales
+--								   VT -> Ventas
+--								   TX -> Transacciones con el  exterior
+/*************************** QUE SE VALIDA  **********************************************
+PARA TODOS    => RUC
+TL,DC         => FECHA EMISION, TIPO COMPROBANTE, SERIE COMPROBANTE, FACTURA/COMP.
+                 NO. AUTORIZACION
+TL            => ID CREDITO/GASTO
+DC            => FECHA EMISION NOTA, NO. NOTA
+TL,RF         => ID RETENCION FUENTE
+TX => SE DEJA PENDIENTE HASTA PROGRAMAR
+*****************************************************************************************
+************* DEVUELVE EL ID DEL RUC (SECUENCIAL DE LA TRANSACCION) *********************
+-4 -> no se ha realizado ningun procesamineto con esta funcion
+-3 -> Indicador de validacion incorrecto (no es ni TL, TX, DC, RF, VT)
+-2 -> NO VALIDADO(MENOR AL 1 AGOSTO 2002)
+-1 -> EXPORTACION/IMPORTACION
+0  -> ERROR
+1  -> COMPRA A PROVEEDOR CON RUC
+2  -> COMPRA A PROVEEDOR CON CEDULA
+3  -> COMPRA A PROVEEDOR CON PASAPORTE
+4  -> VENTA A CLIENTE CON RUC
+5  -> VENTA A CLIENTE CON CEDULA
+6  -> VENTA A CLIENTE CON PASAPORTE
+7  -> VENTA A CLIENTE CONSUMIDOR FINAL
+*****************************************************************************************/
+DECLARE
+  FECHA_INICIO_VALIDACION DATE:='01/01/2006';---------------Fecha inicial de validacion--------
+  nRUC NUMBER:=0;
+  nTipoCmp NUMBER:=0;
+  nSecNta NUMBER:=0;
+  nSerieCmp NUMBER:=0;
+  nFactura NUMBER:=0;
+  nAutorizacion NUMBER:=0;
+  nIDCredito_Gasto NUMBER:=0;
+  nTipoRF NUMBER:=0;
+  nSerieNta NUMBER:=0;
+  nAutorizacionNta NUMBER:=0;
+  vParametroError VARCHAR2(200):='';
+  nDev NUMBER;
+  nMaxDiasCont NUMBER:=62;-- Se da un plaxo maximo de 2 meses para contabilizar una factura
+  MALA_CONVERSION EXCEPTION;
+  MAL_RUC EXCEPTION;
+  MAL_FECHA_EMISION EXCEPTION;
+  TIPO_COMPROBANTE_INVALIDO EXCEPTION;
+  TIPO_COMPROBANTE_CADUCADO EXCEPTION;
+  MAL_SERIE_COMPROBANTE EXCEPTION;
+  MAL_SECUENCIAL_COMPROBANTE EXCEPTION;
+  SERIE_COMPROBANTE_CERO EXCEPTION;
+  NUMERO_AUTORIZACION_CERO EXCEPTION;
+  MAL_NUMERO_AUTORIZACION EXCEPTION;
+  MAL_ID_CREDITO_GASTO EXCEPTION;
+  MAL_TIPO_RF EXCEPTION;
+  MAL_NUMERO_NOTA EXCEPTION;
+  MAL_FECHA_NOTA EXCEPTION;
+  MAL_PASAPORTE EXCEPTION;
+  MAL_TIPO_CMP_CON_IDCRDB EXCEPTION;
+  vTipoRF_verificada VARCHAR2(5);
+  EXISTE_RETENCION VARCHAR2(1):= 'F';
+  TIPO_COMPROBANTE_INVALIDO_VT EXCEPTION;
+  PRAGMA EXCEPTION_INIT(MALA_CONVERSION,-6502);
+  CURSOR cTipoRF(vCodRF VARCHAR2) IS
+    SELECT CODIGO 
+    FROM TIPOS_RETENCIONES_SRI T
+    WHERE t.codigo like vCodRF AND DFECHACMPCONTABLE
+    BETWEEN T.ANIO_VALIDEZ_DESDE AND NVL(T.ANIO_VALIDEZ_HASTA,SYSDATE);
+BEGIN
+  nDev:=-4; -- Marcamos que no se ha procesado nada todavia
+QMS$ERRORS.SHOW_DEBUG_INFO('ID VALIDACION '||vIDValidacion);
+  IF vIDValidacion IS NULL THEN
+    QMS$ERRORS.SHOW_DEBUG_INFO('No se valida nada IDVALIDACION nulo');
+    RETURN nDev;
+  END IF;
+  IF dFechaCmpContable<TO_DATE('01/08/2002','DD/MM/YYYY') AND vIDValidacion!='VT' THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('No se valida por ser comprobantes menores al 1 agosto');
+    RETURN -2; -- no validamos ningun comprobante menor al 1 de agosto del 2002 y no ser venta
+  END IF;
+QMS$ERRORS.SHOW_DEBUG_INFO('FECHA CONTABLE '||TO_CHAR(dFechaCmpContable,'DD/MM/YYY'));
+QMS$ERRORS.SHOW_DEBUG_INFO('RUC '||vRUC);
+QMS$ERRORS.SHOW_DEBUG_INFO('TIPO COMPROBANTE '||vTipoCmp);
+QMS$ERRORS.SHOW_DEBUG_INFO('FECHA EMISION '||TO_CHAR(dFechaCmp,'DD/MM/YYYY'));
+QMS$ERRORS.SHOW_DEBUG_INFO('SERIE '||vSerieCmp);
+QMS$ERRORS.SHOW_DEBUG_INFO('NO NOTA '||vSecNta);
+QMS$ERRORS.SHOW_DEBUG_INFO('FECHA NOTA '||TO_CHAR(dFechaNta,'DD/MM/YYYY'));
+QMS$ERRORS.SHOW_DEBUG_INFO('FACTURA '||vFactura);
+QMS$ERRORS.SHOW_DEBUG_INFO('NO AUTORIZACION '||vAutorizacion);
+QMS$ERRORS.SHOW_DEBUG_INFO('ID CREDITO GASTO '||vIDCredito_Gasto);
+QMS$ERRORS.SHOW_DEBUG_INFO('ID RETENCION FUENTE '||vTipoRF);
+QMS$ERRORS.SHOW_DEBUG_INFO('ID RETENCION FUENTE '||vTipoRF);
+QMS$ERRORS.SHOW_DEBUG_INFO('SERIE NOTA '||vSerieNta);
+QMS$ERRORS.SHOW_DEBUG_INFO('NO AUTORIZACION NOTA '||vAutorizacionNta);
+QMS$ERRORS.SHOW_DEBUG_INFO('Comprobante Contable '||vCmpcnt);
+  IF vIDValidacion NOT IN ('TL','TX','DC','RF','VT') THEN
+QMS$ERRORS.SHOW_DEBUG_INFO('vIDValidacion mal fijado'||vIDValidacion);
+    RETURN -3; -- Salimos sin hacer nada si no vienen bien los indicadores
+  END IF;
+/*************  VALIDAR RUC/CED/PSP      ********************/
+  nDev:=VALIDAR_RUC_Y_CEDULA(vRUC,vIdValidacion,vTipoCmp,vMostraroEscribir);
+  IF nDev=0 THEN
+    RAISE MAL_RUC;
+  ELSIF nDev=3 AND vRuc!='0000000000001' AND vIDValidacion IN ('TL','RF') AND  SUBSTR(vRUC,1,1)!='P' THEN
+-- si es pasaporte debe comenzar con P
+    RAISE MAL_PASAPORTE;
+  END IF;
+  IF vIDValidacion ='VT' THEN
+    nTipoCmp:=TO_NUMBER(vTipoCmp);
+    IF nTipoCmp NOT IN (4,5,18) THEN
+      RAISE TIPO_COMPROBANTE_INVALIDO_VT;
+    END IF;
+    RETURN nDev; -- Si es venta no se hace ninguna validacion adicional y salimos
+  END IF;
+  IF vIDValidacion IN ('TL','DC') THEN
+-- Cosas comunes para Comprobantes de Transacciones Locales y Notas Debito / Credito
+    BEGIN /*************  VALIDAR FECHA EMISION      ********************/
+      IF dFechaCmpContable<dFechaCmp THEN
+-- La fecha de comprobante contable siempre debe ser mayor que la fecha de la factura
+        IF vIDValidacion='DC' THEN
+-- La fecha de la nota de Credito/Debito debe ser mayor o igual a la del Comprobante contable
+          vParametroError:='La fecha de Comprobante Contable de Notas de Credito/Debito debe ser  mayor o igual que la fecha de la factura a la cual se aplica la nota.';
+          RAISE MAL_FECHA_EMISION;
+        ELSE
+          vParametroError:='La fecha de un Comprobante de contable debe ser mayor o igual que la  de la factura/Comprobante que se esta ingresando';
+          RAISE MAL_FECHA_EMISION;
+        END IF;
+      END IF;
+      IF dFechaCmpContable-nMaxDiasCont>dFechaCmp AND vIDValidacion='TL' THEN
+-- La fecha de comprobante contable debe ser maximo 2 meses despues del de la factura siendo  contabilizada
+        vParametroError:='La fecha de Emision debe ser maximo de 2 meses antes de su Fecha de  contabilizacion';
+        RAISE MAL_FECHA_EMISION;
+      END IF;
+    END;
+    BEGIN  /*************  VALIDAR TIPO COMPROBANTE      ********************/
+      nTipoCmp:=TO_NUMBER(NVL(VTipoCmp,'0')); -- vemos que el Tipo Comprobante sea valido
+      IF nTipoCmp NOT IN (1,2,3,9,10,11,12,13,14,15,16,17,19,20,41) THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF nTipocmp IN (13,14) AND dFechaCmpContable>=TO_DATE('01/01/2003') THEN
+        RAISE TIPO_COMPROBANTE_CADUCADO;
+      END IF;
+      IF nTipocmp=10 AND dFechaCmpContable>=TO_DATE('01/04/2003') THEN
+        RAISE TIPO_COMPROBANTE_CADUCADO;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE TIPO_COMPROBANTE_INVALIDO;
+    END;
+    BEGIN  /*************  VALIDAR SERIE COMPROBANTE      ********************/
+-- El numero de serie del comprobante debe tener el formato 001001
+      nSerieCmp:=TO_NUMBER(NVL(vSerieCmp,'0')); -- vemos que la serie del comprobante sea valida
+      IF LENGTH(vSerieCmp)!=6 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+            /*** OTRAS VALIDACIONES DEL TIPO COMPROBANTE *****/
+      IF nTipoCmp IN (8,9,10,11,12,13,14,15,19,20) AND nSerieCmp!=0  THEN
+-- si los comprobantes son TIQUETES, PASAJES DE AVION, ETC
+-- La serie del comprobante debe ser cero
+        RAISE SERIE_COMPROBANTE_CERO;
+      ELSIF nTipoCmp NOT IN (8,9,10,11,12,13,14,15,19,20) AND nSerieCmp NOT BETWEEN 1001 AND  999999 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_SERIE_COMPROBANTE;
+    END;
+    BEGIN  /*************  VALIDAR SERIE NOTA      ********************/
+-- El numero de serie del comprobante debe tener el formato 001001
+      nSerieNta:=TO_NUMBER(NVL(vSerieNta,'0')); -- vemos que la serie del comprobante sea valida
+      IF vIDValidacion='DC' AND LENGTH(vSerieNta)!=6 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_SERIE_COMPROBANTE;
+    END;
+    BEGIN  /*************  VALIDAR FACTURA COMPROBANTE      ********************/
+-- El numero de FACTURA/comprobante debe ser numerico
+      nFactura:=TO_NUMBER(NVL(vFactura,'0')); --
+      IF LENGTH(vFactura)>7 THEN
+-- Maximo 7 caracteres por factura
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF FLOOR(nFactura)!=nFactura THEN
+-- Que sea un numero entero
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF nFactura NOT BETWEEN 1 AND 9999999 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_SECUENCIAL_COMPROBANTE;
+    END;
+    BEGIN  /*************  VALIDAR AUTORIZACION COMPROBANTE      ********************/
+-- El numero de Autorizacion del SRI debe ser numerico
+      nAutorizacion:=TO_NUMBER(NVL(vAutorizacion,'0')); --
+      IF LENGTH(vAutorizacion)>10 THEN
+-- Maximo 10 caracteres por autorizacion
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF FLOOR(nAutorizacion)!=nAutorizacion THEN
+-- Que sea un numero entero
+        RAISE MALA_CONVERSION;
+      END IF;
+       /***** OTRAS VALIDACIONES DEL TIPO COMPROBANTE ********/
+      IF nTipoCmp IN (9,10,11,12,13,14,15,19,20) AND nAutorizacion!=0 THEN
+-- El Numero de autorizacion debe ser cero
+        RAISE NUMERO_AUTORIZACION_CERO;
+      ELSIF nTipoCmp NOT IN (9,10,11,12,13,14,15,19,20) AND nAutorizacion NOT BETWEEN 1 AND  9999999999 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_NUMERO_AUTORIZACION;
+    END;
+    BEGIN  /*************  VALIDAR AUTORIZACION NOTA      ********************/
+-- El numero de Autorizacion del SRI debe ser numerico
+      nAutorizacionNta:=TO_NUMBER(NVL(vAutorizacionNta,'0')); --
+       /***** OTRAS VALIDACIONES DEL TIPO COMPROBANTE ********/
+      IF LENGTH(vAutorizacionNta)>10 THEN
+-- Maximo 10 caracteres por autorizacion
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF FLOOR(nAutorizacionNta)!=nAutorizacionNta THEN
+-- Que sea un numero entero
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF vIDValidacion='DC' AND nAutorizacionNta NOT BETWEEN 1 AND 9999999999 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_NUMERO_AUTORIZACION;
+    END;
+    BEGIN  /*************  VALIDAR ID_CREDITO_GASTO      ********************/
+-- El Identificador de Credito o Gasto de la factura/Comprobante
+      nIDCredito_Gasto:=TO_NUMBER(NVL(vIDCredito_Gasto,'0')); --
+      IF nIDCredito_Gasto NOT BETWEEN 1 AND 9 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_ID_CREDITO_GASTO;
+    END;
+  END IF;
+  IF vIDValidacion IN ('TL','RF') THEN
+-- Cosas comunes para Comprobantes de Caja Medica y Transacciones Locales
+    BEGIN  /*************  VALIDAR TIPO RETENCION      ********************/
+      nTipoRF:=TO_NUMBER(NVL(vTipoRF,'0'));
+      IF dFechaCmpContable < FECHA_INICIO_VALIDACION THEN 
+     /*Se pueden pasar los datos ingresados antes de la fecha de validacion*/
+        IF nTipoRF NOT IN  (0,302,303,304,305,306,307,308,312,315,316,317,318,319,323,325,327,337,339,407,410,411,419,421)  AND 
+          dFechaCmpContable>=TO_DATE('01/01/2002','DD/MM/YYYY') THEN
+-- Para a?o 2002 en adelante
+          vParametroError:='(0,302,303,304,305,306,307,308,312,315,316,317,318,319,323,325,327,337,339,407, 410,411,419,421)';
+          RAISE MALA_CONVERSION;
+        END IF;
+        IF nTipoRF NOT IN  (0,302,303,304,305,306,307,308,310,311,312,313,314,315,316,317,318,407,410) AND 
+          dFechaCmpContable<TO_DATE('01/01/2002','DD/MM/YYYY') THEN
+-- menores al a?o 2002
+         vParametroError:='(0,302,303,304,305,306,307,308,310,311,312,313,314,315,316,317,318,407,410)';
+         RAISE MALA_CONVERSION;
+        END IF;
+    --------- Datos ingresados antes de la fecha inicial de validacion
+      ELSIF dFechaCmpContable >= FECHA_INICIO_VALIDACION THEN 
+     /*Se validan con nuevos tipos de retenciones los datos ingresados luego de la fecha inicial*/
+      -- Para año 2003 en adelante        
+        BEGIN
+         vParametroError:='(';
+         EXISTE_RETENCION := 'F';      
+         FOR rTipoRf IN cTipoRf(nTipoRF) LOOP
+           EXISTE_RETENCION := 'V';      
+         END LOOP;
+         IF EXISTE_RETENCION='F' THEN
+         -- Si no existe codigo RF damos un error e indicamos cuales son las validas
+          FOR rTipoRf IN cTipoRf('%') LOOP
+            vParametroError:=vParametroError||rTipoRF.CODIGO||',';
+          END LOOP;
+          vParametroError:=SUBSTR(vParametroError,1,LENGTH(vParametroError)-1)||')';
+          RAISE MALA_CONVERSION;
+         END IF;
+         vParametroError:= NULL;
+        END;
+QMS$ERRORS.SHOW_DEBUG_INFO('Codigo '||nTipoRF||' existente y valido' );
+      END IF; --------- Datos ingresados después de la fecha inicial de validación
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_TIPO_RF;
+    END;
+  END IF;
+  IF vIDValidacion='DC' THEN
+    BEGIN  /*************  VALIDAR NUMERO DE NOTA  CR/DB    ********************/
+-- El numero de FACTURA/comprobante debe ser numerico
+      nSecNta:=TO_NUMBER(NVL(vSecNta,'0')); --
+      IF LENGTH(vSecNta)>7 THEN
+-- Maximo 7 caracteres por nota CR o DB
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF FLOOR(nSecNta)!=nSecNta THEN
+-- Que sea un numero entero
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF nSecNta <= 0 THEN
+        RAISE MALA_CONVERSION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_NUMERO_NOTA;
+    END;
+    BEGIN  /*************  VALIDAR FECHA NOTA      ********************/
+      vParametroError:='';
+      IF dFechaCmpContable<dFechaNta THEN
+-- La fecha de comprobante contable siempre debe ser mayor que la fecha de la nota
+-- y mayor a la fecha de la factura
+        vParametroError:='La fecha del Comprobante debe ser mayor o igual que el de la Nota de  Credito/Debito';
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF dFechaNta<dFechaCmp THEN
+        vParametroError:='La fecha de la Nota de Credito/Debito debe ser mayor o igual que la  fecha de la factura a la cual se aplica la nota.';
+        RAISE MALA_CONVERSION;
+      END IF;
+      IF dFechaCmpContable-nMaxDiasCont>dFechaNta AND vIDValidacion='DC' THEN
+-- La fecha de comprobante contable debe ser maximo 2 meses despues del de la nota siendo  contabilizada
+        vParametroError:='La fecha de Emision de la nota debe ser maximo de 2 meses antes de su  Fecha de contabilizacion';
+        RAISE MAL_FECHA_EMISION;
+      END IF;
+    EXCEPTION
+      WHEN MALA_CONVERSION THEN
+        RAISE MAL_FECHA_NOTA;
+    END;
+  END IF;
+  IF vIDValidacion='TL' THEN
+    IF nTipoCmp IN (1,3,13) AND nIDCredito_Gasto NOT BETWEEN 1 AND 9 THEN
+-- FACTURAS, LIQUIDACIONES EN COMPRAS, COMPA?IAS DE SEGUROS
+      vParametroError:='(01,02,03,04,05,06,07,08,09)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+    IF nTipoCmp IN (2,10,15) AND nIDCredito_Gasto NOT IN (2,4,5,7,9) THEN
+-- NOTAS DE VENTA,COMPROBANTES DE VENTA ART 10, COMPROBANTES EMITIDOS EN E EXTERIOR
+      vParametroError:='(02,04,05,07,09)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+    IF nTipoCmp = 8 AND nIDCredito_Gasto <> 2 THEN
+-- BOLETOS U ESPECTACULOS
+      vParametroError:='(02)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+    IF nTipoCmp IN (19,20) AND nIDCredito_Gasto NOT IN (2,5) THEN
+--  PAGOS DE CUOTAS O APORTES, DOCUMENTOS EMITIDOS POR EL ESTADO
+      vParametroError:='(02,05)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+    IF nTipoCmp=9 AND nIDCredito_Gasto NOT IN (4,5,7) THEN
+-- TIQUETS MAQUINAS REGISTRADORAS
+      vParametroError:='(04,05,07)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+    IF nTipoCmp IN (11,12,14) AND nIDCredito_Gasto NOT IN (1,2,5) THEN
+-- PASAJES COMPA?IAS DE AVIACION, INSTITUCIONES FINANCIERAS, TELECOMUNICACIONES
+      vParametroError:='(01,02,05)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+  ELSIF vIDValidacion='TX' THEN
+-- Se daja listo para Transacciones al Exterior
+    IF nTipoCmp=17  AND nIDCredito_Gasto NOT BETWEEN 1 AND 7 THEN
+-- IMPORTACIONES
+      vParametroError:='(01,02,03,04,05,06,07)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+    IF nTipoCmp=16  AND nIDCredito_Gasto!=0 THEN
+-- IMPORTACIONES
+      vParametroError:='(00)';
+      RAISE MAL_TIPO_CMP_CON_IDCRDB;
+    END IF;
+  END IF;
+  RETURN nDev;
+EXCEPTION
+  WHEN MAL_PASAPORTE THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00024',vCmpcnt);  -- Mal ingresado el Pasaporte
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00024',vCmpCnt);  -- Mal ingresado el Pasaporte
+    END IF;
+  WHEN MAL_RUC THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00024',vCmpcnt);  -- Mal ingresado el RUC
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00024',vCmpCnt);  -- Mal ingresado el RUC
+    END IF;
+  WHEN MAL_FECHA_EMISION THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00059',vParametroError,vCmpCnt);  -- mal la fecha de emision
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00059',vParametroError,vCmpCnt);  -- mal la fecha de emision
+    END IF;
+  WHEN TIPO_COMPROBANTE_CADUCADO THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00078',vTipocmp,vCmpCnt);  -- tipo Comprobante Caducado
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00078',vTipocmp,vCmpCnt);  -- tipo Comprobante Caducado
+    END IF;
+  WHEN TIPO_COMPROBANTE_INVALIDO THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00058','(1,2,3,9,10,11,12,13,14,15,16,17,19,20)',vCmpCnt);  --  Mal ingresada el Tipo de Comprobante
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00058','(1,2,3,9,10,11,12,13,14,15,16,17,19,20)',vCmpCnt);  --  Mal ingresada el Tipo de Comprobante
+    END IF;
+  WHEN TIPO_COMPROBANTE_INVALIDO_VT THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00058','(4,5,18)',vFactura);  -- Mal ingresada el Tipo de  Comprobante
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00058','(4,5,18)',vFactura);  -- Mal ingresada el Tipo de  Comprobante
+    END IF;
+  WHEN SERIE_COMPROBANTE_CERO THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00073',vTipoCmp,vCmpcnt); -- la serie del comprobante debe ser  cero
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00073',vTipoCmp,vCmpCnt); -- la serie del comprobante debe ser  cero
+    END IF;
+  WHEN MAL_SERIE_COMPROBANTE THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00060',vCmpCnt);  -- Mal ingresada la serie del comprobante
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00060',vCmpCnt);  -- Mal ingresada la serie del comprobante
+    END IF;
+  WHEN MAL_SECUENCIAL_COMPROBANTE THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00064',vCmpCnt);  -- Mal ingresada la Factura/Comp
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00064',vCmpCnt);  -- Mal ingresada la Factura/Comp
+    END IF;
+  WHEN NUMERO_AUTORIZACION_CERO THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00074',vTipoCmp,vCmpCnt); -- la autorizacion debe ser cero
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00074',vTipoCmp,vCmpCnt); -- la autorizacion debe ser cero
+    END IF;
+  WHEN MAL_NUMERO_AUTORIZACION THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00061',vCmpcnt);  -- Mal numero autorizacion
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00061',vCmpcnt);  -- Mal numero autorizacion
+    END IF;
+  WHEN MAL_ID_CREDITO_GASTO THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00062','(1,2,3,4,5,6,7,8,9)',vCmpCnt);  -- Mal ingresada la  Factura/Comp
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00062','(1,2,3,4,5,6,7,8,9)',vCmpCnt);  -- Mal ingresada la  Factura/Comp
+    END IF;
+  WHEN MAL_TIPO_RF THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00063',vParametroError,vCmpCnt);  -- Mal ingresada el Tipo de RF
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00063',vParametroError,vCmpCnt);  -- Mal ingresada el Tipo de  RF
+    END IF;
+  WHEN MAL_NUMERO_NOTA THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00065',vCmpCnt);  -- Mal ingresada No Nota
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00065',vCmpCnt);  -- Mal ingresada No Nota
+    END IF;
+  WHEN MAL_FECHA_NOTA THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00066',vParametroError,vCmpcnt);  -- Mal ingresada la fecha de  la nota
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00066',vParametroError,vCmpcnt);  -- Mal ingresada la fecha de  la nota
+    END IF;
+  WHEN MAL_TIPO_CMP_CON_IDCRDB THEN
+    IF vMostrarOEscribir='E' THEN
+      GNRL.ESCRIBIR_ERRORES('CNT-00079',vTipoCmp,vParametroError,vCmpcnt);  -- Mal ingresada la  fecha de la nota
+      RETURN 0;
+    ELSE
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00079',vTipoCmp,vParametroError,vCmpcnt);  -- Mal ingresada la  fecha de la nota
+    END IF;
+END;
+END VALIDAR_DATOS_SRI;
+
+/* valida la identificacion (Cedula, Ruc o Pasaporte) se correcta */
+PROCEDURE VALIDA_IDENTIFICACION
+ (VID VARCHAR2
+ ,VTIPOID VARCHAR2
+ )
+ IS
+
+NTEMP NUMBER;
+-- Validamos que la identificacion coincida con el tipo identificacion
+-- Preferiblemente va a ser llamado desde trigger PRE-INSERT O PRE-UPDATE
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('************ VALIDA_IDENTIFICACION *************');
+QMS$ERRORS.SHOW_DEBUG_INFO(' ID '||vID);
+QMS$ERRORS.SHOW_DEBUG_INFO(' TIPO ID '||VTIPOID);
+  IF VTIPOID!='PSP' THEN
+    nTemp:=GNRL.VALIDAR_RUC_Y_CEDULA(vID,'TL');
+    IF nTemp=1 AND vTipoID!='RUC' THEN
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01011') ; -- ERROR Corresponde a RUC
+    END IF;
+    IF nTemp=2 AND vTipoID!='CDL' THEN
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01012') ; -- ERROR Corresponde a Cedula
+    END IF;
+    IF nTemp=3 AND vTipoID!='PSP' THEN
+      QMS$ERRORS.SHOW_MESSAGE('ADM-01013') ; -- ERROR Corresponde a Pasaporte
+    END IF;
+  ELSE
+QMS$ERRORS.SHOW_DEBUG_INFO('ES PASAPORTE');
+  END IF;
+END VALIDA_IDENTIFICACION;
+--
+PROCEDURE ROL_HABILITADO_PERMISO
+ (
+  DFECHA       DATE, --:= NULL,
+  VMODULO      IN PERMISOS.MDL_MODULO%TYPE,
+  VCOMPONENTE  IN PERMISOS.COMPONENTE%TYPE,
+  VInsertar   OUT VARCHAR2,  -- := NULL,
+  VActualizar OUT VARCHAR2,  -- := NULL,
+  VEliminar   OUT VARCHAR2,  -- := NULL
+  VConsultar  OUT VARCHAR2  -- := NULL 
+   )
+ IS
+  --- a la hora actual le sumamos un segundo mas, para compararle con la dfecha recibida como
+  --- parametro. Porque la dfecha llega con un segundo mas tarde a la dfechaactual.
+  DFECHAACT   DATE := sysdate + ((1/24)/60)/60;
+ 
+  dFechaHastaI     DATE := NULL;
+  dFechaHastaA     DATE := NULL;
+  dFechaHastaE     DATE := NULL;
+  dFechaHastaC     DATE := NULL;
+  dFecha_00        DATE := NULL;
+  
+     t_eliminar_max   NUMBER :=0;
+     t_actualizar_max NUMBER :=0;
+     t_insertar_max   NUMBER :=0;
+     t_consultar_max  NUMBER :=0;
+ ---quitar 
+--    dFechaHasta_nueva   VARCHAR2(200);
+--    DFECHA_NUEVA     VARCHAR2(200);
+--    dFechaAct_nueva  VARCHAR2(200);
+---       
+       cursor c_permisos is
+       select  eliminar,    t_eliminar,
+               actualizar,  t_actualizar,
+               insertar,    t_insertar, 
+               consultar,   t_consultar, 
+               componente,  role,
+               h_cero
+       from permisos     
+       where mdl_modulo  = VMODULO
+       AND   componente  = VCOMPONENTE;
+BEGIN
+     VInsertar   := 'F';
+     VActualizar := 'F';
+     VEliminar   := 'F';
+     VConsultar  := 'F';
+           
+
+  IF DBMS_SESSION.IS_ROLE_ENABLED('SIS_ADMIN') THEN
+--         IF DBMS_SESSION.IS_ROLE_ENABLED(c.role) THEN         
+         -- Si el rol es el dueño del sistema medico, siempre sera modificable
+
+           VInsertar   := 'T';
+           VActualizar := 'T';
+           VEliminar   := 'T';
+           VConsultar  := 'T';
+  ELSE         
+  
+     FOR c IN c_permisos LOOP
+     --- INSERTAR --- ACTUALIZAR --- ELIMINAR --- CONSULTAR           
+           IF dFecha IS NOT NULL AND DBMS_SESSION.IS_ROLE_ENABLED(c.role) THEN
+      -- INSERTAR
+             if c.insertar = 'V'  AND C.T_INSERTAR > 0 then
+                 -- Para el mayor tiempo de cualquier rol
+                 if t_insertar_max < C.T_INSERTAR then
+                    t_insertar_max := C.T_INSERTAR;
+                 end if;
+                 -- tiempos y roles de sesion validos son considerados
+                 -- INSERTAR 
+                 -- Se divide 1/24 para sacar la constante en horas
+                 -- se compara con la fecha actual por es la hora de creación del registro
+                 --- se considera siempre desde la 00 horas
+                 dFecha_00 :=    to_date(to_char(dFechaAct,'DD/MM/YYYY')||' 00:00', 'DD/MM/YYYY HH24:MI');
+                 --DFECHA_NUEVA      := to_char(DFECHA_00,'DDMMYYYY HH24:MI');
+                 dFechaHastaI   := dFecha_00 +  (C.T_INSERTAR*(1/24)); -- + nHoras;
+                 --dFechaHasta_nueva := to_char(dFechaHastaI,'DDMMYYYY HH24:MI');
+                  IF dFechaAct BETWEEN dFecha_00  AND dFechaHastaI THEN
+                          VInsertar   := 'T';
+                  END IF;
+             end if;
+      -- ACTUALIZAR
+             if c.actualizar = 'V' AND C.T_ACTUALIZAR > 0  then
+                 --
+                 if t_actualizar_max < C.T_ACTUALIZAR then
+                    t_actualizar_max := C.T_ACTUALIZAR;
+                 end if;
+                 -- 
+                 IF c.h_cero = 'V' then
+                    dFecha_00 :=    to_date(to_char(dFecha,'DD/MM/YYYY')||' 00:00', 'DD/MM/YYYY HH24:MI');
+--                  DFECHA_NUEVA      := to_char(DFECHA_00,'DDMMYYYY HH24:MI');
+                    dFechaHastaA   := dFecha_00 +  (C.T_ACTUALIZAR*(1/24)); -- + nHoras;
+--                  dFechaHasta_nueva := to_char(dFechaHastaA,'DDMMYYYY HH24:MI');
+--                  dFechaAct_nueva := to_char(dFechaAct,'DDMMYYYY HH24:MI');
+                    IF dFechaAct BETWEEN dFecha_00  AND dFechaHastaA THEN
+                         VActualizar := 'T';
+                    END IF;
+                 ELSE
+                     dFechaHastaA     := dFecha + (C.T_ACTUALIZAR*(1/24)); -- + nHoras;;
+                     IF dFechaAct BETWEEN dFecha  AND dFechaHastaA THEN
+                          VActualizar := 'T';
+                     END IF;
+                 END IF;                     
+             end if;
+      -- ELIMINAR
+             if c.eliminar = 'V' AND C.T_ELIMINAR > 0 then
+                 --
+                 if t_eliminar_max < C.T_ELIMINAR then
+                    t_eliminar_max := C.T_ELIMINAR;
+                 end if;
+                 IF c.h_cero = 'V' then
+                    dFecha_00 :=    to_date(to_char(dFecha,'DD/MM/YYYY')||' 00:00', 'DD/MM/YYYY HH24:MI');
+                    --DFECHA_NUEVA      := to_char(DFECHA_00,'DDMMYYYY HH24:MI');
+                    dFechaHastaE   := dFecha_00 +  (C.T_ELIMINAR*(1/24)); -- + nHoras;
+                    --dFechaHasta_nueva := to_char(dFechaHastaI,'DDMMYYYY HH24:MI');
+                    IF dFechaAct BETWEEN dFecha_00  AND dFechaHastaE THEN
+                         VEliminar := 'T';
+                    END IF;
+                 ELSE
+                 -- ELIMINAR
+                    dFechaHastaE       := dFecha + (C.T_ELIMINAR*(1/24)); -- + nHoras;
+                    IF  dFechaAct BETWEEN dFecha  AND dFechaHastaE THEN
+                       VEliminar   := 'T';
+                    end if;    
+                 END IF;
+             end if;         
+      -- CONSULTAR-- No control de tiempo
+             if c.consultar = 'V' AND C.T_CONSULTAR > 0 then
+                 dFechaHastaC       := dFecha + (C.T_CONSULTAR*(1/24)); -- + nHoras;
+                 --
+                 if t_consultar_max < C.T_CONSULTAR then
+                    t_consultar_max := C.T_CONSULTAR; 
+                 end if;
+                 -- 
+                 IF dFechaHastaC IS NOT NULL AND (dFechaAct BETWEEN dFecha  AND dFechaHastaC) THEN
+                          VConsultar   := 'T';
+                END IF;                 
+             end if;         
+         END IF;
+---------------------------
+
+
+      END LOOP;
+
+      VActualizar:=VActualizar;
+
+ END IF;      
+
+
+END ROL_HABILITADO_PERMISO;
+
+--
+FUNCTION PRIMER_REGISTRO
+ (
+  NCTACBR_NUMERO CUOTAS_A_COBRAR.CTACBR_NUMERO%TYPE
+ )
+ RETURN NUMBER
+ IS
+ SALDO CUOTAS_A_COBRAR.SALDO%TYPE;
+
+BEGIN
+select round(t.saldo,2)
+into saldo
+from cuotas_a_cobrar t
+where t.ctacbr_numero = NCTACBR_NUMERO
+and t.fecha_plazo is not null
+and NUMERO_CUOTA < 2
+order by t.numero_cuota;
+      
+      return saldo;
+ 
+EXCEPTION WHEN OTHERS THEN
+     saldo := 0;
+     return saldo;
+END;
+------- fin primer registro
+
+/*ultimo registro*/
+
+FUNCTION ULTIMO_REGISTRO
+ (
+  NCTACBR_NUMERO CUOTAS_A_COBRAR.CTACBR_NUMERO%TYPE
+ )
+ RETURN DATE
+ IS
+ fecha CUOTAS_A_COBRAR.fecha_plazo%TYPE;
+
+BEGIN
+     SELECT * 
+       into fecha
+     FROM (
+  select t.fecha_plazo Fecha
+  from cuotas_a_cobrar t
+  where t.ctacbr_numero = NCTACBR_NUMERO
+  and t.fecha_plazo is not null
+  order by t.numero_cuota desc )
+     where ROWNUM < 2;
+     
+    return fecha;
+ 
+EXCEPTION WHEN OTHERS THEN
+--     fecha := 0;
+     return fecha;
+END;
+--- fin ultimo registro
+FUNCTION DEVUELVE_PORCENTAJE_PROMOCION
+ (VTIPOCRG IN VARCHAR2
+ ,VCODCRG IN VARCHAR2
+ ,VNUMEROHC IN PACIENTES.NUMERO_HC%TYPE
+ ,VMODO IN VARCHAR2 := 'NORMAL'
+ ,VPORCENTAJE_PROMOCION IN DETALLES_PROMOCIONES.PORCENTAJE_PROMOCION%TYPE
+ )
+ RETURN NUMBER
+ IS
+
+NPORCENTAJE_PROMOCION DETALLES_PROMOCIONES.PORCENTAJE_PROMOCION%TYPE;
+NVALOR NUMBER := 0;
+NPRMPCN PROMOCIONES.CODIGO%TYPE;
+VAREA CARGOS.DPR_ARA_CODIGO%TYPE;
+VDEPT CARGOS.DPR_ARA_CODIGO%TYPE;
+VPRMPCN PROMOCIONES_PACIENTES.PRM_CODIGO%TYPE;
+BEGIN
+DECLARE
+  CURSOR cCrg IS
+    SELECT AREA,DEPARTAMENTO
+    FROM ITEMS_SUBBODEGAS_CARGOS
+    WHERE TIPO_DESCARGO=vTipoCrg AND CODIGO_DESCARGO=vCodCrg;
+-- cursor que devuelve la ultima promoción de un paciente
+  CURSOR CPrm IS
+    SELECT PRM_CODIGO
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=vnumerohc
+    AND FECHA=(SELECT MAX(FECHA)
+             FROM PROMOCIONES_PACIENTES
+             WHERE PCN_NUMERO_HC=vnumerohc);
+-- cursor que devuelve el porcentaje promoción del departamento según la promoción
+  CURSOR cDetPrm (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM DETALLES_PROMOCIONES
+    WHERE prm_codigo=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept;
+-- cursor que devuelve el porcentaje promoción del cargo según la promoción
+  CURSOR cPrmExc (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE,
+                  vCargo CARGOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM PROMOCIONES_EXCEPCIONES
+    WHERE PRM_CODIGO=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept
+    AND CRG_TIPO=vTipoCrg
+    AND CRG_CODIGO=vCargo;
+
+BEGIN
+  QMS$ERRORS.SHOW_DEBUG_INFO('Devuelve_Promocion');
+  QMS$ERRORS.SHOW_DEBUG_INFO('Codigo del cargo '||vTipoCrg||vCodCrg);
+  nValor:=1;
+  IF vnumerohc IS NULL THEN
+    RETURN 0;
+  END IF;
+  IF vmodo='NORMAL' AND vTipoCrg IS NOT NULL THEN
+  QMS$ERRORS.SHOW_DEBUG_INFO('va a revisar la promocion');
+    nValor:=1;
+    nPORCENTAJE_PROMOCION := 1;
+    OPEN cCrg;
+    FETCH cCrg INTO vArea,vDept;
+    IF cCRg%NOTFOUND THEN
+-- aqui nunca deberia entrar
+      CLOSE cCrg;
+qms$errors.show_message('ADM-00011','Cargo no existe');
+    END IF;
+    CLOSE cCrg;
+    BEGIN
+      OPEN CPrm;
+      FETCH CPrm INTO vPrmPcn;
+      IF CPrm%NOTFOUND THEN
+        QMS$ERRORS.SHOW_MESSAGE('ADM-00011','El paciente no tiene categoria social. Comuniquese con Trabajo social');
+      END IF;
+    END;
+    BEGIN
+      OPEN CDetPrm (vPrmPcn,vArea,vDept);
+      FETCH CDetPrm INTO nPORCENTAJE_PROMOCION;
+    -- Si el area y departamento tienen una promocion, vemos si es una excepcion
+      OPEN CPrmExc (vPrmPcn,vArea,vDept,vCodCrg);
+      FETCH CPrmExc INTO nPorcentaje_Promocion;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+        NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+    END;
+    QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion '||nPORCENTAJE_PROMOCION );
+    nValor:=nPORCENTAJE_PROMOCION;
+  ELSIF vmodo='QUERY' THEN
+    nValor:=vPORCENTAJE_PROMOCION;
+  ELSE
+    nValor:=1;
+  END IF;
+  QMS$ERRORS.SHOW_DEBUG_INFO('Valor de la promocion es '||nValor);
+  RETURN NVL(nValor,1);
+END;
+END;
+
+-- DEVUELVE LA PROMOCION (PORCENTAJE) QUE APLICA A LA PROMOCION
+FUNCTION DEVUELVE_PROMOCION(nHC NUMBER,vTipoCrg VARCHAR2,vCodCrg VARCHAR2,vPrmPcn VARCHAR2) RETURN NUMBER IS
+  CURSOR cCrg IS
+    SELECT DPR_ARA_CODIGO,DPR_CODIGO
+    FROM CARGOS
+    WHERE TIPO=vTipoCrg AND CODIGO=vCodCrg;
+  nValor NUMBER:=0;
+  nPorcentaje_promocion NUMBER;
+  vArea CARGOS.DPR_ARA_CODIGO%TYPE;
+  vDept CARGOS.DPR_CODIGO%TYPE;
+-- cursor que devuelve la ultima promoción de un paciente
+-- cursor que devuelve el porcentaje promoción del departamento según la promoción
+  CURSOR cDetPrm (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM DETALLES_PROMOCIONES
+    WHERE prm_codigo=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept;
+-- cursor que devuelve el porcentaje promoción del cargo según la promoción
+  CURSOR cPrmExc (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE,
+                  vCargo CARGOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM PROMOCIONES_EXCEPCIONES
+    WHERE PRM_CODIGO=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept
+    AND CRG_TIPO=vTipoCrg
+    AND CRG_CODIGO=vCargo;
+BEGIN
+  QMS$ERRORS.SHOW_DEBUG_INFO('Devuelve_Promocion');
+  QMS$ERRORS.SHOW_DEBUG_INFO('Codigo del cargo '||vTipoCrg||vCodCrg);
+  QMS$ERRORS.SHOW_DEBUG_INFO('Codigo Promocion '||vPrmPcn);
+  nValor:=1;
+  IF nHC IS NULL THEN
+    RETURN 0;
+  END IF;
+  IF  vTipoCrg IS NOT NULL THEN
+  QMS$ERRORS.SHOW_DEBUG_INFO('va a revisar la promocion');
+    nValor:=1;
+    nPORCENTAJE_PROMOCION := 1;
+    IF vTipoCrg IN ('P','S') THEN
+-- si son procedimientos o servicios vemos de que area son
+      OPEN cCrg;
+      FETCH cCrg INTO vArea,vDept;
+      IF cCRg%NOTFOUND THEN
+-- aqui nunca deberia entrar
+        CLOSE cCrg;
+        qms$errors.show_message('ADM-00011','Cargo no existe');
+      END IF;
+      CLOSE cCrg;
+    ELSE
+-- si son medicamentos o insumos siempre es farmacia
+      vArea:='A';
+      vDept:='F';
+    END IF;
+    BEGIN
+      OPEN CDetPrm (vPrmPcn,vArea,vDept);
+      FETCH CDetPrm INTO nPORCENTAJE_PROMOCION;
+    -- Si el area y departamento tienen una promocion, vemos si es una excepcion
+      OPEN CPrmExc (vPrmPcn,vArea,vDept,vCodCrg);
+      FETCH CPrmExc INTO nPorcentaje_Promocion;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+        NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+    END;
+    QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion '||nPORCENTAJE_PROMOCION );
+    nValor:=nPORCENTAJE_PROMOCION;
+  ELSE
+    nValor:=1;
+  END IF;
+
+  QMS$ERRORS.SHOW_DEBUG_INFO('Valor de la promocion es '||nValor);
+  RETURN NVL(nValor,1);
+END;
+------------------------------ FUNCIONES AÑADIDAS POR RINA PARA RECATEGORIZAR CUENTAS  ---------------
+FUNCTION DEVUELVE_PORCENTAJE_PRM
+ (VTIPOCRG IN VARCHAR2
+ ,VCODCRG IN VARCHAR2
+ ,VPCN_NUMERO_HC IN NUMBER
+ ,vPrmPcn VARCHAR2 
+ )
+ RETURN NUMBER IS
+  CURSOR cCrg IS
+    SELECT DPR_ARA_CODIGO,DPR_CODIGO,COSTO
+    FROM CARGOS
+    WHERE TIPO=vTipoCrg AND CODIGO=vCodCrg;
+  nValor NUMBER:=0;
+  nPorcentaje_promocion NUMBER;
+  nValor_fijo NUMBER;
+  nPrecio_de_venta NUMBER;
+  vArea CARGOS.DPR_ARA_CODIGO%TYPE;
+  vDept CARGOS.DPR_CODIGO%TYPE;
+-- cursor que devuelve la ultima promoción de un paciente
+-- cursor que devuelve el porcentaje promoción del departamento según la promoción
+  CURSOR cDetPrm (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM DETALLES_PROMOCIONES
+    WHERE prm_codigo=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept;
+-- cursor que devuelve el porcentaje promoción del cargo según la promoción
+  CURSOR cPrmExc (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE,
+                  vCargo CARGOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION,VALOR_FIJADO
+    FROM PROMOCIONES_EXCEPCIONES
+    WHERE PRM_CODIGO=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept
+    AND CRG_TIPO=vTipoCrg
+    AND CRG_CODIGO=vCargo;
+BEGIN
+  QMS$ERRORS.SHOW_DEBUG_INFO('Devuelve_Promocion');
+  QMS$ERRORS.SHOW_DEBUG_INFO('Codigo del cargo '||vTipoCrg||vCodCrg);
+  QMS$ERRORS.SHOW_DEBUG_INFO('Codigo Promocion '||vPrmPcn);
+  nValor:=1;
+  IF  VPCN_NUMERO_HC IS NULL THEN
+    RETURN 0;
+  END IF;
+  IF vTipoCrg IS NOT NULL THEN
+  QMS$ERRORS.SHOW_DEBUG_INFO('va a revisar la promocion');
+    nValor:=1;
+    nPORCENTAJE_PROMOCION := 1;
+    IF vTipoCrg IN ('P','S') THEN
+-- si son procedimientos o servicios vemos de que area son
+      OPEN cCrg;
+      FETCH cCrg INTO vArea,vDept,nPrecio_de_venta;
+      IF cCRg%NOTFOUND THEN
+-- aqui nunca deberia entrar
+        CLOSE cCrg;
+        qms$errors.show_message('ADM-00011','Cargo no existe');
+      END IF;
+      CLOSE cCrg;
+    ELSE
+-- si son medicamentos o insumos siempre es farmacia
+      vArea:='A';
+      vDept:='F';
+    END IF;
+    BEGIN
+      OPEN CDetPrm (vPrmPcn,vArea,vDept);
+      FETCH CDetPrm INTO nPORCENTAJE_PROMOCION;
+    -- Si el area y departamento tienen una promocion, vemos si es una excepcion
+      OPEN CPrmExc (vPrmPcn,vArea,vDept,vCodCrg);
+      FETCH CPrmExc INTO nPorcentaje_Promocion,nValor_Fijo;
+      IF nvl(nValor_Fijo,0) > 0 THEN
+        nPorcentaje_Promocion := nValor_Fijo/nPRECIO_DE_VENTA;
+      END IF;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+        NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+    END;
+    QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion '||nPORCENTAJE_PROMOCION );
+    nValor:=nPORCENTAJE_PROMOCION;
+  ELSE
+    nValor:=1;
+  END IF;
+  QMS$ERRORS.SHOW_DEBUG_INFO('Valor de la promocion es '||nValor);
+  RETURN NVL(nValor,1);
+END;
+
+PROCEDURE RECATEGORIZAR_CUENTA_POR_HC
+-- Proceso para recategorizar la cuenta de un paciente basándose en la última promoción.
+-- es el mismo proceso que realiza el módulo de Recategorización de cuentas pendientes.
+(VPCN_NUMERO_HC IN NUMBER) IS
+nULTRGS NUMBER;
+nANT NUMBER;
+nCONT NUMBER;
+nprcprm NUMBER;
+i NUMBER;
+bSeguir BOOLEAN;
+PROMO VARCHAR2(2):= NULL;
+PORCENTAJE NUMBER:= NULL;
+descuento number;
+CURSOR CNTS (PACIENTE NUMBER ) IS
+SELECT * FROM CUENTAS CNT
+where  CNT.PCN_NUMERO_HC = PACIENTE AND ((((CNT.ESTADO='PND') OR 
+                                            (CNT.ESTADO='PRE')) AND 
+                                            (CNT.CANTIDAD>0)));
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('Iniciando Recategorizar_Pacientes ');
+
+   PROMO:=GNRL.DEVOLVER_COD_ULTIMA_PROMOCION(VPCN_NUMERO_HC);
+   FOR RCNTS IN CNTS(VPCN_NUMERO_HC) LOOP
+   BEGIN
+      PORCENTAJE:= GNRL.Devuelve_porcentaje_prm(RCNTS.CRG_TIPO,RCNTS.CRG_CODIGO,VPCN_NUMERO_HC,promo);
+      IF porcentaje > 1 THEN
+         descuento := 0;
+      ELSE
+          descuento := (RCNTS.CANTIDAD * RCNTS.VALOR)-(RCNTS.CANTIDAD * RCNTS.VALOR * PORCENTAJE);
+      END IF;
+      UPDATE CUENTAS C             
+      SET C.PORCENTAJE_PROMOCION = PORCENTAJE,
+          C.DESCUENTO_OTORGADO = DESCUENTO,
+          C.PRM_CODIGO = promo
+      WHERE 
+       C.PCN_NUMERO_HC= VPCN_NUMERO_HC AND
+       C.DOCUMENTO = RCNTS.DOCUMENTO AND
+       C.NUMERO = RCNTS.NUMERO AND
+       C.DETALLE = RCNTS.DETALLE AND
+       C.CRG_TIPO =   RCNTS.CRG_TIPO AND
+       C.CRG_CODIGO = RCNTS.CRG_CODIGO AND
+       C.CANTIDAD = RCNTS.CANTIDAD AND
+       C.ESTADO = RCNTS.ESTADO;
+QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion despues '||TO_CHAR(promo));
+QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion despues '||TO_CHAR(descuento));
+          i := i +1;
+    EXCEPTION
+    WHEN OTHERS THEN
+       NULL;      
+    END;         
+    END LOOP ;
+QMS$ERRORS.SHOW_DEBUG_INFO('NO SE PROCESAN LOS MEDICAMENTOS, NO ES NECESARIO');
+   IF i = 0 THEN
+    qms$errors.show_message('FCT-00100','No se Recategorizar_Pacientes a ningún item.  Esta seguro de haber chequeado como seleccionados las cuentas?','Revise que esten seleccionadas las cuentas.');
+   END IF;
+END RECATEGORIZAR_CUENTA_POR_HC;
+
+PROCEDURE RECATEGORIZAR_CUENTA
+-- Recategoriza la cuenta de un paciente teniendo como parámetro un periodo de recategorzación.
+(VPCN_NUMERO_HC IN NUMBER,FECHA_INICIAL IN DATE, FECHA_FINAL IN DATE,PROMO IN VARCHAR) IS
+nULTRGS NUMBER;
+nANT NUMBER;
+nCONT NUMBER;
+nprcprm NUMBER;
+i NUMBER;
+bSeguir BOOLEAN;
+PORCENTAJE NUMBER:= NULL;
+descuento number;
+CURSOR CNTS (PACIENTE NUMBER,FECHA_INICIAL DATE, FECHA_FINAL DATE) IS
+SELECT * FROM CUENTAS CNT
+where  CNT.PCN_NUMERO_HC = PACIENTE AND ((((CNT.ESTADO='PND') OR 
+                                            (CNT.ESTADO='PRE')) AND 
+                                            (CNT.CANTIDAD>0))) AND
+       CNT.FECHA BETWEEN FECHA_INICIAL AND FECHA_FINAL;
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('Iniciando Recategorizar_Pacientes_por fecha ');
+
+   FOR RCNTS IN CNTS(VPCN_NUMERO_HC,FECHA_INICIAL,FECHA_FINAL) LOOP
+   BEGIN
+      PORCENTAJE:= GNRL.Devuelve_porcentaje_prm(RCNTS.CRG_TIPO,RCNTS.CRG_CODIGO,VPCN_NUMERO_HC,promo);
+      IF porcentaje > 1 THEN
+         descuento := 0;
+      ELSE
+         descuento := (RCNTS.CANTIDAD * RCNTS.VALOR)-(RCNTS.CANTIDAD * RCNTS.VALOR * PORCENTAJE);
+      END IF;
+      UPDATE CUENTAS C             
+      SET C.PORCENTAJE_PROMOCION = PORCENTAJE,
+          C.DESCUENTO_OTORGADO = DESCUENTO,
+          C.PRM_CODIGO = PROMO          
+      WHERE 
+       C.PCN_NUMERO_HC= VPCN_NUMERO_HC AND
+       C.DOCUMENTO = RCNTS.DOCUMENTO AND
+       C.NUMERO = RCNTS.NUMERO AND
+       C.DETALLE = RCNTS.DETALLE AND
+       C.CRG_TIPO =   RCNTS.CRG_TIPO AND
+       C.CRG_CODIGO = RCNTS.CRG_CODIGO AND
+       C.CANTIDAD = RCNTS.CANTIDAD AND
+       C.ESTADO = RCNTS.ESTADO;
+QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion despues '||TO_CHAR(promo));
+QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion despues '||TO_CHAR(descuento));
+          i := i +1;
+    EXCEPTION
+    WHEN OTHERS THEN
+       NULL;      
+    END;         
+    END LOOP ;
+QMS$ERRORS.SHOW_DEBUG_INFO('NO SE PROCESAN LOS MEDICAMENTOS, NO ES NECESARIO');
+   IF i = 0 THEN
+    qms$errors.show_message('FCT-00100','No se Recategorizar_Pacientes a ningún item.  Esta seguro de haber chequeado como seleccionados las cuentas?','Revise que esten seleccionadas las cuentas.');
+   END IF;
+END RECATEGORIZAR_CUENTA;
+
+PROCEDURE RECATEGORIZAR_CUENTA_PRD
+(FECHA_INICIAL IN DATE,FECHA_FINAL IN DATE) IS
+-- Este proceso recategoriza las cuentas de todos los pacientes que tengan valores pendientes de facturar
+-- dentro del periodo indicado en los parámetros fecha_ini y fecha_fin.
+CURSOR PCNREC (FECHA_INI DATE,FECHA_FIN DATE) IS
+SELECT C.PCN_NUMERO_HC NUMERO_HC FROM CUENTAS C
+WHERE C.FECHA BETWEEN FECHA_INI AND FECHA_FIN
+AND C.ESTADO = 'PND' --AND C.PCN_NUMERO_HC = 5777
+GROUP BY C.PCN_NUMERO_HC;
+I NUMBER :=0;
+J NUMBER:=0;
+FECHA_DESDE DATE;
+FECHA_HASTA DATE;
+FECHA_INICIAL_COMPLETA DATE;
+FECHA_FINAL_COMPLETA DATE;
+vPromocion varchar2(2):= NULL;
+
+CURSOR PRMPCN(HC_PACIENTE NUMBER) IS
+SELECT P.FECHA,P.PCN_NUMERO_HC,P.PRM_CODIGO
+FROM PROMOCIONES_PACIENTES P
+WHERE P.PCN_NUMERO_HC = HC_PACIENTE AND
+      P.FECHA BETWEEN FECHA_INICIAL AND FECHA_FINAL
+ORDER BY P.FECHA;
+ 
+TYPE PRMPCNTABTYP IS TABLE OF PRMPCN%ROWTYPE INDEX BY BINARY_INTEGER;
+PRMPCN_TAB PRMPCNTABTYP;
+BEGIN
+   FECHA_INICIAL_COMPLETA:= TO_DATE(TO_CHAR(FECHA_INICIAL,'DD/MM/YYYY')||' 00:00:00','DD/MM/YYYY HH24:MI:SS');
+   FECHA_FINAL_COMPLETA:= TO_DATE(TO_CHAR(FECHA_FINAL,'DD/MM/YYYY')||' 23:59:59','DD/MM/YYYY HH24:MI:SS');   
+   DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_INICIAL_COMPLETA,'DD/MM/YYYY HH24:MI:SS'));
+   DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_FINAL_COMPLETA,'DD/MM/YYYY HH24:MI:SS'));   
+   FOR RPCNREC IN PCNREC(FECHA_INICIAL_COMPLETA,FECHA_FINAL_COMPLETA) LOOP
+-- En primer lugar subo a la tabla todas las promociones del paciente
+   I:= 0;
+   J:=0;
+   OPEN PRMPCN(RPCNREC.NUMERO_HC);
+   LOOP
+      I:= I + 1;
+      FETCH PRMPCN INTO PRMPCN_TAB(I);
+         EXIT WHEN PRMPCN%NOTFOUND;
+   END LOOP;
+   CLOSE PRMPCN;
+   i:= i-1;
+   IF I >= 1 THEN   
+   BEGIN  --Una vez obtenidas las promociones del paciente, se procede a recategorizar.
+      BEGIN
+         SELECT PRM.PRM_CODIGO  INTO vPromocion
+         FROM PROMOCIONES_PACIENTES PRM
+         WHERE PRM.PCN_NUMERO_HC=RPCNREC.NUMERO_HC AND 
+               PRM.FECHA=(SELECT MAX(FECHA)
+                             FROM PROMOCIONES_PACIENTES P
+                             WHERE P.PCN_NUMERO_HC=RPCNREC.NUMERO_HC AND 
+                                   P.fecha<PRMPCN_TAB(1).FECHA) ;
+      EXCEPTION                           
+      WHEN OTHERS THEN
+         vPromocion:= PRMPCN_TAB(1).PRM_CODIGO;
+      END;             
+      QMS$ERRORS.Show_debug_info('Primera categorización');
+      FECHA_DESDE := FECHA_INICIAL_COMPLETA;
+      FECHA_HASTA := PRMPCN_TAB(1).FECHA;     
+      RECATEGORIZAR_CUENTA(RPCNREC.NUMERO_HC,FECHA_DESDE,FECHA_HASTA,vPromocion);
+      DBMS_OUTPUT.put_line('Primera promoción '||vPromocion);
+      DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+      DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));   
+      IF I> 1 THEN
+         QMS$ERRORS.Show_debug_info('Tiene más de una promoción ');
+      FOR J IN 1..I-1 LOOP
+         FECHA_DESDE := PRMPCN_TAB(J).FECHA;
+         FECHA_HASTA := PRMPCN_TAB(J+1).FECHA;       
+         RECATEGORIZAR_CUENTA(RPCNREC.NUMERO_HC,FECHA_DESDE,FECHA_HASTA,PRMPCN_TAB(J).PRM_CODIGO);
+         DBMS_OUTPUT.put_line('Promoción '||to_Char(j)||' '||PRMPCN_TAB(J).PRM_CODIGO);
+         DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+         DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));            
+      END LOOP;
+      END IF;   
+      FECHA_DESDE := FECHA_HASTA;
+      FECHA_HASTA := FECHA_FINAL_COMPLETA;
+      RECATEGORIZAR_CUENTA(RPCNREC.NUMERO_HC,FECHA_DESDE,FECHA_HASTA,PRMPCN_TAB(I).PRM_CODIGO);    
+      DBMS_OUTPUT.put_line('Ultima promoción '||PRMPCN_TAB(I).PRM_CODIGO);
+      DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+      DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));   
+   END;   
+   END IF;
+   END LOOP;   
+END RECATEGORIZAR_CUENTA_PRD;
+------------------------------ FUNCIONES AÑADIDAS POR RINA PARA RECATEGORIZAR CUENTAS  ---------------
+
+FUNCTION EXISTE_PACIENTE
+ (NNUMERO_HC NUMBER
+ )
+ RETURN BOOLEAN
+ IS
+
+NNUMERO NUMBER;
+BEGIN
+   SELECT numero_hc
+   INTO nNumero
+   FROM
+      PACIENTES
+   WHERE numero_hc=nNumero_HC; 
+   RETURN TRUE;
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+   RETURN FALSE;
+END;
+/* Devuelve las dosis administradas para cada prescripción */
+FUNCTION CUMPLIMIENTOS_PX
+ (NNUMCLAVE NUMBER
+ ,DFECHA DATE
+ ,NPX_NUM NUMBER
+ ,VPX CHAR := 'NULL'
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+DECLARE
+   vDev VARCHAR2(2000) := '';
+   vTemp VARCHAR2(50);
+   CURSOR cCmpQmt IS
+      SELECT TO_CHAR(hora, 'hh24:mi') || '->'||to_char(dosis)
+      FROM CUMPLIMIENTOS_QUIMIOTERAPIA
+   WHERE
+      dssqmt_prsmdcqmt_fecha=dFecha AND
+      dssqmt_numero=nPx_num AND
+      DSSQMT_TRTQMT_QMT_NUMERO=nNumClave
+      ORDER BY HORA ASC;
+   CURSOR cMmtCmp IS
+      SELECT TO_CHAR(fecha_planificada, 'hh24:mi')
+      FROM MOMENTOS_CUMPLIMIENTO
+   WHERE
+      dtlprs_prsmdc_fecha=dFecha AND
+      dtlprs_numero=nPx_num AND
+      DTLPRS_NUMERO=nNumClave
+      ORDER BY fecha_planificada ASC;
+BEGIN
+   IF vPx= 'Q'THEN
+      OPEN cCmpQmt;
+      LOOP
+         FETCH cCmpQmt INTO vTemp;
+         EXIT WHEN cCmpQmt%NOTFOUND;
+         vDev:=vDev||RPAD(vTemp, 15) || '  ';
+      END LOOP;
+      CLOSE cCmpQmt;
+      RETURN vDev;
+   ELSE
+      OPEN cMmtCmp;
+      LOOP
+         FETCH cMmtCmp INTO vTemp;
+         EXIT WHEN cMmtCmp%NOTFOUND;
+         vDev:=vDev||vTemp|| '  ';
+      END LOOP;
+      CLOSE cMmtCmp;
+      RETURN vDev;
+   END IF;
+END;
+END;
+/* Busca el ultimo diagnostico oncológico */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/* Devuelve el último diagnostico segun tipo que posee el paciente,
+    con un maximo de 40 caracteres */
+    -- Parametros
+    -- 	nNumeroHC => el número de Historia Clínica del paciente
+    --	vTipo => se puede pasar ('ONC',SCN','PRE','PRM') o '%'
+    DECLARE
+       CURSOR enf IS
+          SELECT NVL(d.dx_generico, e.enfermedad)
+          FROM diagnosticos d, enfermedades e
+       WHERE
+          (d.pcn_numero_hc=nNumeroHC) AND
+          (d.enf_codigo=e.codigo) AND(dgn_type LIKE vTipo)
+          order BY fecha_inicio desc;
+       vEnfermedad enfermedades.enfermedad%TYPE;
+    BEGIN
+       OPEN enf;
+       FETCH enf INTO vEnfermedad;
+       IF enf%NOTFOUND THEN
+          vEnfermedad:= '';
+       END IF;
+       CLOSE enf;
+       -- devolvemos solamente los primeros 40 caracteres de la cadena
+       RETURN SUBSTR(vEnfermedad, 1, 40);
+    END;
+END ULTIMO_DIAGNOSTICO;
+/* Busca el último diagnóstico (función sobrecargada) */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ ,VENFCOD IN OUT VARCHAR2
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/* Devuelve el último diagnostico segun tipo que posee el paciente,
+    con un maximo de 40 caracteres y solo si no tiene fecha fin*/
+    -- Parametros
+    -- 	nNumeroHC => el número de Historia Clínica del paciente
+    --	vTipo => se puede pasar ('ONC',SCN','PRE','PRM') o '%'
+    --	vEnfCod => Devuelve el codigo de la enfermedad
+    DECLARE
+       CURSOR enf IS
+          SELECT NVL(d.dx_generico, e.enfermedad), e.codigo
+          FROM diagnosticos d, enfermedades e
+       WHERE
+          (d.pcn_numero_hc=nNumeroHC) AND
+          d.fecha_fin IS NULL AND
+          (d.enf_codigo=e.codigo) AND(dgn_type LIKE vTipo)
+          ORDER BY fecha_inicio DESC;
+       vEnfermedad enfermedades.enfermedad%TYPE;
+       vCodigo enfermedades.codigo%TYPE;
+    BEGIN
+       OPEN enf;
+       FETCH enf INTO vEnfermedad, vCodigo;
+       IF enf%NOTFOUND THEN
+          vEnfermedad:= '';
+          IF NVL(vEnfCod, '') != ''THEN
+             vEnfCod:= '';
+          END IF;
+       ELSE
+          vEnfCod:=vCodigo;
+       END IF;
+       CLOSE enf;
+       -- devolvemos solamente los primeros 40 caracteres de la cadena
+       RETURN SUBSTR(vEnfermedad, 1, 40);
+    END;
+END ULTIMO_DIAGNOSTICO;
+/* Busca el ultimo Diagnostico (función sobrecargada) */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ ,NDGNID IN OUT NUMBER
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/* Devuelve el último diagnostico segun tipo que posee el paciente,
+    con un maximo de 40 caracteres y solo si no tiene fecha fin*/
+    -- Parametros
+    -- 	nNumeroHC => el número de Historia Clínica del paciente
+    --	vTipo => se puede pasar ('ONC',SCN','PRE','PRM') o '%'
+    --	nDgnId => Devuelve el codigo de diagnostico de la enfermedad
+    DECLARE
+       CURSOR enf IS
+          SELECT NVL(d.dx_generico, e.enfermedad), d.dgn_id
+          FROM diagnosticos d, enfermedades e
+       WHERE
+          (d.pcn_numero_hc=nNumeroHC) AND
+          d.fecha_fin IS NULL AND
+          (d.enf_codigo=e.codigo) AND(dgn_type LIKE vTipo)
+          ORDER BY fecha_inicio DESC;
+       vEnfermedad enfermedades.enfermedad%TYPE;
+       nCodigo diagnosticos.dgn_id%TYPE;
+    BEGIN
+       OPEN enf;
+       FETCH enf INTO vEnfermedad, nCodigo;
+       IF enf%NOTFOUND THEN
+          vEnfermedad:= '';
+          IF NVL(nDgnId, 0) != 0 THEN
+             nDgnId:= NULL;
+          END IF;
+       ELSE
+          nDgnId:=nCodigo;
+       END IF;
+       CLOSE enf;
+       -- devolvemos solamente los primeros 40 caracteres de la cadena
+       RETURN SUBSTR(vEnfermedad, 1, 40);
+    END;
+END ULTIMO_DIAGNOSTICO;
+
+-- PL/SQL Block
+END  GNRL;

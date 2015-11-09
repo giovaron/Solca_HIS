@@ -1,0 +1,719 @@
+PROCEDURE  VALIDAR_CONTABILIZACION_ROL
+  (CEMPCOD  IN  VARCHAR2
+  ,DFECHADESDE  IN  DATE
+  ,DFECHAHASTA  IN  DATE
+  )
+  IS
+-- Program Data
+VMENSAJEERROR VARCHAR2(1000);
+VCUENTA VARCHAR2(40);
+VDATO VARCHAR2(66);
+VPARAM VARCHAR2(3);
+VTER VARCHAR2(3);
+
+-- PL/SQL Block
+ BEGIN
+--En primer lugar validamos que todos los empleados pertenezcan a un centro de costo
+--Además, se valida que el porcentaje de distribución de gastos por empleado entre
+--los diferentes centros de costos,no sobrepase ni sea inferior al 100%
+--Por último se valida que tanto los parámetros de gastos como de pasivos, estén 
+--asociados a una cuenta contable.
+-- Errores CNT-01101 EMPLEADO NO ASIGNADO A UN CENTRO DE COSTO
+--         CNT-01102 LA DISTRIBUCIÓN DE INGRESOS DEL EMPLEADO SUPERA EL 100%
+--         CNT-01103 LA DISTRIBUCIÓN DE INGRESOS DEL EMPLEADO NO LLEGA AL 100% 
+--         CNT-01104 PARÁMETROS DE GASTOS NO TIENEN CUENTA ASOCIADA
+--         CNT-01106 PARÁMETROS DE PASIVOS NO TIENE CUENTA ASOCIADA
+--         CNT-01105 PARÁMETROS DE INTEGRACION NO TIENE CUENTA ASOCIADA
+
+DECLARE
+CURSOR EMPLEADOS_NO_ASIGNADOS IS
+SELECT DISTINCT TO_CHAR(CODIGO)||' '||APELLIDOS||' '||NOMBRES 
+FROM EMPLEADOS_ROLES,MOVIMIENTOS_TOTALES 
+WHERE EMP_CODIGO = cEmpCod AND
+      EMP_CODIGO = EMPROL_EMP_CODIGO  AND
+      EMP_CODIGO = PRMROL_EMP_CODIGO  AND
+      CODIGO = EMPROL_CODIGO AND
+      (FECHA BETWEEN dFechaDesde AND dFechaHasta) AND  
+      CODIGO NOT IN (SELECT EMPROL_CODIGO FROM EMPLEADOS_CENTROS_DE_COSTOS
+                     WHERE EMPROL_EMP_CODIGO = EMP_CODIGO AND
+                           CNTCST_EMP_CODIGO = EMP_CODIGO);
+CURSOR PORCENTAJE_MAYOR IS 
+SELECT TO_CHAR(CODIGO)||' '||APELLIDOS||' '||NOMBRES FROM EMPLEADOS_ROLES
+WHERE EMP_CODIGO = cEmpCod AND
+      100 <(SELECT SUM(PORCENTAJE) FROM EMPLEADOS_CENTROS_DE_COSTOS
+            WHERE EMPROL_EMP_CODIGO = EMP_CODIGO AND
+                  CNTCST_EMP_CODIGO = EMP_CODIGO AND
+                  EMPROL_CODIGO = CODIGO);
+CURSOR PORCENTAJE_MENOR IS 
+SELECT TO_CHAR(CODIGO)||' '||APELLIDOS||' '||NOMBRES FROM EMPLEADOS_ROLES
+WHERE EMP_CODIGO = cEmpCod AND
+      100 >(SELECT SUM(PORCENTAJE) FROM EMPLEADOS_CENTROS_DE_COSTOS
+            WHERE EMPROL_EMP_CODIGO = EMP_CODIGO AND
+                  CNTCST_EMP_CODIGO = EMP_CODIGO AND
+                  EMPROL_CODIGO = CODIGO);
+
+CURSOR PARAMETROS_GASTOS_SIN_CUENTA IS
+SELECT SUBSTR(PRMROL.CODIGO||' '||SUBSTR(PRMROL.NOMBRE,1,25)||' Asociar con '||SUBSTR(CNTCST.DESCRIPCION,1,25),1,65) PARAMETROS
+FROM PARAMETROS_ROLES  PRMROL,MOVIMIENTOS_TOTALES MVMTOT,
+     EMPLEADOS_CENTROS_DE_COSTOS EMPCNTCST,
+     CENTROS_DE_COSTOS CNTCST
+WHERE PRMROL.EMP_CODIGO = cEmpCod AND
+      PRMROL.TIPO NOT IN ('E','B') AND
+      PRMROL.TIPO_CONTABILIZACION = 'G' AND
+      PRMROL.EMP_CODIGO = MVMTOT.PRMROL_EMP_CODIGO AND
+      PRMROL.EMP_CODIGO = MVMTOT.EMPROL_EMP_CODIGO AND
+      PRMROL.CODIGO = MVMTOT.PRMROL_CODIGO AND
+      (MVMTOT.FECHA BETWEEN dFechaDesde AND dFechaHasta) AND
+      MVMTOT.EMPROL_EMP_CODIGO = EMPCNTCST.EMPROL_EMP_CODIGO AND
+      MVMTOT.EMPROL_EMP_CODIGO = EMPCNTCST.CNTCST_EMP_CODIGO AND
+      MVMTOT.EMPROL_CODIGO = EMPCNTCST.EMPROL_CODIGO AND
+      MVMTOT.EMPROL_EMP_CODIGO = CNTCST.EMP_CODIGO AND
+      MVMTOT.PRMROL_EMP_CODIGO = CNTCST.EMP_CODIGO AND
+      MVMTOT.DEBE > 0 AND
+      EMPCNTCST.EMPROL_EMP_CODIGO = CNTCST.EMP_CODIGO AND
+      EMPCNTCST.CNTCST_EMP_CODIGO = CNTCST.EMP_CODIGO AND
+      EMPCNTCST.CNTCST_TIPO=CNTCST.TIPO AND
+      EMPCNTCST.CNTCST_AGRUPADOR = CNTCST.AGRUPADOR  AND
+      CNTCST.TIPO||CNTCST.AGRUPADOR||PRMROL.CODIGO NOT IN ( SELECT AGRCNT_TIPO||AGRCNT_CODIGO||SUBSTR(CLAVE_RELACIONADA,1,5) 
+                                                            FROM CUENTAS_ASOCIADAS CNTASC
+                                                            WHERE CNTASC.TIPO_DE_CUENTA = 'RDP' AND
+                                                                  CNTASC.TIPO_DE_ASOCIACION ='GRP' AND
+                                                                  CNTASC.EMP_CODIGO = cEmpCod)
+GROUP BY SUBSTR(PRMROL.CODIGO||' '||SUBSTR(PRMROL.NOMBRE,1,25)||' Asociar con '||SUBSTR(CNTCST.DESCRIPCION,1,25),1,65);
+
+CURSOR PASIVOS_SIN_CUENTA_GNR IS
+SELECT DISTINCT (PRMROL.CODIGO||' '||PRMROL.NOMBRE)
+FROM MOVIMIENTOS_TOTALES MVMTOT,PARAMETROS_ROLES PRMROL
+WHERE PRMROL.EMP_CODIGO = cEmpCod AND
+      (((PRMROL.PROPIETARIO = 'P' OR PRMROL.PROVISION = 'V') AND PRMROL.TIPO_MOVIMIENTO = 'D') OR PRMROL.TIPO_MOVIMIENTO = 'C') AND
+      (MVMTOT.FECHA BETWEEN dFechaDesde AND dFechaHasta) AND
+      PRMROL.TIPO_CONTABILIZACION = 'G' AND
+      PRMROL.TIPO <> 'E' AND PRMROL.TIPO <> 'B' AND
+      MVMTOT.PRMROL_EMP_CODIGO = PRMROL.EMP_CODIGO AND
+      MVMTOT.EMPROL_EMP_CODIGO = PRMROL.EMP_CODIGO AND
+      MVMTOT.PRMROL_CODIGO = PRMROL.CODIGO AND
+      PRMROL.CODIGO NOT IN (SELECT CLAVE_RELACIONADA
+                            FROM CUENTAS_ASOCIADAS
+                            WHERE EMP_CODIGO = cEmpCod AND
+                                  TIPO_DE_CUENTA = 'RDP' AND
+                                  TIPO_DE_ASOCIACION = 'PRP');
+
+CURSOR PASIVOS_SIN_CUENTA_IND IS
+SELECT DISTINCT (PRMROL.CODIGO||' '||PRMROL.NOMBRE||' DEL EMPLEADO '||TO_CHAR(MVMTOT.EMPROL_CODIGO))
+FROM MOVIMIENTOS_TOTALES MVMTOT,PARAMETROS_ROLES PRMROL , EMPLEADOS_CUENTAS_INDIVIDUALES EMPCNTIND
+WHERE PRMROL.EMP_CODIGO = cEmpCod AND
+      (((PRMROL.PROPIETARIO = 'P' OR PRMROL.PROVISION = 'V') AND PRMROL.TIPO_MOVIMIENTO = 'D') OR PRMROL.TIPO_MOVIMIENTO = 'C') AND
+      (MVMTOT.FECHA BETWEEN dFechaDesde AND dFechaHasta) AND
+      PRMROL.TIPO_CONTABILIZACION = 'I' AND
+      PRMROL.TIPO <> 'E' AND PRMROL.TIPO <> 'B' AND
+      MVMTOT.PRMROL_EMP_CODIGO = PRMROL.EMP_CODIGO AND
+      MVMTOT.PRMROL_CODIGO = PRMROL.CODIGO AND
+      MVMTOT.EMPROL_EMP_CODIGO = PRMROL.EMP_CODIGO AND
+      NVL(MVMTOT.DEBE,MVMTOT.HABER) > 0 AND
+      ((MVMTOT.EMPROL_CODIGO NOT IN (SELECT CNTIND.EMPROL_CODIGO 
+                                   FROM EMPLEADOS_CUENTAS_INDIVIDUALES CNTIND
+                                   WHERE CNTIND.EMPROL_EMP_CODIGO = MVMTOT.EMPROL_EMP_CODIGO)) OR
+      (MVMTOT.EMPROL_EMP_CODIGO = EMPCNTIND.EMPROL_EMP_CODIGO AND
+      MVMTOT.EMPROL_CODIGO = EMPCNTIND.EMPROL_CODIGO AND
+      PRMROL.EMP_CODIGO = EMPCNTIND.EMPROL_EMP_CODIGO AND
+      PRMROL.CODIGO||EMPCNTIND.CUENTA_CONTABLE NOT IN (SELECT CLAVE_RELACIONADA||CUENTA
+                            FROM CUENTAS_ASOCIADAS
+                            WHERE EMP_CODIGO = cEmpCod AND
+                                  TIPO_DE_CUENTA = 'RDP' AND
+                                  TIPO_DE_ASOCIACION = 'PRP')));
+
+  CURSOR CTERCERIZADORA IS
+  SELECT DISTINCT TERCERIZADORA,SUBSTR(CG.RV_MEANING,1,50) 
+  FROM EMPLEADOS_rOLES EMPROL,CG_REF_CODES CG
+  WHERE CG.RV_DOMAIN = 'TERCERIZADORA' AND
+        EMPROL.TERCERIZADORA = CG.RV_LOW_VALUE;
+BEGIN
+   -- Valida que no existan empleados sin Centro de Costo Asociado
+   vMensajeError:=NULL;
+   OPEN EMPLEADOS_NO_ASIGNADOS;
+   LOOP
+      FETCH EMPLEADOS_NO_ASIGNADOS INTO vDato;
+      EXIT WHEN EMPLEADOS_NO_ASIGNADOS%NOTFOUND;
+      vMensajeError:=vMensajeError||' '||vDato;
+   END LOOP;
+   CLOSE EMPLEADOS_NO_ASIGNADOS;
+   IF vMensajeError IS NOT NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01101',vMensajeError);    
+   END IF;
+
+-- Valida que el porcentaje de distribución de gastos por empleado no sea mayor al 100%
+   vMensajeError:=NULL;
+   OPEN PORCENTAJE_MAYOR;
+   LOOP
+      FETCH PORCENTAJE_MAYOR INTO vDato;
+      EXIT WHEN PORCENTAJE_MAYOR%NOTFOUND;
+      vMensajeError:=vMensajeError||' '||vDato;
+   END LOOP;
+   CLOSE PORCENTAJE_MAYOR;
+   IF vMensajeError IS NOT NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01102',vMensajeError);    
+   END IF;   
+
+-- Valida que el porcentaje de distribución de gastos por empleado no sea menor al 100%
+   vMensajeError:=NULL;
+   OPEN PORCENTAJE_MENOR;
+   LOOP
+      FETCH PORCENTAJE_MENOR INTO vDato;
+      EXIT WHEN PORCENTAJE_MENOR%NOTFOUND;
+      vMensajeError:=vMensajeError||' '||vDato;
+   END LOOP;
+   CLOSE PORCENTAJE_MENOR;
+   IF vMensajeError IS NOT NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01103',vMensajeError);    
+   END IF;   
+
+-- Valida que no existan parámetros que generan Gastos sin una cuenta de Gastos asociada
+   vMensajeError:=NULL;
+   OPEN PARAMETROS_GASTOS_SIN_CUENTA ;
+   LOOP
+      FETCH PARAMETROS_GASTOS_SIN_CUENTA  INTO vDato;
+      EXIT WHEN PARAMETROS_GASTOS_SIN_CUENTA %NOTFOUND OR LENGTH(vMensajeError) >980;
+      IF vMensajeError IS NULL OR LENGTH (vMensajeError) <= 920 THEN
+         vMensajeError:=vMensajeError||' '||vDato;
+      END IF;
+      IF LENGTH(vMensajeError) > 980 THEN 
+         vMensajeError := vMensajeError||' y Otros más' ;
+      END IF; 
+   END LOOP;
+   CLOSE PARAMETROS_GASTOS_SIN_CUENTA;
+   IF vMensajeError IS NOT NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01104',vMensajeError);    
+   END IF;  
+
+-- Valida que no existan parámetros generales que generan Deudas sin una cuenta de Pasivos asociada
+   vMensajeError:=NULL;
+   OPEN PASIVOS_SIN_CUENTA_GNR ;
+   LOOP
+      FETCH PASIVOS_SIN_CUENTA_GNR  INTO vDato;
+      EXIT WHEN PASIVOS_SIN_CUENTA_GNR %NOTFOUND;
+      vMensajeError:=vMensajeError||' '||vDato;
+   END LOOP;
+   CLOSE PASIVOS_SIN_CUENTA_GNR;
+   IF vMensajeError IS NOT NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01106',vMensajeError);    
+   END IF; 
+
+-- Valida que no existan parámetros individuales que generan Deudas sin una cuenta de Pasivos asociada
+   vMensajeError:=NULL;
+   OPEN PASIVOS_SIN_CUENTA_IND ;
+   LOOP
+      FETCH PASIVOS_SIN_CUENTA_IND  INTO vDato;
+      EXIT WHEN PASIVOS_SIN_CUENTA_IND %NOTFOUND;
+      vMensajeError:=vMensajeError||' '||vDato;
+   END LOOP;
+   CLOSE PASIVOS_SIN_CUENTA_IND;
+   IF vMensajeError IS NOT NULL THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01106',vMensajeError);    
+   END IF; 
+   QMS$ERRORS.SHOW_DEBUG_INFO('Hasta aquí si llegó');
+-- Valida que no existen parametros de integración 
+   vMensajeError:=NULL;
+   OPEN CTERCERIZADORA;
+   LOOP
+      FETCH CTERCERIZADORA INTO vParam,vDato;
+      QMS$ERRORS.SHOW_DEBUG_INFO('La tercerizadora es '||vParam||vDato);      
+      BEGIN
+         SELECT SUBSTR(PRMINT.PARAMETRO,4,3) INTO vTer
+         FROM PARAMETROS_INTEGRACION PRMINT
+         WHERE SUBSTR(PRMINT.PARAMETRO,4,3) = vParam AND
+               PRMINT.TIPO = 'RDP';         
+      EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+         vMensajeError:=vMensajeError||' '||vDato;
+      END;
+      EXIT WHEN CTERCERIZADORA %NOTFOUND;         
+   END LOOP;
+   CLOSE CTERCERIZADORA;
+   IF vMensajeError IS NOT NULL THEN
+       QMS$ERRORS.SHOW_MESSAGE('CNT-01105',vMensajeError);    
+   END IF; 
+
+EXCEPTION
+  WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en el procedimiento VALIDAR_CONTABILIZAR_ROL por error '||SQLERRM);
+END;
+END VALIDAR_CONTABILIZACION_ROL; 
+
+
+/* Crea un comprobante Contable por el Rol de Pagos de Pagos Especiales */
+PROCEDURE CONTABILIZAR_PAGO_ESPECIAL
+ (NTIPOCAMBIO IN number
+ ,NTIPOCAMBIOE IN NUMBER
+ ,VMONEDALOCAL IN VARCHAR2
+ ,CEMPCOD IN VARCHAR2
+ ,CTPOCMP IN VARCHAR2
+ ,DFECHACMP IN DATE
+ ,NCLAVE IN OUT NUMBER
+ ,DFECHADESDE IN DATE
+ ,DFECHAHASTA IN DATE
+ ,CPARAMETRO IN VARCHAR2
+ ,CPRMNOMBRE IN VARCHAR2
+ ,CCNTPRS IN VARCHAR2
+ )
+ IS
+
+NDIFCUADRE NUMBER := 0;
+I NUMBER;
+NCUADREH NUMBER(21, 6) := 0;
+VDESCING VARCHAR2(1000);
+CNOMBRE_SEC VARCHAR2(100);
+NNUMING NUMBER := 0;
+NDIFERENCIAPAGO NUMBER(21, 6) := 0;
+NCUADRED NUMBER(21, 6) := 0;
+--Este proceso crea un Comprobante Contable por un Pago Especial realizado
+--desde el Sistema de Rol de Pagos. 
+--Los errores que pueden presentarse al realizar este proceso son:
+BEGIN
+DECLARE
+CURSOR cMesCerrado IS
+  SELECT COUNT(*)
+    FROM CIERRES_DE_MES
+    WHERE TRUNC(MES,'MM')=TRUNC(dFechaCmp,'MM')
+      AND  ESTADO='C';
+CURSOR cGastosRoles IS --(Debe) Cursor de Gastos por Roles de Pagos
+SELECT EMP_CODIGO,SUBSTR(RV_MEANING,1,20) DESCRIPCION,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,AXL_CODIGO,SAXL_CODIGO,
+    SAXL2_CODIGO,SAXL3_CODIGO,VALOR
+FROM GASTOS_PAGOS_ESPECIALES ,CG_REF_CODES
+WHERE EMP_CODIGO = cEmpCod AND
+      CODIGO = cParametro AND
+      (FECHA BETWEEN dFechaDesde AND dFechaHasta) AND
+      RV_DOMAIN = 'AGRUPADOR COSTOS GENERAL' AND
+      AGRUPADOR_TIPO = RV_LOW_VALUE; 
+TYPE tMovCnt  IS TABLE OF MOVIMIENTOS%ROWTYPE INDEX BY BINARY_INTEGER;
+rMovCnt tMovCnt; -- Tabla en donde se guardan los datos antes de Contabilizar
+nContMesCerrado NUMBER:=0;-- Devuelve 1 si el mes esta cerrado caso contrario 0
+
+CURSOR cSueldosxPagar IS
+  SELECT PRMINT.CUENTA_CONTABLE,
+         PLNCNT.EMP_CODIGO EMP_CODIGO, PLNCNT.MYR_CODIGO
+         MYR_CODIGO, PLNCNT.CNT_CODIGO CNT_CODIGO, PLNCNT.SCNT_CODIGO SCNT_CODIGO,
+         PLNCNT.AXL_CODIGO AXL_CODIGO, PLNCNT.SAXL_CODIGO SAXL_CODIGO,
+         PLNCNT.SAXL2_CODIGO SAXL2_CODIGO, PLNCNT.SAXL3_CODIGO SAXL3_CODIGO
+  FROM PARAMETROS_INTEGRACION PRMINT,PLAN_DE_CUENTAS PLNCNT
+  WHERE PRMINT.EMP_CODIGO=cEmpCod
+    AND PRMINT.PARAMETRO='RDPSPP'
+    AND PRMINT.TIPO='RDP'
+    AND PRMINT.CUENTA_CONTABLE=PLNCNT.CODIGO (+);
+
+CURSOR cGasto_Presupuesto IS --(Debe) Cursor de cuentas de Gasto Presupuestario
+SELECT EMP_CODIGO,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,AXL_CODIGO,SAXL_CODIGO,
+       SAXL2_CODIGO,SAXL3_CODIGO,PRM_NOMBRE,DEBE
+FROM AFECTACION_PRESUPUESTO_PAGOE 
+WHERE EMP_CODIGO = cEmpCod AND      
+      PRM_CODIGO = cParametro AND 
+     (FECHA BETWEEN dFechaDesde AND dFechaHasta) ;
+BEGIN
+-- PRIMERO CREAMOS LA CABECERA PARA VER QUE NO EXISTE UN COMPROBANTE IGUAL
+  SELECT NOMBRE_SECUENCIA INTO cNOMBRE_SEC
+  FROM TIPOS_COMPROBANTES_EMPRESAS
+  WHERE EMP_CODIGO = cEmpCod AND
+        TPOCMP_CODIGO = cTpoCmp;
+  GNRL.ACTUALIZA_SECUENCIA(cNOMBRE_SEC,nClave);
+  OPEN cMesCerrado;
+  FETCH cMesCerrado INTO nContMesCerrado;
+  IF nContMesCerrado>0 THEN
+-- Error no se puede contabilizar para un mes cerrado
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00046');-- No se puede crear un comprobante de un mes ya cerrado
+  END IF;
+  VALIDAR_CONTABILIZACION_ROL(cEmpCod,dFechaDesde,dFechaHasta);   
+  -- PRIMERO CREAMOS LA CABECERA PARA VER QUE NO EXISTE UN COMPROBANTE IGUAL
+  BEGIN
+     vDescIng:='PAGO DE '||cPrmNombre ||' CORRESPONDE A '||TO_CHAR(dFechaHasta,'MONTH/YYYY');
+     INSERT INTO COMPROBANTES (TPOCMPEMP_EMP_CODIGO,TPOCMPEMP_TPOCMP_CODIGO,FECHA,CLAVE,
+                               MAYORIZADO,ESTADO,TOTAL,MONEDA_LOCAL,TIPO_DE_CAMBIO,TIPO_DE_CAMBIOE,
+                               CONCEPTO,CRRMES_MES,CONTABILIZADO_DESDE)
+     VALUES (cEmpCod,cTpoCmp,dFechaCmp,nClave,'F','N',0,vMonedaLocal,nTipoCambio,nTipoCambioE,vDescIng,NULL,'RDP'); 
+  EXCEPTION 
+  WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo la inserción del Comprobante por error '||SQLERRM);  
+  END;
+  i:=1;
+  nCuadreD:=0;
+  FOR rGastosRoles IN cGastosRoles LOOP
+    -- FIJAMOS EL DEBE
+    IF i>1 THEN
+       IF rMovCnt(i-1).DESCRIPCION <> rGastosRoles.Descripcion THEN
+          nNumIng:= nNumIng+1;
+       END IF;
+    END IF;
+    rMovCnt(i).SECUENCIA:=100+nNumIng;
+    rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+    rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+    rMovCnt(i).CMP_FECHA:=dFechaCmp;
+    rMovCnt(i).CMP_CLAVE:=nClave;
+    rMovCnt(i).DEBE:=ROUND(rGastosRoles.VALOR,2);
+    rMovCnt(i).DEBEE:=ROUND(rGastosRoles.VALOR,2)*nTipoCambioE;
+    rMovCnt(i).HABER:=0;
+    rMovCnt(i).HABERE:=0;
+    rMovCnt(i).FECHA:=dFechaCmp;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rGastosRoles.EMP_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rGastosRoles.MYR_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rGastosRoles.CNT_CODIGO;
+    rMovCnt(i).SS_S_A_SC_CODIGO:=rGastosRoles.SCNT_CODIGO;
+    rMovCnt(i).SS_S_A_CODIGO:=rGastosRoles.AXL_CODIGO;
+    rMovCnt(i).SS_S_CODIGO:=rGastosRoles.SAXL_CODIGO;
+    rMovCnt(i).SS_CODIGO:=rGastosRoles.SAXL2_CODIGO;
+    rMovCnt(i).S_CODIGO:=rGastosRoles.SAXL3_CODIGO;
+    rMovCnt(i).DESCRIPCION:=rGastosRoles.DESCRIPCION||' corresponde a '||TO_CHAR(dFechaHasta,'MONTH/YYYY');
+    rMovCnt(i).ASOCIACION:=NULL;
+    rMovCnt(i).COMPROMISO:= 'F';
+    rMovCnt(i).OBLIGACION:='F';
+    rMovCnt(i).PAGO := 'F';  
+    rMovCnt(i).AJUSTE_PRESUPUESTARIO := 'F';
+    nCuadreD:=nCuadreD+rMovCnt(i).DEBE;
+    i:=i+1;
+  END LOOP;
+  nCuadreH:=0;
+  nDifCuadre:=nCuadreD-nCuadreH;
+  IF nDifCuadre>0 THEN -- La diferencia se carga a la cuenta Sueldo Por Pagar o Bancos
+     FOR rSueldosxPagar IN cSueldosxPagar LOOP
+       rMovCnt(i).SECUENCIA:=201;
+       rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+       rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+       rMovCnt(i).CMP_FECHA:=dFechaCmp;
+       rMovCnt(i).CMP_CLAVE:=nClave;
+       rMovCnt(i).DEBE:=0;
+       rMovCnt(i).DEBEE:=0;
+       rMovCnt(i).HABER:=ROUND(nDifCuadre,2);
+       rMovCnt(i).HABERE:=ROUND(nDifCuadre,2)*nTipoCambioE;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rSueldosxPagar.EMP_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rSueldosxPagar.MYR_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rSueldosxPagar.CNT_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CODIGO:=rSueldosxPagar.SCNT_CODIGO;
+       rMovCnt(i).SS_S_A_CODIGO:=rSueldosxPagar.AXL_CODIGO;
+       rMovCnt(i).SS_S_CODIGO:=rSueldosxPagar.SAXL_CODIGO;
+       rMovCnt(i).SS_CODIGO:=rSueldosxPagar.SAXL2_CODIGO;
+       rMovCnt(i).S_CODIGO:=rSueldosxPagar.SAXL3_CODIGO;
+       rMovCnt(i).DESCRIPCION:='PAGO DE '||cPrmNombre ||' CORRESPONDE A '||TO_CHAR(dFechaHasta,'MONTH/YYYY');
+       rMovCnt(i).ASOCIACION:=NULL;   
+       rMovCnt(i).COMPROMISO:= 'F';
+       rMovCnt(i).OBLIGACION:='F';
+       rMovCnt(i).PAGO := 'F';  
+       rMovCnt(i).AJUSTE_PRESUPUESTARIO := 'F';
+       i:=i+1; 
+     END LOOP;
+  ELSE
+     QMS$ERRORS.SHOW_MESSAGE('CNT-01107');
+  END IF;
+  IF cCntPrs = 'V' THEN
+     FOR rGasto_Presupuesto IN cGasto_Presupuesto LOOP
+      -- FIJAMOS EL DEBE DE LA AFECTACION PRESUPUESTARIA
+       rMovCnt(i).SECUENCIA:=301;
+       rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+       rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+       rMovCnt(i).CMP_FECHA:=dFechaCmp;
+       rMovCnt(i).CMP_CLAVE:=nClave;
+       rMovCnt(i).DEBE:=ROUND(rGasto_Presupuesto.DEBE,2);
+       rMovCnt(i).DEBEE:=ROUND(rGasto_Presupuesto.DEBE,2)*nTipoCambioE;
+       rMovCnt(i).HABER:=0;
+       rMovCnt(i).HABERE:=0;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rGasto_Presupuesto.EMP_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rGasto_Presupuesto.MYR_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rGasto_Presupuesto.CNT_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CODIGO:=rGasto_Presupuesto.SCNT_CODIGO;
+       rMovCnt(i).SS_S_A_CODIGO:=rGasto_Presupuesto.AXL_CODIGO;
+       rMovCnt(i).SS_S_CODIGO:=rGasto_Presupuesto.SAXL_CODIGO;
+       rMovCnt(i).SS_CODIGO:=rGasto_Presupuesto.SAXL2_CODIGO;
+       rMovCnt(i).S_CODIGO:=rGasto_Presupuesto.SAXL3_CODIGO;
+       rMovCnt(i).DESCRIPCION:= 'PAGO DE '||rGasto_Presupuesto.PRM_NOMBRE||' DE '||TO_CHAR(dFechaHasta,'MONTH/YYYY');
+       rMovCnt(i).ASOCIACION:=NULL;
+       rMovCnt(i).COMPROMISO:= 'V';
+       rMovCnt(i).OBLIGACION:='V';
+       rMovCnt(i).PAGO := 'V'; 
+       rMovCnt(i).AJUSTE_PRESUPUESTARIO := 'F';          
+       i:=i+1;
+     END LOOP;
+  END IF;
+-- AHORA SI NO HA HABIDO NINGUN ERROR CREAMOS LOS DETALLES DEL COMPROBANTE
+  FOR I IN 1..rMovCnt.COUNT LOOP
+    IF (rMovCnt(I).DEBE=0 AND rMovCnt(I).HABER=0) OR (rMovCnt(I).DEBE>0 AND rMovCnt(I).HABER>0) THEN
+      QMS$ERRORS.SHOW_MESSAGE('ADM-00009',rMovCnt(I).SS_S_A_SC_CNT_MYR_EMP_CODIGO||rMovCnt(I).SS_S_A_SC_CNT_MYR_CODIGO||
+                                          rMovCnt(I).SS_S_A_SC_CNT_CODIGO||rMovCnt(I).SS_S_A_SC_CODIGO||
+                                          rMovCnt(I).SS_S_A_CODIGO||rMovCnt(I).SS_S_CODIGO||rMovCnt(I).SS_CODIGO||
+                                          rMovCnt(I).S_CODIGO||' '||rMovCnt(I).DESCRIPCION||' ** DEBE ** '||
+                                          rMovCnt(I).DEBE||' ** HABER **'||rMovCnt(I).HABER,'Comuniquese con Softcase');
+    END IF;
+    INSERT INTO MOVIMIENTOS (MVM_ID,CMP_TPOCMPEMP_EMP_CODIGO,CMP_TPOCMPEMP_TPOCMP_CODIGO,
+  	    CMP_FECHA,CMP_CLAVE,FECHA,SECUENCIA,DEBE,HABER,DEBEE,HABERE,MONEDA,TIPO_DE_CAMBIO,MAYORIZADO,
+          COMPROMISO,OBLIGACION,PAGO,AJUSTE_PRESUPUESTARIO,
+  	    SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,SS_S_A_SC_CNT_CODIGO,
+  	    SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,SS_CODIGO,S_CODIGO,
+          DESCRIPCION,ASOCIACION,ESTADO_MOVIMIENTO,OBL_OBL_ID)
+    VALUES (MVM_SEQ.NEXTVAL,cEmpCod,cTpoCmp,dFechaCmp,nClave,dFechaCmp,rMovCnt(I).SECUENCIA,
+      	rMovCnt(I).DEBE,rMovCnt(I).HABER,rMovCnt(I).DEBEE,rMovCnt(I).HABERE,
+            vMonedaLocal,nTipoCambio,'F',rMovCnt(i).COMPROMISO,rMovCnt(i).OBLIGACION,
+            rMovCnt(i).PAGO,rMovCnt(i).AJUSTE_PRESUPUESTARIO,rMovCnt(I).SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+            rMovCnt(I).SS_S_A_SC_CNT_MYR_CODIGO,rMovCnt(I).SS_S_A_SC_CNT_CODIGO,
+  	      rMovCnt(I).SS_S_A_SC_CODIGO,rMovCnt(I).SS_S_A_CODIGO,rMovCnt(I).SS_S_CODIGO,
+            rMovCnt(I).SS_CODIGO,rMovCnt(I).S_CODIGO,
+  	      rMovCnt(I).DESCRIPCION,rMovCnt(I).ASOCIACION,'N',NULL);
+  END LOOP;
+EXCEPTION
+  WHEN DUP_VAL_ON_INDEX THEN
+-- FALLA SI YA EXISTE UN COMPROBANTE IGUAL (CABECERA)
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01010',cTpoCmp||'-'||TO_CHAR(dFechaCmp,'DD/MM/YYYY')||'-'||TO_CHAR(nClave));
+  WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en el procedimiento CONTABILIZAR_PAGO_ESPECIAL por error '||SQLERRM);
+END;
+END;
+/* Crea un comprobante Contable por el Rol de Pagos */
+PROCEDURE  CONTABILIZAR_ROL_DE_PAGOS
+  (NTIPOCAMBIO  IN  number
+  ,NTIPOCAMBIOE  IN  NUMBER
+  ,VMONEDALOCAL  IN  VARCHAR2
+  ,CEMPCOD  IN  VARCHAR2
+  ,CTPOCMP  IN  VARCHAR2
+  ,DFECHACMP  IN  DATE
+  ,NCLAVE  IN OUT  NUMBER
+  ,DFECHADESDE  IN  DATE
+  ,DFECHAHASTA  IN  DATE  
+  ,CCNTPRS IN VARCHAR2:='F'
+  )
+  IS
+-- Program Data
+NCUADREH NUMBER(21, 6) := 0;
+VCTASUELDOSXPAGAR PARAMETROS_INTEGRACION.CUENTA_CONTABLE%TYPE;
+NCUADRED NUMBER(21, 6) := 0;
+J NUMBER := 0;
+NDIFCUADRE NUMBER(21, 6) := 0;
+NNUMING NUMBER := 100;
+I NUMBER;
+k number :=0;
+VDESCING VARCHAR2(1000);
+CNOMBRE_SEC VARCHAR2(100);
+
+
+-- PL/SQL Block
+ BEGIN
+--Este proceso crea un Comprobante Contable para el Rol de Pagos emitido
+--desde el Sistema de Rol de Pagos. Antes de proceder a contabilizar el 
+--Rol, se valida que los datos necesarios para realizar el proceso estén
+--correctos, esto lo hacemos en el proceso VALIDAR_CONTABILIZACION_ROL
+BEGIN
+DECLARE
+CURSOR cMesCerrado IS
+  SELECT COUNT(*)
+    FROM CIERRES_DE_MES
+    WHERE TRUNC(MES,'MM')=TRUNC(dFechaCmp,'MM')
+      AND  ESTADO='C';
+CURSOR cSueldosxPagar IS
+SELECT CG.RV_MEANING EMPRESA,
+       SUBSTR(PRMINT.PARAMETRO,4,3) PARAMETRO,
+       PRMINT.CUENTA_CONTABLE,
+       PLNCNT.EMP_CODIGO EMP_CODIGO, PLNCNT.MYR_CODIGO
+       MYR_CODIGO, PLNCNT.CNT_CODIGO CNT_CODIGO, PLNCNT.SCNT_CODIGO SCNT_CODIGO,
+       PLNCNT.AXL_CODIGO AXL_CODIGO, PLNCNT.SAXL_CODIGO SAXL_CODIGO,
+       PLNCNT.SAXL2_CODIGO SAXL2_CODIGO, PLNCNT.SAXL3_CODIGO SAXL3_CODIGO
+FROM CG_REF_CODES CG,PARAMETROS_INTEGRACION PRMINT,
+     PLAN_DE_CUENTAS PLNCNT
+WHERE CG.RV_LOW_VALUE = SUBSTR(PRMINT.PARAMETRO,4,3) 
+  AND CG.RV_DOMAIN = 'TERCERIZADORA' 
+  AND PRMINT.EMP_CODIGO=cEmpCod 
+  AND PRMINT.TIPO='RDP'
+  AND PRMINT.CUENTA_CONTABLE=PLNCNT.CODIGO (+)
+ORDER BY 2,1;
+
+TYPE tMovCnt  IS TABLE OF MOVIMIENTOS%ROWTYPE INDEX BY BINARY_INTEGER;
+rMovCnt tMovCnt; -- Tabla en donde se guardan los datos antes de Contabilizar
+nContMesCerrado NUMBER:=0;-- Devuelve 1 si el mes esta cerrado caso contrario 0
+BEGIN
+-- PRIMERO CREAMOS LA CABECERA PARA VER QUE NO EXISTE UN COMPROBANTE IGUAL
+  OPEN cMesCerrado;
+  FETCH cMesCerrado INTO nContMesCerrado;
+  IF nContMesCerrado>0 THEN
+-- Error no se puede contabilizar para un mes cerrado
+      QMS$ERRORS.SHOW_MESSAGE('CNT-00046');-- No se puede crear un comprobante de un mes ya cerrado
+  END IF;
+  IF nClave IS NULL THEN
+     SELECT NOMBRE_SECUENCIA INTO cNOMBRE_SEC
+     FROM TIPOS_COMPROBANTES_EMPRESAS
+     WHERE EMP_CODIGO = cEmpCod AND
+           TPOCMP_CODIGO = cTpoCmp;
+     GNRL.ACTUALIZA_SECUENCIA(cNOMBRE_SEC,nClave);
+  END IF;
+  VALIDAR_CONTABILIZACION_ROL(cEmpCod,dFechaDesde,dFechaHasta);   
+  -- PRIMERO CREAMOS LA CABECERA PARA VER QUE NO EXISTE UN COMPROBANTE IGUAL
+  BEGIN
+     vDescIng:='Pago de Sueldos desde '||TO_CHAR(dFechaDesde,'DD/MM/YYYY HH24:MI')||' hasta '||
+               TO_CHAR(dFechaHasta,'DD/MM/YYYY HH24:MI');
+
+     INSERT INTO COMPROBANTES (TPOCMPEMP_EMP_CODIGO,TPOCMPEMP_TPOCMP_CODIGO,FECHA,CLAVE,
+                               MAYORIZADO,ESTADO,TOTAL,MONEDA_LOCAL,TIPO_DE_CAMBIO,TIPO_DE_CAMBIOE,
+                               CONCEPTO,CRRMES_MES,CONTABILIZADO_DESDE)
+     VALUES (cEmpCod,cTpoCmp,dFechaCmp,nClave,'F','N',0,vMonedaLocal,nTipoCambio,nTipoCambioE,vDescIng,NULL,'RDP'); 
+  EXCEPTION 
+  WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo la inserción del Comprobante por error '||SQLERRM);  
+  END;
+  i:=1;
+  j:=0;
+  k:=0;
+  FOR rSueldosxPagar IN cSueldosxPagar LOOP
+  k:= k+1;
+  nCuadreD:=0;
+  ncuadreH:=0;
+  QMS$ERRORS.SHOW_DEBUG_INFO(rSueldosxPagar.PARAMETRO);  
+  BEGIN     
+     DECLARE CURSOR cGastosRoles IS --(Debe) Cursor de Gastos por Roles de Pagos
+             SELECT EMP_CODIGO,SUBSTR(RV_MEANING,1,20) DESCRIPCION,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,AXL_CODIGO,SAXL_CODIGO,
+             SAXL2_CODIGO,SAXL3_CODIGO,VALOR
+             FROM GASTOS_ROLES_DE_PAGOS ,CG_REF_CODES
+             WHERE EMP_CODIGO = cEmpCod AND
+                  (FECHA BETWEEN dFechaDesde AND dFechaHasta) AND
+                  RV_DOMAIN = 'AGRUPADOR COSTOS GENERAL' AND
+                  AGRUPADOR_TIPO = RV_LOW_VALUE AND
+                  TERCERIZADORA = rSueldosxPagar.PARAMETRO
+             ORDER BY 1,2; 
+             CURSOR cPasivosRoles IS --(Haber) Cursor de Pasivos por Roles de Pagos
+             SELECT EMP_CODIGO,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,
+                    AXL_CODIGO,SAXL_CODIGO,SAXL2_CODIGO,SAXL3_CODIGO,PRMROL_NOMBRE,VALOR
+             FROM PASIVOS_ROLES_DE_PAGOS 
+             WHERE EMP_CODIGO = cEmpCod AND
+                   PRMROL_TIPO <> 'E' AND
+                   TERCERIZADORA = rSueldosxPagar.PARAMETRO AND
+                   (FECHA BETWEEN dFechaDesde AND dFechaHasta);
+     BEGIN
+     FOR rGastosRoles IN cGastosRoles LOOP
+       -- FIJAMOS EL DEBE
+--       nNumIng:= nNumIng+1;       
+--       rMovCnt(i).SECUENCIA:=100+nNumIng;
+       rMovCnt(i).SECUENCIA:=k;
+       rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+       rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+       rMovCnt(i).CMP_FECHA:=dFechaCmp;
+       rMovCnt(i).CMP_CLAVE:=nClave;
+       rMovCnt(i).DEBE:=ROUND(rGastosRoles.VALOR,2);
+       rMovCnt(i).DEBEE:=ROUND(rGastosRoles.VALOR,2)*nTipoCambioE;
+       rMovCnt(i).HABER:=0;
+       rMovCnt(i).HABERE:=0;
+       rMovCnt(i).FECHA:=dFechaCmp;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rGastosRoles.EMP_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rGastosRoles.MYR_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rGastosRoles.CNT_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CODIGO:=rGastosRoles.SCNT_CODIGO;
+       rMovCnt(i).SS_S_A_CODIGO:=rGastosRoles.AXL_CODIGO;
+       rMovCnt(i).SS_S_CODIGO:=rGastosRoles.SAXL_CODIGO;
+       rMovCnt(i).SS_CODIGO:=rGastosRoles.SAXL2_CODIGO;
+       rMovCnt(i).S_CODIGO:=rGastosRoles.SAXL3_CODIGO;
+       rMovCnt(i).DESCRIPCION:=rGastosRoles.DESCRIPCION||'de '||TO_CHAR(dFechaHasta,'MONTH/YYYY')||rSueldosxPagar.EMPRESA;
+       rMovCnt(i).ASOCIACION:=NULL;
+       nCuadreD:=nCuadreD+rMovCnt(i).DEBE;
+       i:=i+1;
+       QMS$ERRORS.SHOW_DEBUG_INFO('Se fijo el debe '||to_char(i));  
+     END LOOP;
+     IF nCuadreD > 0 THEN
+        j:= i; --Posición para crear el movimiento por la diferencia del Debe y Haber
+        i:= i+1;
+     END IF;
+     ncuadreH:=0;
+     FOR rPasivosRoles IN cPasivosRoles LOOP
+--          IF rMovCnt(i-2).DESCRIPCION <> rPasivosRoles.PRMROL_NOMBRE||' SUELDOS DE '||TO_CHAR(dFechaHasta,'MONTH/YYYY')THEN
+--             nNumIng:= nNumIng+1;
+--          END IF;
+     -- FIJAMOS EL HABER
+--       rMovCnt(i).SECUENCIA:=100+nNumIng;
+       rMovCnt(i).SECUENCIA:=k;
+       rMovCnt(i).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+       rMovCnt(i).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+       rMovCnt(i).CMP_FECHA:=dFechaCmp;
+       rMovCnt(i).CMP_CLAVE:=nClave;
+       rMovCnt(i).DEBE:=0;
+       rMovCnt(i).DEBEE:=0;
+       rMovCnt(i).HABER:=ROUND(rPasivosRoles.VALOR,2);
+       rMovCnt(i).HABERE:=ROUND(rPasivosRoles.VALOR,2)*nTipoCambioE;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rPasivosRoles.EMP_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_MYR_CODIGO:=rPasivosRoles.MYR_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CNT_CODIGO:=rPasivosRoles.CNT_CODIGO;
+       rMovCnt(i).SS_S_A_SC_CODIGO:=rPasivosRoles.SCNT_CODIGO;
+       rMovCnt(i).SS_S_A_CODIGO:=rPasivosRoles.AXL_CODIGO;
+       rMovCnt(i).SS_S_CODIGO:=rPasivosRoles.SAXL_CODIGO;
+       rMovCnt(i).SS_CODIGO:=rPasivosRoles.SAXL2_CODIGO;
+       rMovCnt(i).S_CODIGO:=rPasivosRoles.SAXL3_CODIGO;
+       rMovCnt(i).DESCRIPCION:= rPasivosRoles.PRMROL_NOMBRE||' SUELDOS DE '||TO_CHAR(dFechaHasta,'MONTH/YYYY');
+       rMovCnt(i).ASOCIACION:=NULL;       
+       nCuadreH:=nCuadreH+rMovCnt(i).HABER;
+       i:=i+1;
+       QMS$ERRORS.SHOW_DEBUG_INFO('Se fijo el Haber'||to_char(i));  
+     END LOOP;
+     nDifCuadre:=nCuadreD-nCuadreH;
+     IF nDifCuadre >0 THEN -- La diferencia se carga a la cuenta Sueldo Por Pagar
+       rMovCnt(j).SECUENCIA:=k;
+       rMovCnt(j).CMP_TPOCMPEMP_EMP_CODIGO:=cEmpCod;
+       rMovCnt(j).CMP_TPOCMPEMP_TPOCMP_CODIGO:=cTpoCmp;
+       rMovCnt(j).CMP_FECHA:=dFechaCmp;
+       rMovCnt(j).CMP_CLAVE:=nClave;
+       rMovCnt(j).DEBE:=0;
+       rMovCnt(j).DEBEE:=0;
+       rMovCnt(j).HABER:=ROUND(nDifCuadre,2);
+       rMovCnt(j).HABERE:=ROUND(nDifCuadre,2)*nTipoCambioE;
+       rMovCnt(j).SS_S_A_SC_CNT_MYR_EMP_CODIGO:=rSueldosxPagar.EMP_CODIGO;
+       rMovCnt(j).SS_S_A_SC_CNT_MYR_CODIGO:=rSueldosxPagar.MYR_CODIGO;
+       rMovCnt(j).SS_S_A_SC_CNT_CODIGO:=rSueldosxPagar.CNT_CODIGO;
+       rMovCnt(j).SS_S_A_SC_CODIGO:=rSueldosxPagar.SCNT_CODIGO;
+       rMovCnt(j).SS_S_A_CODIGO:=rSueldosxPagar.AXL_CODIGO;
+       rMovCnt(j).SS_S_CODIGO:=rSueldosxPagar.SAXL_CODIGO;
+       rMovCnt(j).SS_CODIGO:=rSueldosxPagar.SAXL2_CODIGO;
+       rMovCnt(j).S_CODIGO:=rSueldosxPagar.SAXL3_CODIGO;
+       rMovCnt(j).DESCRIPCION:='DESCUENTOS DE '||TO_CHAR(dFechaHasta,'MONTH/YYYY')||rSueldosxPagar.EMPRESA;
+       rMovCnt(j).ASOCIACION:=NULL;   
+     ELSIF nDifCuadre < 0 THEN
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01107');
+     END IF;  
+     END;
+  END;
+  nNumIng:= nNumIng+1;
+  END LOOP;
+-- AHORA SI NO HA HABIDO NINGUN ERROR CREAMOS LOS DETALLES DEL COMPROBANTE
+  FOR I IN 1..rMovCnt.COUNT LOOP
+    QMS$ERRORS.SHOW_DEBUG_INFO('Va a insertar');
+    IF (rMovCnt(I).DEBE=0 AND rMovCnt(I).HABER=0) OR (rMovCnt(I).DEBE>0 AND rMovCnt(I).HABER>0) THEN
+      QMS$ERRORS.SHOW_MESSAGE('ADM-00009',rMovCnt(I).SS_S_A_SC_CNT_MYR_EMP_CODIGO||rMovCnt(I).SS_S_A_SC_CNT_MYR_CODIGO||
+                                          rMovCnt(I).SS_S_A_SC_CNT_CODIGO||rMovCnt(I).SS_S_A_SC_CODIGO||
+                                          rMovCnt(I).SS_S_A_CODIGO||rMovCnt(I).SS_S_CODIGO||rMovCnt(I).SS_CODIGO||
+                                          rMovCnt(I).S_CODIGO||' '||rMovCnt(I).DESCRIPCION||' ** DEBE ** '||
+                                          rMovCnt(I).DEBE||' ** HABER **'||rMovCnt(I).HABER,'Comuniquese con Softcase');
+    END IF;
+           QMS$ERRORS.SHOW_DEBUG_INFO(rMovCnt(I).SS_S_A_SC_CNT_MYR_EMP_CODIGO||
+                               rMovCnt(I).SS_S_A_SC_CNT_MYR_CODIGO||
+                               rMovCnt(I).SS_S_A_SC_CNT_CODIGO||
+                               rMovCnt(I).SS_S_A_SC_CODIGO||
+                               rMovCnt(I).SS_S_A_CODIGO||
+                               rMovCnt(I).SS_S_CODIGO||
+                               rMovCnt(I).SS_CODIGO||
+                               rMovCnt(I).S_CODIGO||
+                               rMovCnt(I).DESCRIPCION||' '||
+                               TO_CHAR(rMovCnt(I).DEBE)||' '||
+                               TO_CHAR(rMovCnt(I).HABER)); 
+    BEGIN
+    INSERT INTO MOVIMIENTOS (MVM_ID,CMP_TPOCMPEMP_EMP_CODIGO,CMP_TPOCMPEMP_TPOCMP_CODIGO,
+  	    CMP_FECHA,CMP_CLAVE,FECHA,SECUENCIA,DEBE,HABER,DEBEE,HABERE,MONEDA,TIPO_DE_CAMBIO,MAYORIZADO,          
+            SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,SS_S_A_SC_CNT_CODIGO,
+  	    SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,SS_CODIGO,S_CODIGO,
+          DESCRIPCION,ASOCIACION,ESTADO_MOVIMIENTO,OBL_OBL_ID)
+    VALUES (MVM_SEQ.NEXTVAL,cEmpCod,cTpoCmp,dFechaCmp,nClave,dFechaCmp,rMovCnt(I).SECUENCIA,
+      	rMovCnt(I).DEBE,rMovCnt(I).HABER,rMovCnt(I).DEBEE,rMovCnt(I).HABERE,
+            vMonedaLocal,nTipoCambio,'F',rMovCnt(I).SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+            rMovCnt(I).SS_S_A_SC_CNT_MYR_CODIGO,rMovCnt(I).SS_S_A_SC_CNT_CODIGO,
+  	      rMovCnt(I).SS_S_A_SC_CODIGO,rMovCnt(I).SS_S_A_CODIGO,rMovCnt(I).SS_S_CODIGO,
+            rMovCnt(I).SS_CODIGO,rMovCnt(I).S_CODIGO,
+  	      rMovCnt(I).DESCRIPCION,rMovCnt(I).ASOCIACION,'N',NULL);
+    EXCEPTION WHEN OTHERS THEN
+       QMS$ERRORS.SHOW_DEBUG_INFO('No se pudo insertar');
+       QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en el procedimiento CONTABILIZAR_ROL por error '||SQLERRM);
+    END;
+  END LOOP;
+EXCEPTION
+  WHEN DUP_VAL_ON_INDEX THEN
+-- FALLA SI YA EXISTE UN COMPROBANTE IGUAL (CABECERA)
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01010',cTpoCmp||'-'||TO_CHAR(dFechaCmp,'DD/MM/YYYY')||'-'||TO_CHAR(nClave));
+  WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en el procedimiento CONTABILIZAR_ROL por error '||SQLERRM);
+END;
+END;
+END CONTABILIZAR_ROL_DE_PAGOS; 
+

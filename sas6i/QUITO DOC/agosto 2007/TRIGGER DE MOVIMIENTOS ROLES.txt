@@ -1,0 +1,21 @@
+BEGIN
+-- Cada vez que se inserte un movimiento que se refiere a dias de permiso por
+-- enfermedad,vacaciones o maternidad se modifica el estado laboral del empleado
+DECLARE
+AGRUPADOR CHAR(1);
+BEGIN
+   SELECT DISTINCT NOMBRE_AGRUPADOR INTO AGRUPADOR
+   FROM PARAMETROS_ROLES
+   WHERE CODIGO = :NEW.PRMROL_CODIGO;
+   IF AGRUPADOR IN ('V','E','M') THEN
+-- ESTABA 'N' EN VEZ DE 'M'
+      UPDATE EMPLEADOS_ROLES
+      SET ESTADO_LABORAL = AGRUPADOR
+      WHERE EMP_CODIGO = :NEW.EMPROL_EMP_CODIGO AND
+            CODIGO = :NEW.EMPROL_CODIGO;
+   END IF;
+EXCEPTION
+WHEN OTHERS THEN
+   QMS$ERRORS.UNHANDLED_EXCEPTION('Error en el trigger ROLACTESTLBR');
+END;
+END;

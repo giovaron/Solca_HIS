@@ -1,0 +1,10 @@
+insert into agrupadores_contables
+select TIPO                 ,          
+'2'                       ,  
+REPLACE(DESCRIPCION,'Cex -','Emr -')                   , 
+CUENTA_CONTABLE_MAYOR          ,
+EMP_CODIGO                     ,
+CONTRA_CUENTA_CONTABLE_MAYOR
+from AGRUPADORES_CONTABles
+WHERE codigo='1'
+/

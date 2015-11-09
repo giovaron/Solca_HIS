@@ -1,0 +1,10 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\VISTA_TARIFARIO_CIRUGIA.sql
+--
+-- Generated for Oracle 9i on Tue Jun 14  14:01:28 2011 by Server Generator 6.5.96.5.6
+
+
+SPOOL VISTA_TARIFARIO_CIRUGIA.lst
+
+@@VISTA_TARIFARIO_CIRUGIA.vw
+
+SPOOL OFF

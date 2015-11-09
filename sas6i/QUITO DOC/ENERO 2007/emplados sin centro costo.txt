@@ -1,0 +1,19 @@
+72 CAJAS ENCALADA TERESA OLIVIA     administrativo
+78 CANDO TORRES MARIANA DE LOS ANGELES   PRIMER PISO
+
+
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Adm. Direccion Medica 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Cln. Cuidados Intensivo 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Cln. Medicina Interna 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Cln. Oncologia Clinica 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Cln. Pediatria Oncologi 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Cln.Preconsulta 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Crg. Cabeza, Cuello y P 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Crg. Mastologia y Melan 
+P0083 SUBSIDIO POR ENFERMEDAD Asociar con Hosp. Tercer Piso 
+P0354 BON HORAS EXTRAORD.Y SUP  Asociar con Adm. Financiero 
+P0357 BECA CALCULADO Asociar con Hosp. Primer Piso
+
+
+P0081 DESCUENTO POR MATERINIDAD 
+P0365 OTROS EGRESOS HORAS

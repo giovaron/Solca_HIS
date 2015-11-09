@@ -1,0 +1,129 @@
+PROCEDURE GENERA_DEPRECIACION IS
+-- Genera la Depreciación de Activo Fijos, siempre que se hayan ingresado
+-- los datos requeridos para la depreciación y que se cumpla la validación
+-- que consiste en que no se pueden generar depreciaciones en desorden.
+MES CHAR(3);
+VGRUPO NUMBER(4);
+VSUBGRUPO NUMBER(4);
+VACTIVO NUMBER(4);
+VCODIGO NUMBER(4);
+VVALOR_INICIAL NUMBER(21,6);
+VVALOR_ACTUAL NUMBER(21,6);
+VPORCENTAJE_DEP NUMBER(3);
+VDEP_ACUMULADA NUMBER(21,6);
+VDEP_ACUMULADA_INICIAL NUMBER(21,6);
+VDEPRECIACION NUMBER(21,6);
+ULTIMO_ANIO NUMBER(4);
+ULTIMO_MES NUMBER(2);
+SALDO_DEPRECIAR NUMBER(21,6); 
+VIDA_UTIL NUMBER;
+CURSOR CACTIVOS IS
+SELECT ACTFSBGACTFJO_GRPACTFJO_CODIGO,
+       ACTFJOGNR_SBGACTFJO_CODIGO,ACTFJOGNR_CODIGO,CODIGO,VALOR_INICIAL,
+       PORCENTAJE_DEPRECIACION,VALOR_ACTUAL
+FROM ACTIVOS_FIJOS_ESPECIFICOS
+WHERE TIPO = 'A' AND
+      SBGACTFJO_GRPACTFJO_EMP_CODIGO = :GLOBAL.CG$EMPRESA_CODIGO AND
+      ESTADO NOT IN('A','J') AND
+      ((:DPRACF.MES > 1 AND FECHA_INGRESO  <= (SELECT MAX(ROUND(TO_DATE('16/'||TO_CHAR(:DPRACF.MES-1,'09')||'/'||TO_CHAR(:DPRACF.ANIO,'0009'),'DD/MM/RRRR'),'MM')-1)
+                         FROM DUAL))OR
+       (:DPRACF.MES = 1 AND FECHA_INGRESO  <= (SELECT MAX(ROUND(TO_DATE('16/'||TO_CHAR(12,'09')||'/'||TO_CHAR(:DPRACF.ANIO-1,'0009'),'DD/MM/RRRR'),'MM')-1)
+                         FROM DUAL))) AND
+      ESTADO_DE_DISPONIBILIDAD = 'D'AND
+      PORCENTAJE_DEPRECIACION > 0 AND
+      VALOR_ACTUAL > 0
+ORDER BY 1,2,3,4,5;
+BEGIN
+   IF :DPRACF.ANIO IS NOT NULL AND :DPRACF.MES IS NOT NULL AND :DPRACF.PRS_CODIGO
+      IS NOT NULL AND :DPRACF.FECHA IS NOT NULL THEN
+      IF (VALIDA_DEPRECIACION(ULTIMO_MES,ULTIMO_ANIO)) = 1 THEN
+      BEGIN
+         SELECT DECODE (:DPRACF.MES,1,'ENE',
+                                 2,'FEB',
+                                 3,'MAR',
+                                 4,'ABR',
+                                 5,'MAY',
+                                 6,'JUN',
+                                 7,'JUL',
+                                 8,'AGO',
+                                 9,'SEP',
+                                10,'OCT',
+                                11,'NOV',
+                                12,'DIC') INTO MES FROM DUAL;
+         OPEN CACTIVOS;
+         LOOP
+            FETCH CACTIVOS INTO VGRUPO,VSUBGRUPO,VACTIVO,VCODIGO,
+                                VVALOR_INICIAL,VPORCENTAJE_DEP,VVALOR_ACTUAL;
+            EXIT WHEN CACTIVOS%NOTFOUND;
+            BEGIN
+               SELECT VALOR_ACUMULADO INTO VDEP_ACUMULADA_INICIAL
+               FROM DETALLES_DEPRECIACIONES
+               WHERE TO_CHAR(DPRACF_ANIO)||TO_CHAR(DPRACF_MES,'FM09') = (SELECT MIN(TO_CHAR(DPRACF_ANIO)||TO_CHAR(DPRACF_MES,'FM09'))
+                                                                          FROM DETALLES_DEPRECIACIONES DTLDPR
+                                                                          WHERE DTLDPR.SBGACTFJO_GRPACTFJO_EMP_CODIGO = :GLOBAL.CG$EMPRESA_CODIGO AND
+                                                                                DTLDPR.ACTFSBGACTFJO_GRPACTFJO_CODIGO = VGRUPO AND
+                                                                                DTLDPR.ACTFACTFJOGNR_SBGACTFJO_CODIGO = VSUBGRUPO AND
+                                                                                DTLDPR.ACTFJOESP_ACTFJOGNR_CODIGO     = VACTIVO AND
+                                                                                DTLDPR.ACTFJOESP_CODIGO = VCODIGO AND
+                                                                                DTLDPR.ESTADO <> 'A') AND
+                     SBGACTFJO_GRPACTFJO_EMP_CODIGO = :GLOBAL.CG$EMPRESA_CODIGO AND
+                     ACTFSBGACTFJO_GRPACTFJO_CODIGO = VGRUPO AND
+                     ACTFACTFJOGNR_SBGACTFJO_CODIGO = VSUBGRUPO AND
+                     ACTFJOESP_ACTFJOGNR_CODIGO     = VACTIVO AND
+                     ACTFJOESP_CODIGO = VCODIGO AND
+                     ESTADO <> 'A';
+            EXCEPTION
+               WHEN NO_DATA_FOUND THEN
+               VDEP_ACUMULADA_INICIAL := 0;
+            END;
+            SELECT NVL(SUM(DEBE*-1+HABER),0)INTO VDEP_ACUMULADA
+            FROM MOVIMIENTOS_ACTIVOS_FIJOS
+            WHERE MVM_TIPO LIKE 'DPR%' AND
+                  ESTADO <> 'A' AND
+                  SBGACTFJO_GRPACTFJO_EMP_CODIGO = :GLOBAL.CG$EMPRESA_CODIGO AND
+                  ((:DPRACF.MES = 1 AND MVM_NUMERO <= :DPRACF.ANIO -1)OR(:DPRACF.MES > 1 AND MVM_NUMERO <= :DPRACF.ANIO)) AND
+                  ACTFSBGACTFJO_GRPACTFJO_CODIGO = VGRUPO AND
+                  ACTFACTFJOGNR_SBGACTFJO_CODIGO = VSUBGRUPO AND
+                  ACTFJOESP_ACTFJOGNR_CODIGO     = VACTIVO AND
+                  ACTFJOESP_CODIGO = VCODIGO;
+            VDEP_ACUMULADA:=VDEP_ACUMULADA + VDEP_ACUMULADA_INICIAL;
+            SALDO_DEPRECIAR:= ROUND((VVALOR_INICIAL*(VPORCENTAJE_DEP/100)),2);
+            VIDA_UTIL:= ROUND(100/VPORCENTAJE_DEP);
+            IF VDEP_ACUMULADA = 0  AND VVALOR_INICIAL > 0 AND VVALOR_ACTUAL >0  AND VVALOR_ACTUAL <= VVALOR_INICIAL THEN
+               VDEP_ACUMULADA := ROUND(VVALOR_INICIAL - VVALOR_ACTUAL,2);
+            END IF;
+            IF ROUND(VVALOR_INICIAL-VDEP_ACUMULADA,2) > SALDO_DEPRECIAR THEN
+--               VDEPRECIACION := ROUND(((VPORCENTAJE_DEP/12)* VVALOR_INICIAL)/100,2);
+               VDEPRECIACION := ROUND(((VVALOR_INICIAL-SALDO_DEPRECIAR)/VIDA_UTIL)/12,2);
+               IF VDEPRECIACION > (VVALOR_ACTUAL-SALDO_DEPRECIAR) THEN  -- Si la depreciación es mayor que el valor actual del activo
+                  VDEPRECIACION := (VVALOR_ACTUAL-SALDO_DEPRECIAR);     -- se deprecia el valor actual más no el porcentaje de deprec.
+               END IF;
+               INSERT INTO DETALLES_DEPRECIACIONES(DPRACF_EMP_CODIGO,DPRACF_ANIO,
+                           DPRACF_MES,NUMERO,SBGACTFJO_GRPACTFJO_EMP_CODIGO,
+                           ACTFSBGACTFJO_GRPACTFJO_CODIGO,ACTFACTFJOGNR_SBGACTFJO_CODIGO,
+                           ACTFJOESP_ACTFJOGNR_CODIGO,ACTFJOESP_CODIGO,VALOR_INICIAL,PORCENTAJE_DEPRECIACION,
+                           VALOR,VALOR_ACUMULADO,ESTADO)
+               VALUES(:GLOBAL.CG$EMPRESA_CODIGO,:DPRACF.ANIO,:DPRACF.MES,DTLDPR_SEQ.NEXTVAL,
+                      :GLOBAL.CG$EMPRESA_CODIGO,VGRUPO,VSUBGRUPO,VACTIVO,VCODIGO,VVALOR_INICIAL,
+                      (VPORCENTAJE_DEP/100)/12,VDEPRECIACION,VDEP_ACUMULADA,'N');
+               ACFGNR.CREAR_MOVIMIENTOS(:GLOBAL.CG$EMPRESA_CODIGO,VGRUPO,VSUBGRUPO,VACTIVO,
+                      VCODIGO,'DPR'||MES,:DPRACF.ANIO,:DPRACF.FECHA,0,
+                      VDEPRECIACION,'N',0);
+            END IF;
+         END LOOP;
+         CLOSE CACTIVOS;
+         :DPRACF.DPRACF_IND:= 'D';
+      EXCEPTION
+      WHEN OTHERS THEN
+         :DPRACF.DPRACF_IND := 'E';
+         QMS$ERRORS.SHOW_MESSAGE('ACF-00019',MES||' '||SQLERRM);
+      END;
+      ELSE
+         :DPRACF.DPRACF_IND := 'E';
+         QMS$ERRORS.SHOW_MESSAGE('ACF-00027',TO_CHAR(:DPRACF.MES),TO_CHAR(:DPRACF.ANIO),TO_CHAR(ULTIMO_MES),TO_CHAR(ULTIMO_ANIO));
+      END IF;
+   ELSE
+      :DPRACF.DPRACF_IND := 'E';
+      QMS$ERRORS.SHOW_MESSAGE('ACF-00023');
+   END IF;
+END;

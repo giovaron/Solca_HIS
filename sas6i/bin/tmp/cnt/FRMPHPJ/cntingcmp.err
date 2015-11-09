@@ -1,0 +1,9 @@
+FRM-30441: Warning: Initial Value ignored for subordinate mirror item MVM.MONEDAD.
+FRM-30441: Warning: Initial Value ignored for subordinate mirror item MVM.MONEDAH.
+FRM-30441: Warning: Initial Value ignored for subordinate mirror item MVM.TIPO_DE_CAMBIO2.
+FRM-30441: Warning: Initial Value ignored for subordinate mirror item MVM.DEBEML.
+FRM-30441: Warning: Initial Value ignored for subordinate mirror item MVM.HABERML.
+FRM-30441: Warning: Initial Value ignored for subordinate mirror item RTN.TOTAL_IVA2.
+FRM-30441: Warning: Initial Value ignored for subordinate mirror item RTN.TOTAL_RETENIDO2.
+
+Created form file G:\sas\fnt\cnt\FRMPHPJ\cntingcmp.fmx

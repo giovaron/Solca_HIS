@@ -1,0 +1,66 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\EMPLEADOS_NUEVOS.lis
+
+Generated on Thu Aug 17  09:51:09 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View EMPLEADOS_NUEVOS                                                                                        * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition            SELECT DISTINCT E.CEDULA,...                                        
+
+                                         Comment                                                                                
+Column CEDULA                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column NOMBRES                                                                                               * NOT IN DATABASE * ***
+                                                                                                                                
+Column APELLIDOS                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column PARROQUIA                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column CANTON                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column PROVINCIA                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column FECHA_NACIMIENTO                                                                                      * NOT IN DATABASE * ***
+                                                                                                                                
+Column ESTADO_CIVIL                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column SEXO                                                                                                  * NOT IN DATABASE * ***
+                                                                                                                                
+Column DIRECCION                                                                                             * NOT IN DATABASE * ***
+                                                                                                                                
+Column TELEFONO                                                                                              * NOT IN DATABASE * ***
+                                                                                                                                
+Column CARNE_SEGURO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column FECHA_INGRESO                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+Column CRG_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column CRG_DESCRIPCION                                                                                       * NOT IN DATABASE * ***
+                                                                                                                                
+Column DPR_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column DPR_DESCRIPCION                                                                                       * NOT IN DATABASE * ***
+                                                                                                                                
+Column TIPO                                                                                                  * NOT IN DATABASE * ***
+                                                                                                                                
+Column OBSERVACIONES                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+                                                ------------------------------------
+                                                View EMPLEADOS_NUEVOS Differences: 1
+                                                ------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

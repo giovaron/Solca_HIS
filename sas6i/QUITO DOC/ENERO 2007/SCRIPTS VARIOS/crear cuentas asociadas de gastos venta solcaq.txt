@@ -1,0 +1,384 @@
+DECLARE
+-- ITEMS INSUMOS Y MEDICAMENTOS quimioterapeuticos
+  CURSOR cCntAscQmt IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M72062' AND
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+--'M72062' --  ANDROCUR  50 MG TAB
+
+-- INSUMOS Y MEDICAMENTOS QUIROFANO
+  CURSOR cCntAscQrfMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M500112' AND
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+--'M500112' --  CLORHIDRATO DE REMIFENTANILO 5 MG (ULTIVA)
+  CURSOR cCntAscQrfIns IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U01457' AND
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+--'U01457' --  SIERRA G4-570 EQUIPO NEUROCIRUGIA
+
+-- INSUMOS Y MEDICAMENTOS GASTROENTEROLOGIA
+  CURSOR cCntAscGastroMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M58084' AND
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+--'M58084' --  CICLOSPORINA 100 MG CAP (SANDIMMUN)
+
+-- INSUMOS Y MEDICAMENTOS UROLOGIA
+  CURSOR cCntAscUroMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M66022' AND 
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+--'M66022' --  MANITOL 20% 500ML
+
+-- INSUMOS Y MEDICAMENTOS GINECOLOGIA
+  CURSOR cCntAscGineMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M74012' AND
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+--'M74012' --  ESTRIOL 15 G (OVESTIN)
+-- INSUMOS Y MEDICAMENTOS EN GENERAL
+  CURSOR cCntAscMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M500824' AND
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+ --'M500824' -- LIDOCAINA  S/E 3 ML
+  CURSOR cCntAscIns IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U031376' AND
+          TIPO_DE_CUENTA='INV' AND 
+          TIPO_DE_ASOCIACION='GIN';
+--'U031376' -- REGISTRO DE INYECCIONES
+-- ITEMS INSUMOS Y MEDICAMENTOS quimioterapeuticos
+  CURSOR cItmQmt IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc -- La vista ya excluye la seccion 72 QUIMIOTERAPEUTICOS
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) NOT IN ('P','S')
+    and sUbstr(clave,2,2)='72';
+
+--- ITEMS INSUMOS Y MEDICAMENTOS QUIROFANO excluyendo los quimioterapeuticos
+  CURSOR cItmQrfMed IS
+    select clave
+    from nuevos_items_QRF,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) != 'U';
+  CURSOR cItmQrfIns IS
+    select clave
+    from nuevos_items_QRF,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) != 'M';
+--- ITEMS INSUMOS Y MEDICAMENTOS GASTROENTEROLOGIA
+  CURSOR cItmGastroMed IS
+    select clave
+    from nuevos_items_Gastro,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null;
+--- ITEMS INSUMOS Y MEDICAMENTOS UROLOGIA
+  CURSOR cItmUroMed IS
+    select clave
+    from nuevos_items_uro,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null;
+--- ITEMS INSUMOS Y MEDICAMENTOS GINECOLOGIA
+  CURSOR cItmGineMed IS
+    select clave
+    from nuevos_items_gine,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null;
+-- ITEMS INSUMOS Y MEDICAMENTOS excluyendo los quimioterapeuticos, QUIROFANO, GASTROENTEROLOGIA, GINECOLOGIA Y UROLOGIA
+  CURSOR cItmMed IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) = 'M'
+    and sUbstr(clave,2,2)!='72';
+  CURSOR cItmIns IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND TIPO_DE_CUENTA(+)='INV' 
+    AND TIPO_DE_ASOCIACION(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) != 'M'
+    and sUbstr(clave,2,2)!='72';
+  i Number:=0;
+  j Number:=0;
+BEGIN
+-- SAVEPOINT;
+-- A -> PRECONSULTA
+-- INSUMOS y MEDICAMENTOS QUIMIOTERAPEUTICOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmQmt LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQmt LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' INSUMOS y MEDICAMENTOS QUIMIOTERAPEUTICOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS QUIROFANO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmQrfMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQrfMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS QUIROFANO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- INSUMOS QUIROFANO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmQrfIns LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQrfIns LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' INSUMOS QUIROFANO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS GASTROENTEROLOGIA 
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmGastroMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscGastroMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS GASTROENTEROLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS UROLOGIA 
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmUroMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscUroMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS UROLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS GINECOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmGineMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscGineMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS GINECOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS EN GENERAL
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS EN GENERAL '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- INSUMOS EN GENERAL
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmIns LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscIns LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' INSUMOS EN GENERAL '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+  DBMS_OUTPUT.PUT_LINE('TERMINANDO ');
+--COMMIT;
+EXCEPTION
+WHEN OTHERS THEN
+  DBMS_OUTPUT.PUT_LINE('ERROR '||SQLERRM);
+  ROLLBACK;
+  RAISE;
+END;            
+/

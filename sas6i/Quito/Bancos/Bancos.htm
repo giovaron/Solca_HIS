@@ -1,0 +1,533 @@
+<HTML>
+<HEAD><TITLE>Subsistema de Bancos</TITLE>
+<STYLE>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</STYLE>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Softcase</o:Author>
+  <o:Revision>1</o:Revision>
+  <o:TotalTime>24</o:TotalTime>
+  <o:Created>2006-05-23T14:20:00Z</o:Created>
+  <o:Pages>1</o:Pages>
+  <o:Words>375</o:Words>
+  <o:Characters>2065</o:Characters>
+  <o:Company> </o:Company>
+  <o:Lines>17</o:Lines>
+  <o:Paragraphs>4</o:Paragraphs>
+  <o:CharactersWithSpaces>2436</o:CharactersWithSpaces>
+  <o:Version>11.5606</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:View>Print</w:View>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:HyphenationZone>21</w:HyphenationZone>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:SelectEntireFieldWithStartOrEnd/>
+   <w:UseWord2002TableStyleRules/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]-->
+<STYLE>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Batang;
+	panose-1:2 3 6 0 0 1 1 1 1 1;
+	mso-font-alt:"Arial Unicode MS";
+	mso-font-charset:129;
+	mso-generic-font-family:auto;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 151388160 16 0 524288 0;}
+@font-face
+	{font-family:Garamond;
+	panose-1:2 2 4 4 3 3 1 1 8 3;
+	mso-font-charset:0;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:647 0 0 0 159 0;}
+@font-face
+	{font-family:"Arial Black";
+	panose-1:2 11 10 4 2 1 2 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:647 0 0 0 159 0;}
+@font-face
+	{font-family:Geneva;
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-alt:Arial;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:"\@Batang";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:129;
+	mso-generic-font-family:auto;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 151388160 16 0 524288 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{mso-style-link:"Texto independiente Car";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:12.0pt;
+	margin-left:0in;
+	text-align:justify;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:Garamond;
+	mso-fareast-font-family:Batang;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.25pt;
+	mso-fareast-language:EN-US;}
+p.Rtulodecaptulo, li.Rtulodecaptulo, div.Rtulodecaptulo
+	{mso-style-name:"R\00F3tulo de cap\00EDtulo";
+	mso-style-link:"R\00F3tulo de cap\00EDtulo Car";
+	mso-style-next:"Texto independiente";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:12.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	border:none;
+	mso-border-bottom-alt:solid windowtext .75pt;
+	padding:0in;
+	mso-padding-alt:0in 0in 3.0pt 0in;
+	font-size:7.5pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Arial Black";
+	mso-fareast-font-family:Batang;
+	mso-bidi-font-family:"Times New Roman";
+	text-transform:uppercase;
+	letter-spacing:3.5pt;
+	mso-font-kerning:14.0pt;
+	mso-fareast-language:EN-US;}
+p.Ttulodecaptulo, li.Ttulodecaptulo, div.Ttulodecaptulo
+	{mso-style-name:"T\00EDtulo de cap\00EDtulo";
+	mso-style-next:Normal;
+	margin-top:24.0pt;
+	margin-right:1.5in;
+	margin-bottom:.25in;
+	margin-left:0in;
+	line-height:22.0pt;
+	mso-pagination:widow-orphan lines-together;
+	page-break-after:avoid;
+	font-size:22.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Arial Black";
+	mso-fareast-font-family:Batang;
+	mso-bidi-font-family:"Times New Roman";
+	color:gray;
+	letter-spacing:-1.75pt;
+	mso-font-kerning:14.0pt;
+	mso-fareast-language:EN-US;}
+span.TextoindependienteCar
+	{mso-style-name:"Texto independiente Car";
+	mso-style-locked:yes;
+	mso-style-link:"Texto independiente";
+	mso-ansi-font-size:12.0pt;
+	font-family:Garamond;
+	mso-ascii-font-family:Garamond;
+	mso-fareast-font-family:Batang;
+	mso-hansi-font-family:Garamond;
+	letter-spacing:-.25pt;
+	mso-ansi-language:ES;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:AR-SA;}
+span.RtulodecaptuloCar
+	{mso-style-name:"R\00F3tulo de cap\00EDtulo Car";
+	mso-style-locked:yes;
+	mso-style-link:"R\00F3tulo de cap\00EDtulo";
+	mso-ansi-font-size:7.5pt;
+	font-family:"Arial Black";
+	mso-ascii-font-family:"Arial Black";
+	mso-fareast-font-family:Batang;
+	mso-hansi-font-family:"Arial Black";
+	text-transform:uppercase;
+	letter-spacing:3.5pt;
+	mso-font-kerning:14.0pt;
+	mso-ansi-language:ES;
+	mso-fareast-language:EN-US;
+	mso-bidi-language:AR-SA;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:70.85pt 85.05pt 70.85pt 85.05pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:382676979;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1037948914 2114871288 287716722 201981979 201981967 201981977 201981979 201981967 201981977 201981979;}
+@list l0:level1
+	{mso-level-tab-stop:91.2pt;
+	mso-level-number-position:left;
+	margin-left:91.2pt;
+	text-indent:-.25in;}
+@list l0:level2
+	{mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Geneva;}
+@list l1
+	{mso-list-id:744373460;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1490385300 287716722 201981977 201981979 201981967 201981977 201981979 201981967 201981977 201981979;}
+@list l1:level1
+	{mso-level-tab-stop:27.0pt;
+	mso-level-number-position:left;
+	margin-left:81.0pt;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Geneva;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</STYLE>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Tabla normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--></HEAD>
+
+<BODY lang=ES style="tab-interval: 35.4pt">
+<DIV class=Section1>
+<P class=Ttulodecaptulo style="MARGIN: 24pt 1.5in 6pt 37.2pt">
+
+Subsistema de Bancos</P>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><I 
+style="mso-bidi-font-style: normal"><SPAN lang=ES-MX 
+style="FONT-SIZE: 14pt; mso-ansi-language: ES-MX">
+
+El sistema de Bancos permite llevar un control del Libro de Bancos 
+para poder realizar la Conciliación Bancaria frente a los estados 
+de cuenta emitidos por las Entidades Financieras con las que la empresa trabaja.
+
+<SPAN style="mso-spacerun: yes">&nbsp; </SPAN> 
+<SPAN style="mso-spacerun: yes">&nbsp; </SPAN><SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN><SPAN style="mso-spacerun: yes">&nbsp; </SPAN><SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN><o:p></o:p></SPAN></I></P>
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><SPAN 
+class=RtulodecaptuloCar><SPAN 
+style="FONT-SIZE: 7.5pt; mso-bidi-font-size: 10.0pt">Administración de 
+Datos<o:p></o:p></SPAN></SPAN></P>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><SPAN lang=ES-MX 
+style="mso-ansi-language: ES-MX">
+
+Permite realizar el ingreso, modificación y eliminación de los datos 
+que corresponde a las Instituciones Financieras,
+datos de las cuentas bancarias o tarjetas de crédito 
+y los tipos de movimientos que se registran en el Libro de Bancos.
+
+
+<o:p></o:p></SPAN></P>
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><B><SPAN 
+style="FONT-SIZE: 9pt; TEXT-TRANSFORM: uppercase; COLOR: gray; LETTER-SPACING: 1.5pt; 
+mso-bidi-font-size: 10.0pt; mso-font-kerning: 14.0pt">
+Entidades Financieras / Cuentas: 
+</SPAN></B>
+
+Al momento de crear una Cuenta Bancaria o Tarjeta de Crédito, 
+se especifica la fecha de creación y el saldo inicial 
+con el que se abre la cuenta.
+
+<SPAN style="mso-spacerun: yes">&nbsp; </SPAN></P>
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"></P>
+
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0"
+WIDTH=881 HEIGHT=732>
+ <PARAM NAME=movie VALUE="entidades cuentas tarjetas.swf"> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE="#FFFFFF"> <EMBED src="entidades cuentas tarjetas.swf" quality=high bgcolor="#FFFFFF"  WIDTH=881 HEIGHT=732 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"></EMBED>
+</OBJECT>
+
+<p></p>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><B><SPAN 
+style="FONT-SIZE: 9pt; TEXT-TRANSFORM: uppercase; COLOR: gray; 
+LETTER-SPACING: 1.5pt; mso-bidi-font-size: 10.0pt; mso-font-kerning: 14.0pt">
+
+Tipos de Movimientos:
+
+</SPAN></B> 
+
+Es importante definir los tipos de movimientos que se realizarán en Bancos,
+las operaciones que forman los mismos, además de características que definen
+si el movimiento será aplicable a tarjetas de crédito, si debe o no ser 
+contabilizado y si es necesario un número de referencia en ese tipo de movimiento.
+
+
+<br><br>
+En el sistema se encuentra definidos los siguientes tipos de movimientos: 
+<br><br>
+
+Saldo Inicial.<br>
+Cheque (S.C.).<br>
+Cheque.<br>
+Depósito (S.C.).<br>
+Intereses.<br>
+Nota de Crédito (S.C.).<br>
+Nota de Crédito.<br>
+Nota de Débito (S.C.).<br>
+Nota de Débito.<br>
+Pago de Sueldos (S.C.).<br>
+Pago de Sueldos.<br>
+Transferencia a otra Cuenta (S.C.).<br>
+Transferencia a otra Cuenta.<br> 
+Transferencia desde otra cuenta.<br><br> 
+
+* S.C : Sistema Contable <br><br> 
+
+
+&nbsp &nbsp&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp 
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0"
+WIDTH=896 HEIGHT=731>
+ <PARAM NAME=movie VALUE="tipos de movimientos.swf"> 
+<PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE="#FFFFFF"> 
+<EMBED src="tipos de movimientos.swf" quality=high bgcolor="#FFFFFF"  
+WIDTH=896 HEIGHT=731 TYPE="application/x-shockwave-flash" 
+PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
+</EMBED>
+</OBJECT>
+
+<SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN></P>
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"></P>
+
+<p></p>
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><SPAN 
+class=RtulodecaptuloCar><SPAN 
+style="FONT-SIZE: 7.5pt; mso-bidi-font-size: 10.0pt">
+Control de Cuentas<o:p></o:p></SPAN></SPAN></P>
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><SPAN lang=ES-MX 
+style="mso-ansi-language: ES-MX">
+
+Esta opción permite realizar dos procesos principales de 
+control de las cuentas ya sean bancarias o de tarjetas de 
+crédito que son:<br><br> 
+Llevar el control del  Libro de Bancos y realizar la 
+Conciliación Bancaria. 
+
+</SPAN><SPAN style="mso-spacerun: yes">&nbsp; </SPAN></P>
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><B><SPAN 
+style="FONT-SIZE: 9pt; TEXT-TRANSFORM: uppercase; COLOR: gray; LETTER-SPACING: 1.5pt; 
+mso-bidi-font-size: 10.0pt; mso-font-kerning: 14.0pt">Libros:</SPAN></B>
+
+Permite administrar el Libro de Bancos de una cuenta 
+ya sea Bancaria o Tarjeta de Crédito. Por cada cuenta 
+se debe tener un Libro, en donde se registran los 
+movimientos de cuenta como son: Cheques, Depósitos, 
+Notas de Crédito, Notas de Débito, Transferencias, etc. 
+Cada movimiento del Libro de Bancos tiene datos 
+importantes como la fecha de emisión, si es un cheque  
+debe registrarse el número y el beneficiario del cheque, 
+un concepto de emisión del movimiento y por su puesto el 
+valor del movimiento bancario.  
+
+<br><br> 
+
+Si los movimientos del libro de bancos ya fueron registrados 
+en primera instancia en las cuentas auxiliares de la Contabilidad,  
+hay la posibilidad de recuperar en el Libro de Bancos los 
+movimientos contables realizados en las cuentas auxiliares de 
+los Bancos y viceversa, es decir que si no se han registrado 
+aún contablemente los movimientos, el sistema permite generar 
+desde el Libro de Bancos los movimientos hacia la Contabilidad.</P>
+
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0"
+WIDTH=831 HEIGHT=732>
+ <PARAM NAME=movie VALUE="libros3.swf"> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE="#FFFFFF"> <EMBED src="libros3.swf" quality=high bgcolor="#FFFFFF"  WIDTH=831 HEIGHT=732 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"></EMBED>
+</OBJECT><br><br>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><B><SPAN 
+style="FONT-SIZE: 9pt; TEXT-TRANSFORM: uppercase; COLOR: gray; 
+LETTER-SPACING: 1.5pt; mso-bidi-font-size: 10.0pt; 
+mso-font-kerning: 14.0pt">
+Conciliación:</SPAN></B> 
+
+Este proceso permite cuadrar el saldo que se tiene en el 
+Libro de Bancos con el saldo del Estado de Cuenta emitido por 
+la entidad financiera, la conciliación realiza por 
+períodos fijados por el usuario, es decir no necesariamente 
+tiene que ser mensual. Para este proceso, el usuario  
+especifica el período, el sistema recupera todos los 
+movimientos del período y le permite al usuario marcar 
+los movimientos que coinciden con el estado de cuenta para luego 
+proceder a la Conciliación.<br><br>
+
+<IMG SRC="estado.bmp" ALIGN="left">
+
+<br><br>
+
+Al realizar la conciliación se tajan los datos que tenemos en el 
+Estado de Cuenta y los datos del sistema, según la coincidencia 
+se marcaran los movimientos.
+
+<br><br>
+
+
+Es importante destacar que es necesaria la integración de el Libro de
+Bancos y la Contabilidad de la empresa, para realizar esta tarea 
+procedemos de la siguiente manera.
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0"
+WIDTH=825 HEIGHT=731>
+ <PARAM NAME=movie VALUE="conciliacion.swf"> 
+<PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE="#FFFFFF"> 
+<EMBED src="conciliacion.swf" quality=high bgcolor="#FFFFFF"  WIDTH=825 HEIGHT=731 TYPE="application/x-shockwave-flash" 
+PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"></EMBED>
+</OBJECT>
+
+<SPAN style="mso-spacerun: yes">&nbsp; </SPAN>
+<SPAN class=SpellE></SPAN><SPAN style="mso-spacerun: yes">&nbsp; 
+</SPAN><br><br>
+
+La conciliación permite obtener un reporte detallado de  los 
+movimientos que constan en el libro de bancos pero no en el estado 
+de cuenta emitido por la entidad financiera como son cheques girados 
+y no cobrados por ejemplo. Así también permite obtener un reporte 
+de los movimientos que constan  en el estado de cuenta y en el Libro
+de Bancos. Además, de la conciliación se obtiene un reporte resumido 
+del saldo inicial, el total de ingreso, el total de egresos
+y el saldo final tanto del Libro de Bancos como del Estado de Cuenta.</P>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><I 
+style="mso-bidi-font-style: normal"><SPAN lang=ES-MX 
+style="FONT-SIZE: 14pt; mso-ansi-language: ES-MX"><SPAN style="mso-spacerun: yes">
+
+
+</SPAN> 
+
+&nbsp &nbsp &nbsp &nbsp &nbsp 
+&nbsp &nbsp &nbsp &nbsp &nbsp
+&nbsp &nbsp &nbsp &nbsp &nbsp 
+&nbsp &nbsp &nbsp &nbsp &nbsp
+
+
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0"
+WIDTH=868 HEIGHT=732>
+ <PARAM NAME=movie VALUE="conciliacioncero.swf"> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE="#FFFFFF"> <EMBED src="conciliacioncero.swf" quality=high bgcolor="#FFFFFF"  WIDTH=868 HEIGHT=732 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"></EMBED>
+</OBJECT>
+
+<SPAN style="mso-spacerun: yes">&nbsp; </SPAN><SPAN 
+style="mso-spacerun: yes"> </SPAN><SPAN style="mso-spacerun: yes">&nbsp; </SPAN><SPAN 
+style="mso-spacerun: yes"> </SPAN><o:p></o:p></SPAN></I></P>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><SPAN 
+class=RtulodecaptuloCar><SPAN 
+
+style="FONT-SIZE: 7.5pt; mso-bidi-font-size: 10.0pt">Reportes:<o:p></o:p></SPAN></SPAN></P>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 37.2pt"><SPAN lang=ES-MX 
+style="mso-ansi-language: ES-MX">
+
+El sistema de Bancos le permite obtener listados de los movimientos 
+del Libro de Bancos agrupados por el tipo de movimiento y por período, 
+permite también imprimir cheques.
+
+<o:p></o:p></SPAN></P>
+
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp 
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0"
+WIDTH=926 HEIGHT=732>
+ <PARAM NAME=movie VALUE="reporte1.swf"> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE="#FFFFFF"> <EMBED src="reporte1.swf" quality=high bgcolor="#FFFFFF"  WIDTH=926 HEIGHT=732 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"></EMBED>
+</OBJECT>
+
+<br><br>
+<br><br>
+
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0"
+WIDTH=887 HEIGHT=731>
+ <PARAM NAME=movie VALUE="reporte2.swf"> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE="#FFFFFF"> <EMBED src="reporte2.swf" quality=high bgcolor="#FFFFFF"  WIDTH=887 HEIGHT=731 TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"></EMBED>
+</OBJECT>
+
+<br><br>
+<br><br>
+
+<P class=MsoBodyText style="MARGIN-LEFT: 50.2pt" style="MARGIN-RIGHT: 50.2pt"><SPAN lang=ES-MX 
+style="mso-ansi-language: ES-MX">
+
+<IMG SRC="tipos.bmp" ALIGN="left">
+<br><br>
+<br><br>
+
+El sistema de Bancos le permite obtener reportes de los movimientos 
+de Bancos agrupados por un tipo de movimiento o por todos los movimientos realizados.(%) 
+ 
+<o:p></o:p></SPAN></P>
+
+<P class=MsoNormal><o:p>&nbsp;</o:p> 
+
+
+
+</P></DIV></BODY></HTML>

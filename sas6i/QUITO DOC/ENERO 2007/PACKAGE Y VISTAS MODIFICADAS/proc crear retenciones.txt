@@ -1,0 +1,15 @@
+se cambia solo lo que esta con %%%%%%%
+/********************* CALCULAMOS LAS RETENCIONES ***********************************/
+    nTotalTotalRtn:=nTotal_Facturado_Cmp; -- original
+    nTotalTotalRtn:=nTotal_Facturado_Cmp-nTotal_Otros; -- %%%%%%% se resta el otros que no aplica retencion
+    nTotalIVARtn:=nTotal_IVA_Facturado;
+QMS$ERRORS.SHOW_DEBUG_INFO('TOTAL DE LA FACTURA GENERAL '||TO_CHAR(nTotalTotalRtn));
+QMS$ERRORS.SHOW_DEBUG_INFO('TOTAL DEL IVA GENERAL '||TO_CHAR(nTotalIVARtn));
+    Calcular_Retenciones (rMovRet.Formula_IVA,rMovRet.Formula_Retencion,rMovRet.TPORTN_VALOR,
+                          IVA,nPresicion,nTotalTotalRtn,nSubtotal_Facturado,nSubtotal_Honorarios,
+                          nTotalIVARtn,nTotal_Iva_Compras,nTotal_Iva_Servicios,nValorRetenido);
+    IF rMovRet.MONEDA='DLAR' THEN
+      nValorAjuste:=0.06;
+    ELSE
+      nValorAjuste:=1500;
+    END IF;

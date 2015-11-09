@@ -1,0 +1,645 @@
+CREATE OR REPLACE TRIGGER "SMS"."MVMGNRRLC" BEFORE
+INSERT
+OR UPDATE
+OR DELETE OF "CMP_CLAVE", "CMP_FECHA", "DEBE", "DEBEE", "ESTADO_MOVIMIENTO", "HABER", "HABERE", "MAYORIZADO", "SS_CODIGO", "SS_S_A_CODIGO", "SS_S_A_SC_CNT_CODIGO", "SS_S_A_SC_CNT_MYR_CODIGO", "SS_S_A_SC_CNT_MYR_EMP_CODIGO", "SS_S_A_SC_CODIGO", "SS_S_CODIGO", "S_CODIGO" ON "MOVIMIENTOS" FOR EACH ROW DECLARE
+-- Program Data
+VTIPOOBL TIPOS_DE_COMPROBANTES.OBLIGACIONES%TYPE;
+DFECHA_ACT DATE;
+ERROR_BORRANDO_SALDOS EXCEPTION;
+VTIPOOPERACION VARCHAR2(3);
+DFECHA_TRABAJO DATE;
+VCODCTA VARCHAR2(40);
+NOBLID OBLIGACIONES.OBL_ID%TYPE;
+ERROR_ACTUALIZANDO_SALDOS EXCEPTION;
+-- PL/SQL Block
+-- 10 ENERO 2007  SE AÑADE QUE PUEDA TRABAJAR CON  MYR_CODIGO 0
+-- PARA EL CONTROL ADICIONAL DE PRESUPUESTOS
+-- 3 MARZO 2007  SI CONTABILIZADO DESDE ES RolDePsgos
+-- no manejar obligaciones
+vCntDesde COMPROBANTES.CONTABILIZADO_DESDE%TYPE;
+BEGIN
+DECLARE
+-- Anadido Solca Quito
+  CURSOR cCntDesde(vCodEmp VARCHAR2,vCodCmp VARCHAR2,
+                 dFechaCmp DATE,nClaveCmp NUMBER) IS
+    SELECT CONTABILIZADO_DESDE
+    FROM COMPROBANTES
+    WHERE TPOCMPEMP_EMP_CODIGO=vCodEmp AND TPOCMPEMP_TPOCMP_CODIGO=vCodCmp AND
+          FECHA=dFechaCmp AND CLAVE=nClaveCmp;
+-- Vemos si el comprobante maneja obligaciones
+  CURSOR cCmpObl(vCodEmp VARCHAR2,vCodCmp VARCHAR2) IS
+    SELECT TPOCMP_OBLIGACIONES
+    FROM VISTA_TIPOS_COMPROBANTES
+    WHERE EMP_CODIGO=vCodEmp AND TPOCMP_CODIGO=vCodCmp;
+-- Escogemos los movimientos asociados a este movimiento cuyo tipo de asociación sea ReTeNción
+-- y que el estado del movimiento no este anulado
+  CURSOR cMovObl(vEmp VARCHAR2,vMyr VARCHAR2,vCnt VARCHAR2,vScnt VARCHAR2,
+                 vAxl VARCHAR2,vSaxl VARCHAR2,vSaxl2 VARCHAR2,vSaxl3 VARCHAR2) IS
+    SELECT D.CODIGO_CUENTA
+    FROM SUBAUXILIARES_3 SAXL3,DATOS_CON_CUENTAS_ASOCIADAS D
+    WHERE S_S_A_SC_CNT_MYR_EMP_CODIGO=vEmp AND
+          S_S_A_SC_CNT_MYR_CODIGO=vMyr AND
+          S_S_A_SC_CNT_CODIGO=vCnt AND
+          S_S_A_SC_CODIGO=vSCnt AND
+          S_S_A_CODIGO=vAxl AND
+          S_S_CODIGO=vSAxl AND
+          S_CODIGO=vSAxl2 AND
+          CODIGO=vSAxl3 AND
+SAXL3.S_S_A_SC_CNT_MYR_CODIGO||
+DECODE(SAXL3.S_S_A_SC_CNT_CODIGO,'00000','',SAXL3.S_S_A_SC_CNT_CODIGO)||
+DECODE(SAXL3.S_S_A_SC_CODIGO,'00000','',SAXL3.S_S_A_SC_CODIGO )||
+DECODE(SAXL3.S_S_A_CODIGO,'00000','',SAXL3.S_S_A_CODIGO)||
+DECODE(SAXL3.S_S_CODIGO,'00000','',SAXL3.S_S_CODIGO)||
+DECODE(SAXL3.S_CODIGO,'00000','',SAXL3.S_CODIGO)||
+DECODE(SAXL3.CODIGO,'00000','',SAXL3.CODIGO)=D.CODIGO_CUENTA AND
+          D.TIPO_DE_ASOCIACION='OBL';
+  CURSOR cTotObl(nOblAsc NUMBER) IS
+-- Escogemos los movimientos asociados a este comprobante cuyo tipo de asociación sea ReTeNción
+-- y que el estado del movimiento no este anulado
+    SELECT haber,debe,estado,tipo
+    FROM OBLIGACIONES
+    WHERE OBL_ID=nOblAsc;
+  vEstadoObl OBLIGACIONES.ESTADO%TYPE;
+  vTipoOblObl OBLIGACIONES.TIPO%TYPE;
+  nDebe NUMBER;
+  nHaber NUMBER;
+  nOblID NUMBER;
+  nDeuda NUMBER;
+  nDeudaTotal NUMBER;
+  nPago NUMBER;
+  nPagosEfectuados NUMBER;
+BEGIN
+  QMS$ERRORS.SHOW_DEBUG_INFO('******************** TRIGGER MVMGNRRLC *************' ||vTipoObl);
+-- AÑADIDO SOLCA QUITO, SIEMPRE SE CONSIDERA MAYORIZADO LAS CUENTAS 0  
+  IF  NVL(:NEW.SS_S_A_SC_CNT_MYR_CODIGO,:OLD.SS_S_A_SC_CNT_MYR_CODIGO)='0' THEN
+    IF INSERTING THEN
+      vTipoOperacion:='INS';
+    ELSIF UPDATING THEN
+      vTipoOperacion:='UPD';
+    ELSE
+      vTipoOperacion:='DEL';
+    END IF;
+-- SI SE HACE POR CONTROL PRESUPUESTARIO SE FIJA POR LA CTA CONTABLE EL TIPO DE OBLIGACION    
+    IF  NVL(:NEW.SS_S_A_SC_CNT_CODIGO,:OLD.SS_S_A_SC_CNT_CODIGO)='01' THEN
+      vTipoObl:='P';
+    ELSE
+      vTipoObl:='C';
+    END IF;
+    :NEW.MAYORIZADO:='V';
+  QMS$ERRORS.SHOW_DEBUG_INFO('TIPO OPERACION ' ||vTipoOperacion);
+  QMS$ERRORS.SHOW_DEBUG_INFO('******************** vTipoObl *************' ||vTipoObl);
+  QMS$ERRORS.SHOW_DEBUG_INFO('vTipoOperacion '||vTipoOperacion);
+  QMS$ERRORS.SHOW_DEBUG_INFO('cta '||:NEW.SS_S_A_SC_CNT_MYR_CODIGO||:NEW.SS_S_A_SC_CNT_CODIGO);
+  QMS$ERRORS.SHOW_DEBUG_INFO('haber '||:NEW.haber||' debe'||:NEW.debe);
+  END IF;
+-- FIN ADICION  
+  IF INSERTING AND :NEW.SS_S_A_SC_CNT_MYR_CODIGO!='0' THEN
+    vTipoOperacion:='INS';
+    dFecha_Trabajo:=TO_DATE(TO_CHAR(:NEW.CMP_FECHA,'DD/MM/YYYY')
+                    ||' '||TO_CHAR(SYSDATE,'HH24:MI'),'DD/MM/YYYY HH24:MI');
+    :NEW.FECHA:=dFecha_Trabajo;
+-- Insertamos el nuevo saldo
+    INSERT INTO SALDOS (SLD_ID,
+                        SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                        SS_S_A_SC_CNT_MYR_CODIGO,
+                        SS_S_A_SC_CNT_CODIGO,
+                        SS_S_A_SC_CODIGO,
+                        SS_S_A_CODIGO,
+                        SS_S_CODIGO,
+                        SS_CODIGO,
+                        S_CODIGO,FECHA,MONEDA,MAYORIZADO,ESTADO,DEBE,
+                        HABER,DEBEE,HABERE,ESTADO_MOVIMIENTO,MVM_MVM_ID,
+                        COMPROMISO,OBLIGACION,PAGO,AJUSTE_PRESUPUESTARIO)
+                        VALUES (SLD_SEQ.NEXTVAL,
+                               :NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_MYR_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_CODIGO,
+                               :NEW.SS_S_A_SC_CODIGO,
+                               :NEW.SS_S_A_CODIGO,
+                               :NEW.SS_S_CODIGO,
+                               :NEW.SS_CODIGO,
+                               :NEW.S_CODIGO,
+                               dFecha_Trabajo,
+                               :NEW.MONEDA,'F','N',
+                               :NEW.DEBE,
+                               :NEW.HABER,
+                               :NEW.DEBEE,
+                               :NEW.HABERE,:NEW.ESTADO_MOVIMIENTO,:NEW.MVM_ID,
+                               :NEW.COMPROMISO,:NEW.OBLIGACION,
+                               :NEW.PAGO,:NEW.AJUSTE_PRESUPUESTARIO);
+-- Mandamos a actualizar los campos de mayorizacion de los mayores (si hay alguno esa fecha)
+    CNTGNR.Actualizar_Campo_Mayorizacion(:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_MYR_CODIGO,dFecha_Trabajo);
+-- Desmayorizamos el comprobante al que pertenece el movimiento
+    CNTGNR.Desmayorizar_Comprobante(:NEW.CMP_TPOCMPEMP_EMP_CODIGO,
+                                    :NEW.CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                                    :NEW.CMP_FECHA,:NEW.CMP_CLAVE);
+  ELSIF UPDATING  AND :NEW.SS_S_A_SC_CNT_MYR_CODIGO!='0' THEN
+    vTipoOperacion:='UPD';
+    IF :OLD.CMP_FECHA!=:NEW.CMP_FECHA THEN
+-- Si cambia la fecha del comprobante cambiamos la fecha de los movimientos y saldos
+      dFecha_Trabajo:=:OLD.fecha;
+      dFecha_Act:=TO_DATE(TO_CHAR(:NEW.CMP_FECHA,'DD/MM/YYYY')
+                    ||' '||TO_CHAR(SYSDATE,'HH24:MI'),'DD/MM/YYYY HH24:MI');
+      :NEW.FECHA:=dFecha_Act;
+    ELSE
+      dFecha_Trabajo:=:NEW.fecha;
+      dFecha_Act:=dFecha_Trabajo;
+    END IF;
+-- Actualizamos el saldo con los nuevos valores y el código de cuenta si es necesario
+    UPDATE SALDOS
+    SET DEBE=:NEW.DEBE,HABER=:NEW.HABER,DEBEE=:NEW.DEBEE,HABERE=:NEW.HABERE,FECHA=dFecha_Act,ESTADO_MOVIMIENTO=:NEW.ESTADO_MOVIMIENTO,MAYORIZADO='F'
+          ,COMPROMISO=:NEW.COMPROMISO
+          ,OBLIGACION=:NEW.OBLIGACION
+          ,PAGO=:NEW.PAGO
+          ,AJUSTE_PRESUPUESTARIO=:NEW.AJUSTE_PRESUPUESTARIO
+          ,SS_S_A_SC_CNT_MYR_EMP_CODIGO=:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO
+          ,SS_S_A_SC_CNT_MYR_CODIGO=:NEW.SS_S_A_SC_CNT_MYR_CODIGO
+          ,SS_S_A_SC_CNT_CODIGO=:NEW.SS_S_A_SC_CNT_CODIGO
+          ,SS_S_A_SC_CODIGO=:NEW.SS_S_A_SC_CODIGO
+          ,SS_S_A_CODIGO=:NEW.SS_S_A_CODIGO
+          ,SS_S_CODIGO=:NEW.SS_S_CODIGO
+          ,SS_CODIGO=:NEW.SS_CODIGO
+          ,S_CODIGO=:NEW.S_CODIGO
+    WHERE MVM_MVM_ID=:NEW.MVM_ID;
+    IF SQL%ROWCOUNT!=1 THEN
+      RAISE ERROR_ACTUALIZANDO_SALDOS;
+    END IF;
+-- Mandamos a actualizar los campos de mayorizacion de los mayores (si hay alguno esa fecha)
+-- sea del anterior codigo y del actual (si se cambio el codigo de cuenta)
+    CNTGNR.Actualizar_Campo_Mayorizacion(:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :OLD.SS_S_A_SC_CNT_MYR_CODIGO,dFecha_Trabajo);
+    CNTGNR.Actualizar_Campo_Mayorizacion(:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_MYR_CODIGO,dFecha_Trabajo);
+    IF TRUNC(dFecha_Trabajo,'DD')!=:OLD.CMP_FECHA THEN
+-- si se cambio de fecha, actualizamos la mayorizacion de la fecha anterior
+      CNTGNR.Actualizar_Campo_Mayorizacion(:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                                  :OLD.SS_S_A_SC_CNT_MYR_CODIGO,:OLD.CMP_FECHA);
+      CNTGNR.Actualizar_Campo_Mayorizacion(:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_MYR_CODIGO,:OLD.CMP_FECHA);
+    END IF;
+    IF :NEW.MAYORIZADO!='V' AND :NEW.ESTADO_MOVIMIENTO=:OLD.ESTADO_MOVIMIENTO THEN
+-- Desmayorizamos el comprobante al que pertenece el movimiento 
+-- solo si no cambio el estado del movimiento y el estado pasa a ser desmayorizado
+-- Caso contrario el estado de mayorizado fue actualizado por el comprobante
+      CNTGNR.Desmayorizar_Comprobante(:NEW.CMP_TPOCMPEMP_EMP_CODIGO,
+                                    :NEW.CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                                    :NEW.CMP_FECHA,:NEW.CMP_CLAVE);
+    END IF;
+-- Registramos en la tabla de diario MOVIMIENTOS_JN como estaba la tabla antes actualizar
+    INSERT INTO MOVIMIENTOS_JN (JN_OPERATION,JN_ORACLE_USER,JN_DATETIME,
+                                JN_NOTES,MVM_ID,CMP_CLAVE,CMP_FECHA,
+                                CMP_TPOCMPEMP_EMP_CODIGO,CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                                SECUENCIA,DEBE,HABER,DEBEE,HABERE,
+                                MONEDA,TIPO_DE_CAMBIO,MAYORIZADO,
+                                SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                                SS_S_A_SC_CNT_MYR_CODIGO,
+                                SS_S_A_SC_CNT_CODIGO,
+                                SS_S_A_SC_CODIGO,
+                                SS_S_A_CODIGO,
+                                SS_S_CODIGO,
+                                SS_CODIGO,
+                                S_CODIGO,
+                                FECHA,DESCRIPCION,ASOCIACION,ESTADO_MOVIMIENTO,OBL_OBL_ID,
+                                COMPROMISO,OBLIGACION,PAGO,AJUSTE_PRESUPUESTARIO)
+                      VALUES ('UPD',USER,SYSDATE,'GENERADO POR EL SISTEMA',
+                               :OLD.MVM_ID,:OLD.CMP_CLAVE,:OLD.CMP_FECHA,
+                               :OLD.CMP_TPOCMPEMP_EMP_CODIGO,:OLD.CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                               :OLD.SECUENCIA,:OLD.DEBE,:OLD.HABER,:OLD.DEBEE,:OLD.HABERE,
+                               :OLD.MONEDA,:OLD.TIPO_DE_CAMBIO,:OLD.MAYORIZADO,
+                               :OLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :OLD.SS_S_A_SC_CNT_MYR_CODIGO,
+                               :OLD.SS_S_A_SC_CNT_CODIGO,
+                               :OLD.SS_S_A_SC_CODIGO,
+                               :OLD.SS_S_A_CODIGO,
+                               :OLD.SS_S_CODIGO,
+                               :OLD.SS_CODIGO,
+                               :OLD.S_CODIGO,
+                               :OLD.FECHA,:OLD.DESCRIPCION,:OLD.ASOCIACION,:OLD.ESTADO_MOVIMIENTO,:OLD.OBL_OBL_ID,
+                               :OLD.COMPROMISO,:OLD.OBLIGACION,:OLD.PAGO,:OLD.AJUSTE_PRESUPUESTARIO);
+  ELSIF DELETING AND :OLD.SS_S_A_SC_CNT_MYR_CODIGO!='0' THEN
+-- AÑADIDO SOLCA QUITO, SIEMPRE SE CONSIDERA MAYORIZADO LAS CUENTAS 0  
+  QMS$ERRORS.SHOW_DEBUG_INFO('******************** BORRANDO SALDOS *************');
+    vTipoOperacion:='DEL';
+    dFecha_Trabajo:=:OLD.fecha;
+-- Borramos de la tabla de saldos los cambios realizados.
+    DELETE FROM SALDOS
+    WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=:OLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO
+          AND SS_S_A_SC_CNT_MYR_CODIGO=:OLD.SS_S_A_SC_CNT_MYR_CODIGO
+          AND SS_S_A_SC_CNT_CODIGO=:OLD.SS_S_A_SC_CNT_CODIGO
+          AND SS_S_A_SC_CODIGO=:OLD.SS_S_A_SC_CODIGO
+          AND SS_S_A_CODIGO=:OLD.SS_S_A_CODIGO
+          AND SS_S_CODIGO=:OLD.SS_S_CODIGO
+          AND SS_CODIGO=:OLD.SS_CODIGO
+          AND S_CODIGO=:OLD.S_CODIGO
+          AND MVM_MVM_ID=:OLD.MVM_ID;
+    IF SQL%ROWCOUNT!=1 THEN
+      RAISE ERROR_BORRANDO_SALDOS;
+    END IF;
+-- Mandamos a actualizar los campos de mayorizacion de los mayores (si hay alguno esa fecha)
+    CNTGNR.Actualizar_Campo_Mayorizacion(:OLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :OLD.SS_S_A_SC_CNT_MYR_CODIGO,dFecha_Trabajo);
+-- Desmayorizamos el comprobante al que pertenece el movimiento
+    CNTGNR.Desmayorizar_Comprobante(:OLD.CMP_TPOCMPEMP_EMP_CODIGO,
+                                    :OLD.CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                                    :OLD.CMP_FECHA,:OLD.CMP_CLAVE);
+-- Registramos en la tabla de diario MOVIMIENTOS_JN como estaba la tabla antes de borrar
+    INSERT INTO MOVIMIENTOS_JN (JN_OPERATION,JN_ORACLE_USER,JN_DATETIME,
+                                JN_NOTES,MVM_ID,CMP_CLAVE,CMP_FECHA,
+                                CMP_TPOCMPEMP_EMP_CODIGO,CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                                SECUENCIA,DEBE,HABER,DEBEE,HABERE,
+                                MONEDA,TIPO_DE_CAMBIO,MAYORIZADO,
+                                SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                                SS_S_A_SC_CNT_MYR_CODIGO,
+                                SS_S_A_SC_CNT_CODIGO,
+                                SS_S_A_SC_CODIGO,
+                                SS_S_A_CODIGO,
+                                SS_S_CODIGO,
+                                SS_CODIGO,
+                                S_CODIGO,
+                                FECHA,DESCRIPCION,ASOCIACION,ESTADO_MOVIMIENTO,OBL_OBL_ID,
+                                COMPROMISO,OBLIGACION,PAGO,AJUSTE_PRESUPUESTARIO)
+                      VALUES ('DEL',USER,SYSDATE,'GENERADO POR EL SISTEMA',
+                               :OLD.MVM_ID,:OLD.CMP_CLAVE,:OLD.CMP_FECHA,
+                               :OLD.CMP_TPOCMPEMP_EMP_CODIGO,:OLD.CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                               :OLD.SECUENCIA,:OLD.DEBE,:OLD.HABER,:OLD.DEBEE,:OLD.HABERE,
+                               :OLD.MONEDA,:OLD.TIPO_DE_CAMBIO,:OLD.MAYORIZADO,
+                               :OLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :OLD.SS_S_A_SC_CNT_MYR_CODIGO,
+                               :OLD.SS_S_A_SC_CNT_CODIGO,
+                               :OLD.SS_S_A_SC_CODIGO,
+                               :OLD.SS_S_A_CODIGO,
+                               :OLD.SS_S_CODIGO,
+                               :OLD.SS_CODIGO,
+                               :OLD.S_CODIGO,
+                               :OLD.FECHA,:OLD.DESCRIPCION,:OLD.ASOCIACION,:OLD.ESTADO_MOVIMIENTO,:OLD.OBL_OBL_ID,
+                               :OLD.COMPROMISO,:OLD.OBLIGACION,:OLD.PAGO,:OLD.AJUSTE_PRESUPUESTARIO);
+  END IF;
+-- ahora vamos a ver si el registro creado/borrado/actualizado maneja o manejaba obligaciones
+-- AÑADIDO SOLCA QUITO, SIEMPRE SE CONSIDERA MAYORIZADO LAS CUENTAS 0  
+  IF  NVL(:NEW.SS_S_A_SC_CNT_MYR_CODIGO,:OLD.SS_S_A_SC_CNT_MYR_CODIGO)!='0' THEN
+    IF vTipoOperacion IN ('INS','UPD') THEN
+      OPEN cCmpObl(:NEW.CMP_TPOCMPEMP_EMP_CODIGO,:NEW.CMP_TPOCMPEMP_TPOCMP_CODIGO);
+    ELSE
+      OPEN cCmpObl(:OLD.CMP_TPOCMPEMP_EMP_CODIGO,:OLD.CMP_TPOCMPEMP_TPOCMP_CODIGO);
+    END IF;
+    FETCH cCmpObl INTO vTipoObl;
+    CLOSE cCmpObl;
+-- ANADIDO SOLCA QUITO, VEMOS Contabilizado_Dede    
+    IF :NEW.ESTADO_MOVIMIENTO=:OLD.ESTADO_MOVIMIENTO THEN
+      IF vTipoOperacion IN ('INS','UPD') THEN
+        OPEN cCntDesde(:NEW.CMP_TPOCMPEMP_EMP_CODIGO,:NEW.CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                       :NEW.CMP_FECHA,:NEW.CMP_CLAVE);
+      ELSE
+        OPEN cCntDesde(:OLD.CMP_TPOCMPEMP_EMP_CODIGO,:OLD.CMP_TPOCMPEMP_TPOCMP_CODIGO,
+                     :OLD.CMP_FECHA,:OLD.CMP_CLAVE);
+      END IF;
+      FETCH cCntDesde INTO vCntDesde;
+      CLOSE cCntDesde;
+      IF vCntDesde IN ('RDP') THEN
+         vTipoObl:=NULL; -- Si es contabilizado desde rol de pagos no Obligacion
+      END IF;
+    END IF;
+  END IF;
+  QMS$ERRORS.SHOW_DEBUG_INFO('******************** A BORRAR OBLIGACION *************');
+  QMS$ERRORS.SHOW_DEBUG_INFO('vTipoObl '||vTipoObl);
+  QMS$ERRORS.SHOW_DEBUG_INFO('vTipoOperacion '||vTipoOperacion);
+  QMS$ERRORS.SHOW_DEBUG_INFO('cta '||:NEW.SS_S_A_SC_CNT_MYR_CODIGO||:NEW.SS_S_A_SC_CNT_CODIGO);
+  QMS$ERRORS.SHOW_DEBUG_INFO('haber '||:NEW.haber||' debe'||:NEW.debe);
+  IF vTipoOperacion = 'INS' AND vTipoObl IN ('P','C') THEN
+-- ***************************************************************************
+-- RECORDAR QUE EL MODULO DE COMPROBANTES NO PERMITIMOS ACTUALIZAR EL CODIGO DE LA CUENTA
+-- DEL PLAN DE CUENTAS CUANDO TENGAN UNA OBLIGACION ASOCIADA.
+-- ASI TAMBIEN EN EL MODULO DE INGRESAR COMPROBANTES SE COMPRUEBA PARA PERMITIR
+-- ACTUALIZAR O BORRAR UN MOVIMIENTO CON OBLIGACIONES
+-- ***************************************************************************
+    IF vTipoObl='P' THEN
+      IF ((:NEW.HABER>0 AND :NEW.SS_S_A_SC_CNT_MYR_CODIGO='2') AND :NEW.OBL_OBL_ID IS NULL) OR
+         (:NEW.HABER>0 AND :NEW.SS_S_A_SC_CNT_MYR_CODIGO='0' AND :NEW.SS_S_A_SC_CNT_CODIGO='01') THEN
+-- CREAMOS LA CUENTA POR PAGAR
+-- Si el comprobante maneja obligaciones del tipo cuentas por pagar en el haber y el haber es mayor que cero
+-- vemos si la cuenta del movimiento puede manejar obligaciones
+-- Recordar que si se actualiza el movimiento de un tipo de proveedor que no manejaba
+-- obligaciones a uno que si maneja, verifiacmos que la OBL_OBL_ID sea nula para crear la obligacion
+-- AÑADIDO SOLCA QUITO 10 ENE 2007, PERMITE CREAR OBLIGACIONES A CUENTAS DE CONTROL
+        OPEN CMovObl(:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_MYR_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_CODIGO,
+                               :NEW.SS_S_A_SC_CODIGO,
+                               :NEW.SS_S_A_CODIGO,
+                               :NEW.SS_S_CODIGO,
+                               :NEW.SS_CODIGO,
+                               :NEW.S_CODIGO);
+        FETCH cMovObl INTO vCodCta;
+        CLOSE cMovObl;
+        IF vCodCta IS NOT NULL AND vTipoOperacion='INS' THEN
+-- Solo se puede crear una obligación si se crea el movimiento y maneja obligaciones
+-- Si la cuenta maneja obligaciones y va al haber, creamos la nueva obligación
+-- Recordar que por medio de la asociacion del movimiento se ingresará la factura
+-- por esa razon es obligatorio la asociación
+          IF :NEW.ASOCIACION IS NOT NULL AND :NEW.DESCRIPCION IS NOT NULL THEN
+            SELECT OBL_SEQ.NEXTVAL INTO nOblID FROM DUAL;
+            INSERT INTO OBLIGACIONES (OBL_ID,COMPROBANTE,FECHA,FACTURA,DESCRIPCION,DEBE,HABER,DEBEE,HABERE,ESTADO,TIPO)
+                 VALUES (nOblId,:NEW.CMP_TPOCMPEMP_TPOCMP_CODIGO||'-'||:NEW.CMP_CLAVE,
+                         :NEW.CMP_FECHA,:NEW.ASOCIACION,:NEW.DESCRIPCION,0,:NEW.HABER,0,:NEW.HABERE,'N','P');
+            :NEW.OBL_OBL_ID:=nOblID; -- Asociamos la obligacion generada con el movimiento actual
+          ELSE
+            IF :NEW.ASOCIACION IS NULL THEN
+              QMS$ERRORS.SHOW_MESSAGE('CNT-00040'); -- La asociacion que indica la factura es obligatoria
+            ELSE
+              QMS$ERRORS.SHOW_MESSAGE('CNT-00045'); -- La descripción que indica el beneficiario de la obligatoria
+            END IF;
+          END IF;
+        END IF;
+      ELSIF :NEW.DEBE>0 AND :NEW.OBL_OBL_ID IS NOT NULL THEN
+-- si se esta insertando y tiene una obligacion asociada, pagamos la obligacion segun el valor del movimiento
+        UPDATE OBLIGACIONES
+        SET DEBE=DEBE+:NEW.DEBE,DEBEE=DEBEE+:NEW.DEBEE
+        WHERE OBL_ID=:NEW.OBL_OBL_ID AND ESTADO='N' AND TIPO='P';
+        IF SQL%ROWCOUNT!=1 THEN
+           QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error cancelando la cuenta por pagar #'||TO_CHAR(:new.OBL_OBL_ID) ,'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+        END IF;
+      END IF;
+    ELSIF vTipoObl='C' THEN
+      IF(:NEW.DEBE>0 AND :NEW.SS_S_A_SC_CNT_MYR_CODIGO='1') AND :NEW.OBL_OBL_ID IS NULL  OR
+        (:NEW.DEBE>0 AND :NEW.SS_S_A_SC_CNT_MYR_CODIGO='0' AND :NEW.SS_S_A_SC_CNT_CODIGO='02') THEN
+-- CREAMOS LA CUENTA POR COBRAR
+-- Si el comprobante maneja obligaciones del tipo cuentas por cobrar y el debe es mayor que cero
+-- vemos si la cuenta del movimiento puede manejar obligaciones
+-- Recordar que si se actualiza el movimiento de un tipo de proveedor que no manejaba
+-- obligaciones a uno que si maneja, verifiacmos que la OBL_OBL_ID sea nula para crear la obligacion
+-- AÑADIDO SOLCA QUITO 10 ENE 2007, PERMITE CREAR OBLIGACIONES A CUENTAS DE CONTROL
+        OPEN CMovObl(:NEW.SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_MYR_CODIGO,
+                               :NEW.SS_S_A_SC_CNT_CODIGO,
+                               :NEW.SS_S_A_SC_CODIGO,
+                               :NEW.SS_S_A_CODIGO,
+                               :NEW.SS_S_CODIGO,
+                               :NEW.SS_CODIGO,
+                               :NEW.S_CODIGO);
+        FETCH cMovObl INTO vCodCta;
+        CLOSE cMovObl;
+        IF vCodCta IS NOT NULL AND vTipoOperacion='INS' THEN
+-- Solo se puede crear una obligación si se crea el movimiento y maneja obligaciones
+-- Si la cuenta maneja obligaciones y va al haber, creamos la nueva obligación
+-- Recordar que por medio de la asociacion del movimiento se ingresará la factura
+-- por esa razon es obligatorio la asociación
+          IF :NEW.ASOCIACION IS NOT NULL AND :NEW.DESCRIPCION IS NOT NULL THEN
+            SELECT OBL_SEQ.NEXTVAL INTO nOblID FROM DUAL;
+            INSERT INTO OBLIGACIONES (OBL_ID,COMPROBANTE,FECHA,FACTURA,DESCRIPCION,DEBE,HABER,DEBEE,HABERE,ESTADO,TIPO)
+                 VALUES (nOblId,:NEW.CMP_TPOCMPEMP_TPOCMP_CODIGO||'-'||:NEW.CMP_CLAVE,
+                         :NEW.CMP_FECHA,:NEW.ASOCIACION,:NEW.DESCRIPCION,:NEW.DEBE,0,:NEW.DEBEE,0,'N','C');
+            :NEW.OBL_OBL_ID:=nOblID; -- Asociamos la obligacion generada con el movimiento actual
+          ELSE
+            IF :NEW.ASOCIACION IS NULL THEN
+              QMS$ERRORS.SHOW_MESSAGE('CNT-00040'); -- La asociacion que indica la factura es obligatoria
+            ELSE
+              QMS$ERRORS.SHOW_MESSAGE('CNT-00045'); -- La descripción que indica el beneficiario de la obligatoria
+            END IF;
+          END IF;
+        END IF;
+      ELSIF :NEW.HABER>0 AND :NEW.OBL_OBL_ID IS NOT NULL THEN
+-- si se esta insertando y tiene una obligacion asociada, pagamos la obligacion segun el valor del movimiento
+        UPDATE OBLIGACIONES
+        SET HABER=HABER+:NEW.HABER,HABERE=HABERE+:NEW.HABERE
+        WHERE OBL_ID=:NEW.OBL_OBL_ID AND ESTADO='N' AND TIPO='C';
+        IF SQL%ROWCOUNT!=1 THEN
+           QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error cancelando la cuenta por cobrar #'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+        END IF;
+      END IF;
+    END IF;
+  ELSIF vTipoOperacion IN ('DEL','UPD') AND vTipoObl IN ('P','C') THEN
+-- Vemos si al borrar/actualizar el movimiento no tiene obligaciones ya canceladas para poder borrar
+    IF vTipoOperacion='UPD' THEN
+      nOblId:=:NEW.OBL_OBL_ID;
+    ELSE
+      nOblId:=:OLD.OBL_OBL_ID;
+    END IF;
+    IF nOblId IS NOT NULL THEN
+-- ***************************************************************************
+-- RECORDAR QUE SI EL ESTADO DEL COMPROBANTE ESTA ANULADO, TODOS LOS MOVIMIENTOS
+-- SERAN ANULADOS AUTOMATICAMENTE DESDE EL TRIGGER DE BASE DE DATOS DE COMPROBANTES
+-- ENTRE AQUI UNICAMENTE SI UNA OBLIGACION ESTA ASOCIADA A ESTE MOVIMIENTO
+-- ***************************************************************************
+      OPEN  cTotObl(nOblId);
+      FETCH cTotObl INTO nHaber,nDebe,vEstadoObl,vTipoOblObl;
+      CLOSE cTotObl;
+      IF vTipoOblObl='P' THEN
+-- Si es una cuenta por pagar, la deuda esta en el haber
+-- y los pagos en el debe
+        nDeudaTotal:=nHaber;
+        nPagosEfectuados:=nDebe;
+        IF vTipoOperacion='UPD' THEN
+          nDeuda:=:NEW.HABER;
+          nPago:=:NEW.DEBE;
+        ELSE
+          nDeuda:=:OLD.HABER;
+          nPago:=:OLD.DEBE;
+        END IF;
+      ELSE
+-- Si es una cuenta por cobrar, la deuda esta en el debe
+-- y los pagos en el haber
+        nDeudaTotal:=nDebe;
+        nPagosEfectuados:=nHaber;
+        IF vTipoOperacion='UPD' THEN
+          nDeuda:=:NEW.DEBE;
+          nPago:=:NEW.HABER;
+        ELSE
+          nDeuda:=:OLD.DEBE;
+          nPago:=:OLD.HABER;
+        END IF;
+      END IF;
+      IF vTipoOperacion='UPD' THEN
+         IF nDeuda>0 THEN
+-- Si la deuda es mayor que cero, se esta actualizando la deuda de la obligacion
+           IF nPagosEfectuados>nDeuda AND :NEW.ESTADO_MOVIMIENTO!='A' AND :OLD.ESTADO_MOVIMIENTO!='A' THEN
+-- Se verifica que el estado de este movimiento no este anulado
+-- Si la cuenta que se actualiza es la misma, solo actualizamos la deuda, no hay problema
+-- siempre que la deuda se mayor que lo cancelado
+             QMS$ERRORS.SHOW_MESSAGE('CNT-00037',LTRIM(TO_CHAR(nPagosEfectuados,'999G999G999G990D00'))); -- La deuda no puede ser menor que lo cancelado
+           ELSIF :NEW.ESTADO_MOVIMIENTO='A' AND nPagosEfectuados>0 THEN
+-- No se anulan los movimientos con obligaciones ya canceladas
+             QMS$ERRORS.SHOW_MESSAGE('CNT-00039'); -- No se puede anular un movimiento con obligaciones canceladas
+           ELSIF :NEW.ESTADO_MOVIMIENTO='A' AND :OLD.ESTADO_MOVIMIENTO='N' AND nPagosEfectuados=0 THEN
+-- Si el estado del movimiento se anula y no tiene obligaciones canceladas, anulamos la obligacion
+             UPDATE OBLIGACIONES
+             SET ESTADO='A'
+             WHERE OBL_ID=nOblId AND estado='N';
+             IF SQL%ROWCOUNT!=1 THEN
+               QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error Anulando una obligación '||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+             END IF;
+           ELSIF :NEW.ESTADO_MOVIMIENTO='N' AND :OLD.ESTADO_MOVIMIENTO='A' THEN
+-- SI EL ESTADO DEL MOVIMIENTO ANTERIOR ES NORMAL Y EL ESTADO DEL MOVIMIENTO ESTA ANULADO
+-- ACTUALIZAMOS LAS OBLIGACIONES PORQUE VUELVEN A ESTAR DISPONIBLE
+-- Si el estado del movimiento se desanula, ponemos las obligaciones en estado normal
+-- y reasociamos la factura segun esta la asociacion, lo cancelado empieza con cero
+-- mientras la deuda empieza con el valor que corresponda al movimiento
+             UPDATE OBLIGACIONES
+             SET ESTADO='N',FACTURA=:NEW.ASOCIACION,DESCRIPCION=:NEW.DESCRIPCION,
+                 DEBE=:NEW.DEBE,HABER=:NEW.HABER,DEBEE=:NEW.DEBEE,HABERE=:NEW.HABERE,
+                 FECHA=:NEW.CMP_FECHA
+             WHERE OBL_ID=nOblId AND ESTADO='A';
+             IF SQL%ROWCOUNT!=1 THEN
+               QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error desanulando una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+             END IF;
+           ELSIF :NEW.ESTADO_MOVIMIENTO='N' THEN
+-- Si pasa hasta aqui no hay ningun problema en actualizar la deuda
+-- Actualizamos la factura para la que se estaba creo la deuda según trae la asociacion
+             IF vTipoOblObl='P' THEN
+-- Si es cuenta por pagar, actualizamos el haber de la obligacion
+               UPDATE OBLIGACIONES
+               SET FACTURA=:NEW.ASOCIACION,DESCRIPCION=:NEW.DESCRIPCION,
+                   HABER=:NEW.HABER,HABERE=:NEW.HABERE,
+                   FECHA=:NEW.CMP_FECHA
+               WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='P';
+               IF SQL%ROWCOUNT!=1 THEN
+                 QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error actualizando la deuda de una obligación '||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+               END IF;
+             ELSE
+-- Si es cuenta por cobrar, actualizamos el debe de la obligacion
+               UPDATE OBLIGACIONES
+               SET FACTURA=:NEW.ASOCIACION,DESCRIPCION=:NEW.DESCRIPCION,
+                   DEBE=:NEW.DEBE,DEBEE=:NEW.DEBEE,
+                   FECHA=:NEW.CMP_FECHA
+               WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='C';
+               IF SQL%ROWCOUNT!=1 THEN
+                 QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error actualizando la deuda de una obligación '||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+               END IF;
+             END IF;
+           END IF;
+        ELSIF nPago>0 THEN
+-- Si se actualizan los PAGOS de las obligaciones hacemos el siguiente proceso
+-- dependiendo si es una cuenta por pagar o por cobrar
+          IF vTipoOblObl='P' THEN
+/* CUENTAS POR PAGAR*/
+-- En cuentas por pagar, los pagos estan en el debe y la deudad en el haber
+            IF :NEW.DEBE+(nPagosEfectuados-:OLD.DEBE)>nDeudaTotal AND :NEW.ESTADO_MOVIMIENTO='N' AND :OLD.ESTADO_MOVIMIENTO='N' THEN
+-- Si al actualizar, el debe y lo cancelado es mayor que la deuda damos un error
+              QMS$ERRORS.SHOW_MESSAGE('CNT-00038',LTRIM(TO_CHAR(nDeudaTotal-nPagosEfectuados+:OLD.DEBE,'999G999G999G990D00'))); -- Lo cancelado debe ser menor que la deuda
+            ELSIF :NEW.ESTADO_MOVIMIENTO='N' AND :OLD.ESTADO_MOVIMIENTO='A' THEN
+-- SI EL NUEVO ESTADO DEL MOVIMIENTO ES 'N' Y EL ANTIGUO ES 'A'
+-- SE ESTA DESANULANDO UN MOVIMIENTO CON UNA OBLIGACION VINCULADA
+-- Revisamos que la obligacion no este anulada
+              IF vEstadoObl='A' THEN
+-- Si el estado de la obligación esta anulado, no se puede desanular este movimiento
+                QMS$ERRORS.SHOW_MESSAGE('CNT-00041'); -- La obligacion esta anulada y no se puede desanular el pago
+              ELSE
+                IF :NEW.DEBE+nPagosEfectuados>nDeudaTotal THEN
+-- Si al actualizar, el pago y lo cancelado es mayor que la deuda damos un error
+                  QMS$ERRORS.SHOW_MESSAGE('CNT-00044'); -- Lo cancelado debe ser menor que la deuda al desanular
+                ELSE
+-- Si el estado de la obligacion no esta anulada, restamos lo cancelado de la obligacion
+                  UPDATE OBLIGACIONES
+                  SET DEBE=DEBE+:NEW.DEBE,DEBEE=DEBEE+:NEW.DEBEE
+                  WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='P';
+                  IF SQL%ROWCOUNT!=1 THEN
+                    QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error pagando la deuda de una obligación','Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+                  END IF;
+                END IF;
+              END IF;
+            ELSIF :NEW.ESTADO_MOVIMIENTO='A' AND :OLD.ESTADO_MOVIMIENTO='N' THEN
+-- Si se anula la obligación, restamos la anulado de la deuda
+              UPDATE OBLIGACIONES
+              SET DEBE=DEBE-:NEW.DEBE,DEBEE=DEBEE-:NEW.DEBEE
+              WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='P';
+              IF SQL%ROWCOUNT!=1 THEN
+                QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error anulando el pago de la deuda de una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+              END IF;
+            ELSIF :NEW.ESTADO_MOVIMIENTO='N' THEN
+-- Si pasa hasta aqui es que no hay problema en que aumente el valor cancelado de la deuda
+              UPDATE OBLIGACIONES
+              SET DEBE=DEBE-:OLD.DEBE+:NEW.DEBE,DEBEE=DEBEE-:OLD.DEBEE+:NEW.DEBEE
+              WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='P';
+              IF SQL%ROWCOUNT!=1 THEN
+                QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error cancelando la deuda de una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+              END IF;
+            END IF;
+          ELSE
+/* CUENTAS POR COBRAR*/
+-- Si es cuenta por cobrar, en el haber esta el pago, y en el debe la deuda
+            IF :NEW.HABER+(nPagosEfectuados-:OLD.HABER)>nDeudaTotal AND :NEW.ESTADO_MOVIMIENTO='N' AND :OLD.ESTADO_MOVIMIENTO='N' THEN
+-- Si al actualizar, el pago y lo cancelado es mayor que la deuda damos un error
+              QMS$ERRORS.SHOW_MESSAGE('CNT-00038',LTRIM(TO_CHAR(nDeudatotal-nPagosEfectuados+:OLD.HABER,'999G999G999G990D00'))); -- Lo cancelado debe ser menor que la deuda
+            ELSIF :NEW.ESTADO_MOVIMIENTO='N' AND :OLD.ESTADO_MOVIMIENTO='A' THEN
+-- SI EL NUEVO ESTADO DEL MOVIMIENTO ES 'N' Y EL ANTIGUO ES 'A'
+-- SE ESTA DESANULANDO UN MOVIMIENTO CON UNA OBLIGACION VINCULADA
+-- Revisamos que la obligacion no este anulada
+              IF vEstadoObl='A' THEN
+-- Si el estado de la obligación esta anulado, no se puede desanular este movimiento
+                QMS$ERRORS.SHOW_MESSAGE('CNT-00041');
+              ELSE
+                IF :NEW.HABER+nPagosEfectuados>nDeudaTotal THEN
+-- Si al desanular, el debe y lo cancelado es mayor que la deuda damos un error
+                  QMS$ERRORS.SHOW_MESSAGE('CNT-00044'); -- Lo cancelado debe ser menor que la deuda
+                ELSE
+-- Si el estado de la obligacion no esta anulada, restamos lo cancelado de la obligacion
+                  UPDATE OBLIGACIONES
+                  SET HABER=HABER+:NEW.HABER,HABERE=HABERE+:NEW.HABERE
+                  WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='C';
+                  IF SQL%ROWCOUNT!=1 THEN
+                    QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error pagando la deuda de una obligación','Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+                  END IF;
+                END IF;
+              END IF;
+            ELSIF :NEW.ESTADO_MOVIMIENTO='A' AND :OLD.ESTADO_MOVIMIENTO='N' THEN
+-- Si se anula la obligación, restamos la anulado de la deuda
+              UPDATE OBLIGACIONES
+              SET HABER=HABER-:NEW.HABER,HABERE=HABERE-:NEW.HABERE
+              WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='C';
+              IF SQL%ROWCOUNT!=1 THEN
+                QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error anulando el pago de la deuda de una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+              END IF;
+            ELSIF :NEW.ESTADO_MOVIMIENTO='N' THEN
+-- Si pasa hasta aqui es que no hay problema en que aumente el valor cancelado de la deuda
+              UPDATE OBLIGACIONES
+              SET HABER=HABER-:OLD.HABER+:NEW.HABER,HABERE=HABERE-:OLD.HABERE+:NEW.HABERE
+              WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='C';
+              IF SQL%ROWCOUNT!=1 THEN
+                QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error cancelando la deuda de una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+              END IF;
+            END IF;
+          END IF;
+        END IF;
+      ELSIF vTipoOperacion='DEL' THEN
+         IF nDeuda>0 THEN
+           IF nPagosEfectuados>0 THEN
+-- Si al borrar el movimieno tiene obligaciones canceladas, damos un error
+             QMS$ERRORS.SHOW_MESSAGE('CNT-00039'); -- No se puede anular un movimiento con obligaciones canceladas
+           ELSIF nPagosEfectuados=0 THEN
+-- Si el movimiento no tiene obligaciones canceladas o tiene movimiento de pago anulados
+-- marcamos como anulado la obligacion que se genero
+             UPDATE OBLIGACIONES
+             SET ESTADO='A',HABER=0,HABERE=0,DEBE=0,DEBEE=0
+             WHERE OBL_ID=nOblId AND estado='N';
+             IF SQL%ROWCOUNT!=1 THEN
+               QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error borrando una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+             END IF;
+           END IF;
+         ELSIF nPago>0 THEN
+-- Si se borra una cuenta con pago a una obligación se resta de lo cancelado
+           IF vTipoOblObl='P' THEN
+             UPDATE OBLIGACIONES
+             SET DEBE=DEBE-:OLD.DEBE,DEBEE=DEBEE-:OLD.DEBEE
+             WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='P';
+             IF SQL%ROWCOUNT!=1 THEN
+               QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error borrando un pago de una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+             END IF;
+           ELSE
+             UPDATE OBLIGACIONES
+             SET HABER=HABER-:OLD.HABER,HABERE=HABERE-:OLD.HABERE
+             WHERE OBL_ID=nOblId AND ESTADO='N' AND TIPO='C';
+             IF SQL%ROWCOUNT!=1 THEN
+               QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error borrando un pago de una obligación'||TO_CHAR(:new.OBL_OBL_ID),'Contate SoftCase Cia Ltda'); -- Debe siempre actualizar una obligacion
+             END IF;
+           END IF;
+         END IF;
+      END IF;
+    END IF;
+  END IF;
+EXCEPTION
+ WHEN ERROR_BORRANDO_SALDOS THEN
+  QMS$ERRORS.SHOW_MESSAGE('CNT-00021',TO_CHAR(:OLD.MVM_ID));
+ WHEN ERROR_ACTUALIZANDO_SALDOS THEN 
+  QMS$ERRORS.SHOW_MESSAGE('CNT-00020',TO_CHAR(:NEW.MVM_ID));
+END;
+END MVMGNRRLC;

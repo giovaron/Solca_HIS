@@ -1,0 +1,14 @@
+-- Y:\sas\guiones\cambios_solca_quito\CAMBIO_EMPLEADOS_ROLES.sql
+--
+-- Generated for Oracle 9i on Thu Aug 17  09:26:20 2006 by Server Generator 6.5.96.5.6
+
+
+SPOOL CAMBIO_EMPLEADOS_ROLES.lst
+
+@@CAMBIO_EMPLEADOS_ROLES.tab
+@@CAMBIO_EMPLEADOS_ROLES.ind
+@@CAMBIO_EMPLEADOS_ROLES.con
+@@CAMBIO_EMPLEADOS_ROLES.sqs
+@@CAMBIO_EMPLEADOS_ROLES.avt
+
+SPOOL OFF

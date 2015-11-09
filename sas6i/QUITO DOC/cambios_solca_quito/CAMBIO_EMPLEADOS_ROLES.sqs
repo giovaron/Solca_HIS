@@ -1,0 +1,10 @@
+-- Y:\sas\guiones\cambios_solca_quito\CAMBIO_EMPLEADOS_ROLES.sqs
+--
+-- Generated for Oracle 9i on Thu Aug 17  09:26:20 2006 by Server Generator 6.5.96.5.6
+ 
+PROMPT Altering Sequence 'EMPROL_SEQ'
+ALTER SEQUENCE EMPROL_SEQ
+ CACHE 20
+NOORDER
+/
+

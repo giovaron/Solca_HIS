@@ -1,0 +1,258 @@
+Using the Form To Object Library (fm2lib61) Utility
+===================================================
+
+1 About object libraries and Oracle Developer Form Builder
+----------------------------------------------------------
+A Developer object library is a container for reusable objects
+and standards. Object libraries enable you to:
+
+- reuse an object in many forms
+
+- apply standards to existing objects
+
+You can both copy objects from object libraries and subclass 
+objects from object libraries.
+
+Object libraries are the primary method for subclassing objects. 
+Changes made to a source object in an object library can be
+propagated to any objects subclassed from that object by 
+recompiling the appropriate forms.
+
+An object library is subdivided into 'tabs'. Each tab can
+contain a number of source objects.
+
+
+2 About object libraries and Oracle Designer Form Generator
+-----------------------------------------------------------
+During generation, you can direct Form Generator to subclass
+properties of generated objects from objects in an object library.
+
+Form Generator determines which object library object to use as
+follows:
+- if an implementation source object has been specified for a
+Repository object (using the Template/Library Object property),
+Form Generator uses that object from the object library
+- if an implementation source object has not been specified (or
+if the object library does not contain the specified
+implementation source object), Form Generator determines which 
+object library object to use from the type of the generated
+object, the name of object library objects, and the names of 
+the object library tabs containing those objects
+
+
+3 About modifying object library objects
+----------------------------------------
+Modifying the properties of several objects in an object library 
+can be a time-consuming procedure. An object cannot be modified in 
+an object library directly but must be copied to a form and edited,
+before being copied back to the object library. Furthermore, the
+changes will not be reflected in any other object library objects
+subclassed from that object. This is because object libraries do not 
+retain subclass property relationships between objects in the
+object library.
+
+
+4 What is the Form to Object Library (fm2lib61) utility?
+--------------------------------------------------------
+The Form to Object Library (fm2lib61) utility simplifies the
+process of maintaining object libraries, and ensures that any
+subclassed information is retained.
+
+Instead of copying an object from the object library into a form
+for editing and then copying the object back into the object
+library, you maintain the object library as a form (i.e. as an
+.fmb file). Objects can be easily edited and subclassed as 
+necessary. When all the objects have been defined to your 
+satisfaction, you use the FM2LIB61 utility to convert the .fmb
+file into a .olb file. Thus, a subclassed object and the
+object from which it inherits its properties are always
+in step.
+
+To determine the structure of the object library, the FM2LIB61
+utility uses settings specified in the Registry key 
+<ORACLE_HOME>\\CGENF61\\fm2lib61.
+
+Eg: HKEY_LOCAL_MACHINE\\SOFTWARE\\ORACLE\\HOME0\\CGENF61\\fm2lib61
+
+This supports mutiple Oracle homes, and the specified home should
+be the Designer Oracle home.
+
+Below this key, subkeys and values specify:
+- the names of the tabs to create in the object library
+- one or more identifiers that must appear in the name of an object
+  in the .fmb to associate it with a particular tab in the object
+  library created by the FM2LIB61 utility
+
+Note: If the fm2lib61 utility finds an object in the reference form 
+which does not have a name which matches the identifiers for a tab, 
+the reference form object will not be copied to the object library. 
+However, the utility will still check the child objects of this 
+reference form object to determine whether the child form objects 
+need to be copied to the object library. This mechanism allows 
+users to define define a dummy reference form object (which is not 
+copied to the object library) to hold child form objects which are 
+to be copied to the object library. eg. An item must have a parent 
+block in a form. A user may require the item to be copied into the 
+object library, but the user does not want the block to be copied 
+into the object library. To achieve this, the user gives the block 
+an arbitrary name in the reference form, but gives the item (which 
+is a child of the 'dummy' block) a name which identifies an object 
+library tab. Hence, the fm2lib61 utility produces an object library 
+which includes the item but not the parent 'dummy' block.
+
+The utility also allows incremental construction of an object 
+library, from multiple reference forms. For instance, a user may 
+have two reference forms, to be used in the construction of a single 
+object library. By using the 'APPEND' command line argument, when 
+invoking fm2lib61, the utility can take the contents of a reference 
+form and add them to an existing object library which already 
+contains some objects and tabs. 
+
+The incremental construction feature is especially useful for user's 
+who maintain an object library which is constructed from multiple
+reference forms, where each reference form is maintained/released by 
+a different party/group. For example, an object library may be 
+composed of objects originating from the following three sources: 
+(i) the Oracle Designer Form Generator standard shipped object 
+library reference form (ie. ofgstnd1.fmb), (ii) the user's own 
+customised object library reference form, and (iii) a third party 
+'add-on' object library reference form. When a new version of a 
+reference form is made available, the user upgrades his/her object 
+library, by replacing the old version of the reference form, 
+deleting the existing version of the object library and then re-
+applying the fm2lib61 utility, sequentially, to the three reference 
+forms, using the 'APPEND' option.
+
+Note: If the utility is copying an object into an object library tab,
+where the tab already contains an object of the same name, the new 
+object will replace the old object.
+
+5 What is the Registry structure required by the FM2LIB61 utility?
+------------------------------------------------------------------
+The Registry entries below the 
+<ORACLE_HOME>\\CGENF61\\fm2lib61 key
+are structured as follows:
+
+Root Key     Child Key     String Value    String Value
+Name         Name          Name            Value
+----------------------------------------------------------------
+FM2LIB61---->TAB1--------->NAME         =  'Name of tab'
+          |          
+          |            |-->ID1          =  'String 1 identifier'
+          |            |
+          |            :
+          |            |-->IDn          =  'String n identifier'
+          |            :
+   
+          |->TABn--------->NAME         =  'Name of tab'
+          |          
+          |            |-->ID1          =  'String 1 identifier'
+          :            |
+          :            :
+                       |-->IDn          =  'String n identifier'
+
+
+Notes:
+(i)    The name of the root key must be fm2lib61.
+
+(ii)   The FM2LIB61 key must be a child of 
+       <ORACLE_HOME>\\CGENF61.
+
+(iii)  You define child keys below fm2lib61, from which
+       the FM2LIB61 utility will create tabs in the object
+       library. No restrictions apply to the names of
+       child keys
+
+(iv)   There is no limit to the number of child keys you
+       can define below FM2LIB61.
+
+(v)    For each child key, you may create one (and only one)
+       string value called NAME. The FM2LIB61 utility sets
+       the name of the tab in the object library from the
+       value of this string. Alternatively, the NAME string
+       may be omitted from the registry, for a child key, 
+       and the FM2LIB61 utility will default the name the 
+       an object library tab direclty from the name of child 
+       registry key.
+
+(vi)   You define other string values to provide the 
+       identifiers that must appear in an object name for
+       it to be placed on the tab in the object library. No
+       restrictions apply to the names of these string values.
+
+(vii)  There is no limit to the number of identifiers you can
+       define for a tab.
+
+(viii) For the FM2LIB61 utility to place an object on a tab,
+       the object's name **must contain all** the identifiers
+       defined for the tab.
+
+
+6 How to run the FM2LIB61 utility
+---------------------------------
+1) Add the location of fm2lib61.exe to the PATH
+environment variable.
+
+2) Create or modify the Registry settings below the FM2LIB61
+subkey as necessary.
+
+3) Run the FM2LIB61 utility from the DOS prompt or from within a
+script using the following syntax:
+
+fm2lib61 -i <formname>.fmb -o <libname>.olb [APPEND]
+
+For example, to create an object library called mylib.olb from 
+a form called myform.fmb, use the following command:
+
+fm2lib61 -i myform.fmb -o mylib.olb
+
+..to then add objects from another form (otherform.fmb) to the
+new object library you have created, use the following command:
+
+fm2lib61 -i otherform.fmb -o mylib.olb APPEND
+
+
+7 About the ofgstnd1.reg file shipped with Form Generator
+---------------------------------------------------------
+The ofgstnd1.reg and ofgstnd1.fmb files enable you to
+maintain the ofgstnd1.olb object library shipped with
+Form Generator.
+
+Having used ofgstnd1.reg to specify the correct Registry
+settings, you can modify objects in ofgstnd1.fmb. When you
+have made the necessary changes, you can then run the
+FM2LIB61 utility to convert the ofgstnd1.fmb into
+ofgstnd1.olb.
+
+The ofgstnd1.reg file creates Registry settings as follows:
+
+
+Tab       String Value   String Value   Purpose
+Name      Name           Value
+------------------------------------------------------
+TAB1      NAME           PARENT	        Tab Name
+          ID1            CGSO$	        Tab Identifier
+			
+TAB2      NAME           MULTI_ROW      Tab Name
+          ID1            CGSO$          Tab Identifier
+          ID2            _MR            Tab Identifier
+			
+TAB3      NAME           CONTROL        Tab Name
+          ID1            CGSO$          Tab Identifier
+          ID2            _CT            Tab Identifier
+			
+TAB4      NAME           DISPLAY_ONLY   Tab Name
+          ID1            CGSO$          Tab Identifier
+          ID2            _DO            Tab Identifier
+			
+TAB5      NAME           MANDATORY      Tab Name
+          ID1            CGSO$          Tab Identifier
+          ID2            _MD            Tab Identifier
+			
+TAB6      NAME           ACTION_ITEMS   Tab Name
+          ID1            CGAI$          Tab Identifier
+
+
+
+
+

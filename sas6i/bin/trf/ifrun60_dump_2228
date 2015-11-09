@@ -1,0 +1,36 @@
+[12/27/11 14:51:26 Hora est. Pacífico, Sudamérica]::Client Status [ConnId=0, PID=2228]
+	>> ERROR: Abnormal termination, Error Code: C0000005 ACCESS_VIOLATION
+
+======================= STACK DUMP =======================
+
+Fault address:  664AE312 01:0005D312
+Module: C:\ORANT\BIN\PLS805.dll
+
+System Information:
+Operating System: Windows NT Version 6.1 Build 7601 Service Pack 1
+Command line: "C:\ORANT\BIN\ifrun60.EXE" Z:\sas6i\bin\trf\prmgnr.fmx
+FORM/BLOCK/FIELD: FCTCRRDTSPRS:PCN.APELLIDO_PATERNO
+Last Trigger: WHEN-NEW-FORM-INSTANCE - (In Progress)
+Msg: <NULL>
+Last Builtin: SET_VIEW_PROPERTY - (Successfully Completed)
+
+Registers:
+EAX:04909A3C
+EBX:046F38C4
+ECX:14000025
+EDX:048BD445
+ESI:04909AC0
+EDI:00000000
+CS:EIP:001B:664AE312
+SS:ESP:0023:0012CF60  EBP:0012E04C
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010216
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+0x0012e04c 6646452a 046f38c4 0143df38 048dd564 00000008 0x664ae312          
+0x0012e0b4 67e28edc 0143df38 046f38c4 0144b708 014301ec 0x6646452a          
+0x0143d4f4 014301ec 67deac90 67deacd0 00217ab0 00000000 0x67e28edc          
+0x0144b708 00000001 0000000a 0144a210 67fbcf2f 001c189a 0x014301ec          
+------------------- End of Stack Trace -------------------
+
+

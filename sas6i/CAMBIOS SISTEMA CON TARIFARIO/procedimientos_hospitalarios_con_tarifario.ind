@@ -1,0 +1,13 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\procedimientos_hospitalarios_con_tarifario.ind
+--
+-- Generated for Oracle 9i on Thu Jul 07  13:36:35 2011 by Server Generator 6.5.96.5.6
+  
+
+PROMPT Creating Index 'PRCHSP_CNVTRF_FK_I'
+CREATE INDEX PRCHSP_CNVTRF_FK_I ON PROCEDIMIENTOS_HOSPITALARIOS
+ (CONVENIO
+ ,trf_TIPO
+ ,CODIGO_TARIFARIO)
+/
+
+

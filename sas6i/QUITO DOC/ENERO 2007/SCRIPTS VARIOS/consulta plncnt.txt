@@ -1,0 +1,12 @@
+select ''''||lpad(' ',nivel*2,' ')||codigo codigo,nombre
+from plan_de_cuentas_completo
+-- where codigo like '1%'
+order by EMP_CODIGO     ,
+MYR_CODIGO     ,
+CNT_CODIGO     ,
+SCNT_CODIGO    ,
+AXL_CODIGO     ,
+SAXL_CODIGO    ,
+SAXL2_CODIGO,
+SAXL3_CODIGO
+/

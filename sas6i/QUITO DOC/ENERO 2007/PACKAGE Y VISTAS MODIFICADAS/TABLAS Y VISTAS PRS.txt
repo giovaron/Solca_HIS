@@ -1,0 +1,205 @@
+create table tabla_agrupadora_prs
+(CNTING_ID                                 NUMBER(10),
+CUENTA                                             VARCHAR2(40),
+EMP_CODIGO                                         VARCHAR2(3),
+MYR_CODIGO                                         VARCHAR2(5),
+CNT_CODIGO                                         VARCHAR2(5),
+SCNT_CODIGO                                        VARCHAR2(5),
+AXL_CODIGO                                         VARCHAR2(5),
+SAXL_CODIGO                                        VARCHAR2(5),
+SAXL2_CODIGO                                       VARCHAR2(5),
+SAXL3_CODIGO                                       VARCHAR2(5),
+DEBE                                               NUMBER,
+HABER                                               NUMBER
+)
+
+
+CREATE OR REPLACE VIEW "SMS"."DETALLES_INGRESOS_PRS_SA" 
+    ("CTACBR_NUMERO","CUENTA","EMP_CODIGO","MYR_CODIGO",
+    "CNT_CODIGO","SCNT_CODIGO","AXL_CODIGO","SAXL_CODIGO",
+    "SAXL2_CODIGO","SAXL3_CODIGO","AGRUPADOR_CONTABLE","CRG_TIPO",
+    "CRG_CODIGO") AS 
+    SELECT  ctacbr_numero,cntasc.cuenta cuenta, 
+                plncnt.emp_codigo emp_codigo, plncnt.myr_codigo myr_codigo, 
+                plncnt.cnt_codigo cnt_codigo, plncnt.scnt_codigo scnt_codigo, 
+                plncnt.axl_codigo axl_codigo, plncnt.saxl_codigo saxl_codigo, 
+                plncnt.saxl2_codigo saxl2_codigo, plncnt.saxl3_codigo 
+                saxl3_codigo,dtlfctagr.AGRCNT_CODIGO,dtlfctagr.CRG_TIPO,dtlfctagr.CRG_CODIGO  
+    FROM cuentas_asociadas cntasc, plan_de_cuentas plncnt, 
+         detalles_facturas_presupuestos dtlfctagr 
+    WHERE cntasc.AGRCNT_CODIGO (+) = dtlfctagr.agrcnt_codigo 
+      AND cntasc.clave_relacionada(+) = dtlfctagr.crg_tipo || dtlfctagr.crg_codigo 
+      AND cntasc.tipo_de_cuenta(+) = 'ING' 
+      AND cntasc.tipo_de_asociacion(+) = 'PRF' 
+      AND cntasc.emp_codigo = plncnt.emp_codigo(+) 
+      AND cntasc.cuenta = plncnt.codigo(+) 
+      AND cntasc.cuenta is null 
+/
+
+CREATE OR REPLACE VIEW "SMS"."DETALLES_INGRESOS_PRS" 
+    ("CTACBR_NUMERO","CUENTA","EMP_CODIGO","MYR_CODIGO",
+    "CNT_CODIGO","SCNT_CODIGO","AXL_CODIGO","SAXL_CODIGO",
+    "SAXL2_CODIGO","SAXL3_CODIGO","AGRUPADOR_CONTABLE","VALOR") 
+    AS 
+    SELECT  ctacbr_numero,cntasc.cuenta cuenta, 
+                plncnt.emp_codigo emp_codigo, plncnt.myr_codigo myr_codigo, 
+                plncnt.cnt_codigo cnt_codigo, plncnt.scnt_codigo scnt_codigo, 
+                plncnt.axl_codigo axl_codigo, plncnt.saxl_codigo saxl_codigo, 
+                plncnt.saxl2_codigo saxl2_codigo, plncnt.saxl3_codigo 
+                saxl3_codigo,dtlfctagr.AGRCNT_CODIGO, SUM(dtlfctagr.valor) valor 
+    FROM cuentas_asociadas cntasc, plan_de_cuentas plncnt, 
+         detalles_facturas_presupuestos dtlfctagr 
+    WHERE cntasc.AGRCNT_CODIGO (+) = dtlfctagr.agrcnt_codigo 
+      AND cntasc.clave_relacionada(+) = dtlfctagr.crg_tipo || dtlfctagr.crg_codigo 
+      AND cntasc.tipo_de_cuenta(+) = 'ING' 
+      AND cntasc.tipo_de_asociacion(+) = 'PRF' 
+      AND cntasc.emp_codigo = plncnt.emp_codigo(+) 
+      AND cntasc.cuenta = plncnt.codigo(+)  
+    GROUP BY ctacbr_numero,cntasc.cuenta, plncnt.emp_codigo, 
+             plncnt.myr_codigo, plncnt.cnt_codigo, plncnt.scnt_codigo, plncnt. 
+             axl_codigo, plncnt.saxl_codigo, plncnt.saxl2_codigo, plncnt. 
+             saxl3_codigo,dtlfctagr.AGRCNT_CODIGO
+/
+
+CREATE OR REPLACE VIEW "SMS"."DETALLES_FACTURAS_PRESUPUESTOS" 
+    ("CTACBR_NUMERO","FCT_CAJA","FCT_NUMERO","DOCUMENTO","NUMERO",
+    "DETALLE","CRG_TIPO","CRG_CODIGO","VALOR","AGRCNT_CODIGO") AS
+    SELECT 
+DISTINCT FCT.CTACBR_NUMERO CTACBR_NUMERO, 
+        DTLFCT.FCT_CAJA FCT_CAJA, 
+        DTLFCT.FCT_NUMERO FCT_NUMERO, 
+        DTLFCT.DOCUMENTO DOCUMENTO, 
+        DTLFCT.NUMERO NUMERO, 
+        DTLFCT.DETALLE DETALLE, 
+        DTLFCT.CRG_TIPO CRG_TIPO, 
+        DTLFCT.CRG_CODIGO CRG_CODIGO,        
+        (DTLFCT.VALOR*DTLFCT.CANTIDAD*DTLFCT.PORCENTAJE_PROMOCION) valor, 
+        ITMCRGAGR.AGRCNT_CODIGO  
+FROM FACTURAS FCT,DETALLES_FACTURA DTLFCT, 
+ITEM_CARGOS_AGRUPADORES ITMCRGAGR 
+WHERE FCT.CAJA=DTLFCT.FCT_CAJA AND FCT.NUMERO=DTLFCT.FCT_NUMERO 
+AND FCT.ESTADO!='ANL' AND DTLFCT.ESTADO!='ANL' 
+AND DTLFCT.CRG_TIPO=ITMCRGAGR.CRG_TIPO 
+AND DTLFCT.CRG_CODIGO=ITMCRGAGR.CRG_CODIGO 
+AND ROUND( DTLFCT.VALOR,2)>0 
+AND PORCENTAJE_PROMOCION>1 
+UNION 
+SELECT 
+DISTINCT FCT.CTACBR_NUMERO CTACBR_NUMERO, 
+        DTLFCT.FCT_CAJA FCT_CAJA, 
+        DTLFCT.FCT_NUMERO FCT_NUMERO, 
+        DTLFCT.DOCUMENTO DOCUMENTO, 
+        DTLFCT.NUMERO NUMERO, 
+        DTLFCT.DETALLE DETALLE, 
+        DTLFCT.CRG_TIPO CRG_TIPO, 
+        DTLFCT.CRG_CODIGO CRG_CODIGO, 
+        (DTLFCT.VALOR*DTLFCT.CANTIDAD) valor, 
+        ITMCRGAGR.AGRCNT_CODIGO 
+FROM FACTURAS FCT,DETALLES_FACTURA DTLFCT, 
+ITEM_CARGOS_AGRUPADORES ITMCRGAGR 
+WHERE FCT.CAJA=DTLFCT.FCT_CAJA AND FCT.NUMERO=DTLFCT.FCT_NUMERO 
+AND FCT.ESTADO!='ANL' AND DTLFCT.ESTADO!='ANL' 
+AND DTLFCT.CRG_TIPO=ITMCRGAGR.CRG_TIPO 
+AND DTLFCT.CRG_CODIGO=ITMCRGAGR.CRG_CODIGO 
+AND ROUND( DTLFCT.VALOR,2)>0 
+AND PORCENTAJE_PROMOCION<=1
+/
+
+CREATE OR REPLACE VIEW "SMS"."DETALLES_NC_PRESUPUESTOS" 
+    ("NC_NUMERO","FCT_CAJA","FCT_NUMERO","CRG_TIPO","CRG_CODIGO",
+    "VALOR","AGRUPADOR_CONTABLE","CUENTA","EMP_CODIGO",
+    "MYR_CODIGO","CNT_CODIGO","SCNT_CODIGO","AXL_CODIGO",
+    "SAXL_CODIGO","SAXL2_CODIGO","SAXL3_CODIGO") AS 
+    SELECT DTLDVLAGR.NC_NUMERO NC_NUMERO, 
+        DTLDVLAGR.FCT_CAJA FCT_CAJA, 
+        DTLDVLAGR.FCT_NUMERO FCT_NUMERO, 
+        DTLDVLAGR.CRG_TIPO CRG_TIPO, 
+        DTLDVLAGR.CRG_CODIGO CRG_CODIGO, 
+        DTLDVLAGR.VALOR VALOR, 
+        DTLDVLAGR.AGRCNT_CODIGO, 
+CNTASC.CUENTA, 
+PLNCNT.EMP_CODIGO, PLNCNT.MYR_CODIGO, PLNCNT.CNT_CODIGO , 
+PLNCNT.SCNT_CODIGO , PLNCNT.AXL_CODIGO , 
+PLNCNT.SAXL_CODIGO , PLNCNT.SAXL2_CODIGO , 
+PLNCNT.SAXL3_CODIGO 
+FROM DETALLES_NC_AGRUPADAS DTLDVLAGR, 
+CUENTAS_ASOCIADAS CNTASC,PLAN_DE_CUENTAS PLNCNT 
+WHERE DTLDVLAGR.AGRCNT_CODIGO=CNTASC.AGRCNT_CODIGO (+) 
+AND  ROUND(DTLDVLAGR.VALOR,2)>0 
+AND CNTASC.CLAVE_RELACIONADA(+)=DTLDVLAGR.CRG_TIPO||DTLDVLAGR.CRG_CODIGO 
+AND CNTASC.TIPO_DE_CUENTA(+)='ING' 
+AND CNTASC.TIPO_DE_ASOCIACION(+)='PRD' 
+AND CNTASC.EMP_CODIGO=PLNCNT.EMP_CODIGO(+) 
+AND CNTASC.CUENTA=PLNCNT.CODIGO(+) 
+/
+CREATE OR REPLACE VIEW "SMS"."DETALLES_PRESUPUESTOS_DSCTOS" 
+    ("CTACBR_NUMERO","FCT_CAJA","FCT_NUMERO","DOCUMENTO","NUMERO",
+    "DETALLE","CRG_TIPO","CRG_CODIGO","VALOR","AGRCNT_CODIGO") AS
+    SELECT  
+DISTINCT FCT.CTACBR_NUMERO CTACBR_NUMERO, 
+        DTLFCT.FCT_CAJA FCT_CAJA, 
+        DTLFCT.FCT_NUMERO FCT_NUMERO, 
+        DTLFCT.DOCUMENTO DOCUMENTO, 
+        DTLFCT.NUMERO NUMERO, 
+        DTLFCT.DETALLE DETALLE, 
+        DTLFCT.CRG_TIPO CRG_TIPO, 
+        DTLFCT.CRG_CODIGO CRG_CODIGO,        
+        (DTLFCT.VALOR*DTLFCT.CANTIDAD*(1-DTLFCT.PORCENTAJE_PROMOCION)) valor, 
+        ITMCRGAGR.AGRCNT_CODIGO 
+FROM FACTURAS FCT,DETALLES_FACTURA DTLFCT, 
+ITEM_CARGOS_AGRUPADORES ITMCRGAGR 
+WHERE FCT.CAJA=DTLFCT.FCT_CAJA AND FCT.NUMERO=DTLFCT.FCT_NUMERO 
+AND FCT.ESTADO!='ANL' AND DTLFCT.ESTADO!='ANL' 
+AND DTLFCT.CRG_TIPO=ITMCRGAGR.CRG_TIPO 
+AND DTLFCT.CRG_CODIGO=ITMCRGAGR.CRG_CODIGO 
+AND ROUND( DTLFCT.VALOR,2)>0 
+AND PORCENTAJE_PROMOCION<1 
+/
+
+
+CREATE OR REPLACE VIEW "SMS"."DETALLES_DESCUENTOS_PRS" 
+    ("CTACBR_NUMERO","CUENTA","EMP_CODIGO","MYR_CODIGO",
+    "CNT_CODIGO","SCNT_CODIGO","AXL_CODIGO","SAXL_CODIGO",
+    "SAXL2_CODIGO","SAXL3_CODIGO","AGRUPADOR_CONTABLE","VALOR") 
+    AS 
+    SELECT  ctacbr_numero,cntasc.cuenta cuenta, 
+                plncnt.emp_codigo emp_codigo, plncnt.myr_codigo myr_codigo, 
+                plncnt.cnt_codigo cnt_codigo, plncnt.scnt_codigo scnt_codigo, 
+                plncnt.axl_codigo axl_codigo, plncnt.saxl_codigo saxl_codigo, 
+                plncnt.saxl2_codigo saxl2_codigo, plncnt.saxl3_codigo 
+                saxl3_codigo,dtlfctagr.AGRCNT_CODIGO, SUM(dtlfctagr.valor) valor 
+    FROM cuentas_asociadas cntasc, plan_de_cuentas plncnt, 
+         detalles_presupuestos_dsctos dtlfctagr 
+    WHERE cntasc.AGRCNT_CODIGO (+) = dtlfctagr.agrcnt_codigo 
+      AND cntasc.clave_relacionada(+) = dtlfctagr.crg_tipo || dtlfctagr.crg_codigo 
+      AND cntasc.tipo_de_cuenta(+) = 'ING' 
+      AND cntasc.tipo_de_asociacion(+) = 'PRD' 
+      AND cntasc.emp_codigo = plncnt.emp_codigo(+) 
+      AND cntasc.cuenta = plncnt.codigo(+) 
+    GROUP BY ctacbr_numero,cntasc.cuenta, plncnt.emp_codigo, 
+             plncnt.myr_codigo, plncnt.cnt_codigo, plncnt.scnt_codigo, plncnt. 
+             axl_codigo, plncnt.saxl_codigo, plncnt.saxl2_codigo, plncnt. 
+             saxl3_codigo,dtlfctagr.AGRCNT_CODIGO 
+/
+
+CREATE OR REPLACE VIEW "SMS"."DETALLES_DESCUENTOS_PRS_SA" 
+    ("CTACBR_NUMERO","CUENTA","EMP_CODIGO","MYR_CODIGO",
+    "CNT_CODIGO","SCNT_CODIGO","AXL_CODIGO","SAXL_CODIGO",
+    "SAXL2_CODIGO","SAXL3_CODIGO","AGRUPADOR_CONTABLE","CRG_TIPO",
+    "CRG_CODIGO") AS 
+    SELECT  ctacbr_numero,cntasc.cuenta cuenta, 
+                plncnt.emp_codigo emp_codigo, plncnt.myr_codigo myr_codigo, 
+                plncnt.cnt_codigo cnt_codigo, plncnt.scnt_codigo scnt_codigo, 
+                plncnt.axl_codigo axl_codigo, plncnt.saxl_codigo saxl_codigo, 
+                plncnt.saxl2_codigo saxl2_codigo, plncnt.saxl3_codigo 
+                saxl3_codigo,dtlfctagr.AGRCNT_CODIGO, CRG_TIPO,CRG_CODIGO 
+    FROM cuentas_asociadas cntasc, plan_de_cuentas plncnt, 
+         detalles_presupuestos_dsctos dtlfctagr 
+    WHERE cntasc.AGRCNT_CODIGO (+) = dtlfctagr.agrcnt_codigo 
+      AND cntasc.clave_relacionada(+) = dtlfctagr.crg_tipo || dtlfctagr.crg_codigo 
+      AND cntasc.tipo_de_cuenta(+) = 'ING' 
+      AND cntasc.tipo_de_asociacion(+) = 'PRD' 
+      AND cntasc.emp_codigo = plncnt.emp_codigo(+) 
+      AND cntasc.cuenta = plncnt.codigo(+) 
+      AND cntasc.cuenta is null 
+/

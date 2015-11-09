@@ -1,0 +1,239 @@
+
+Reconcile Report: \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\ICSC\CONVENIOS_FIN.lis
+
+Generated on Wed Aug 03  09:28:42 2011 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table CG_REF_CODES                                                                                                              
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                               Permanent
+                                         Cluster                                                                                
+                                      Index Only                                      No                                      No
+
+                                          Cached                                                                        No Cache
+                            Initial Transactions                                       1                                       1
+                                Max Transactions                                                                             255
+                                    Percent Free                                      10                                      10
+                                    Percent Used                                      40                                        
+                                 Initial Extents                                                                           81920
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSP
+                                        Parallel                                      No                                      No
+                                         Comment                                                                                
+Column RV_DOMAIN                                                                - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     100                                     100
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column RV_LOW_VALUE                                                             - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     240                                     240
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column RV_HIGH_VALUE                                                            - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     240                                     240
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column RV_ABBREVIATION                                                          - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     240                                     240
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column RV_MEANING                                                               - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     240                                     240
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column RV_TYPE                                                     * NOT IN REPOSITORY *                                         ***
+                                        Datatype                                                                        VARCHAR2
+                                      Max Length                                                                              10
+                                           Scale                                                                                
+                                       Mandatory                                                                              No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Index X_CG_REF_CODES_1                                                          - same -                                - same -
+                                          Unique                                      No                                      No
+                                          Global                                      No                                      No
+                                       Bitmapped                                      No                                      No
+                              Compute Statistics                                      No                    * NOT DETERMINABLE *
+                                  Index Reversed                                      No                                      No
+                                          Nosort                                      No                    * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                       2                                       2
+                                Max Transactions                                                                             255
+                                    Percent Free                                      10                                      10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           81920
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSP
+                                        Parallel                                      No                                      No
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                               RV_DOMAIN                               RV_DOMAIN
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                            RV_LOW_VALUE                            RV_LOW_VALUE
+Unique Key CG_RF_CODES_UK                                          * NOT IN REPOSITORY *                                         ***
+                                         Enabled                                                                             Yes
+                                        Deferred                                                                              No
+                                       Immediate                                                                              No
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Key Column                                                                       RV_DOMAIN
+                                      Key Column                                                                    RV_LOW_VALUE
+Index CG_RF_CODES_UK                                               * NOT IN REPOSITORY *                                         ***
+                                          Unique                                                                             Yes
+                                          Global                                                                              No
+                                       Bitmapped                                                                              No
+                              Compute Statistics                                                            * NOT DETERMINABLE *
+                                         Reverse                                                                              No
+                                          Nosort                                                            * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                                
+                                     Next Extent                                                                                
+                                     Min Extents                                                                                
+                                     Max Extents                                                                                
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                                
+                                        Parallel                                                                              No
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                                 ---------------------------------
+                                                 Table CG_REF_CODES Differences: 3
+                                                 ---------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table CONVENIOS                                                            * DIFFERENT *                           * DIFFERENT *
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                               Permanent
+                                         Cluster                                                                                
+                                      Index Only                                     Yes                                     Yes
+                               Percent Threshold                                                                              50 ***
+                             Overflow Tablespace                                                                                
+                                          Cached                                                                        No Cache
+                            Initial Transactions                                       1                                       2 ***
+                                Max Transactions                                                                             255
+                                    Percent Free                                      10                                      10
+                                    Percent Used                                      40                                        
+                                 Initial Extents                                  256000                                  262144
+                                     Next Extent                                  102400                                        
+                                     Min Extents                                       1                                       1
+                                     Max Extents                                      -1                                      -1
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                 TBDATOS                                TBDATOSG ***
+                                        Parallel                                      No                                      No
+                                         Comment                                                                                
+Column CONVENIO                                                                 - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     250                                      25
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                               TARIFARIO                                         ***
+                                         Comment                                                                                
+Column DESCRIPCION                                                              - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     250                                     250
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Primary Key CNV_PK                                                              - same -                                - same -
+                                         Enabled                                     Yes                                     Yes
+                                        Deferred                                      No                                      No
+                                       Immediate                                      No                                      No
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Key Column                                CONVENIO                                CONVENIO
+
+Index CNV_PK                                                                                                                    
+                                          Unique                                     Yes                                     Yes
+                                          Global                                      No                                      No
+                                       Bitmapped                                      No                                      No
+                              Compute Statistics                                      No                    * NOT DETERMINABLE *
+                                         Reverse                                      No                                      No
+                                          Nosort                                      No                    * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                       2                                       2
+                                Max Transactions                                                                             255
+                                    Percent Free                                      10                                      10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                          262144
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSG ***
+                                        Parallel                                      No                                      No
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                                   ------------------------------
+                                                   Table CONVENIOS Differences: 5
+                                                   ------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 8
+====================================================================================================================================

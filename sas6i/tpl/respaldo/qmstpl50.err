@@ -1,0 +1,315 @@
+Compiling KEY-HELP trigger on form...
+Compilation error on KEY-HELP trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling KEY-MENU trigger on form...
+Compilation error on KEY-MENU trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling KEY-EXIT trigger on form...
+Compilation error on KEY-EXIT trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling WHEN-WINDOW-CLOSED trigger on form...
+Compilation error on WHEN-WINDOW-CLOSED trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling ON-ERROR trigger on form...
+Compilation error on ON-ERROR trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling ON-MESSAGE trigger on form...
+Compilation error on ON-MESSAGE trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling WHEN-WINDOW-ACTIVATED trigger on form...
+Compilation error on WHEN-WINDOW-ACTIVATED trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling KEY-CLRFRM trigger on form...
+Compilation error on KEY-CLRFRM trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling CALENDAR_WROTE_DATE trigger on form...
+Compilation error on CALENDAR_WROTE_DATE trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$CALENDAR.WROTE_DATE' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling POST-FORMS-COMMIT trigger on form...
+Compilation error on POST-FORMS-COMMIT trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling PRE-FORM trigger on form...
+Compilation error on PRE-FORM trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling WHEN-NEW-BLOCK-INSTANCE trigger on form...
+Compilation error on WHEN-NEW-BLOCK-INSTANCE trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 8, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 8, column 3
+Statement ignored
+
+Compiling WHEN-NEW-FORM-INSTANCE trigger on form...
+Compilation error on WHEN-NEW-FORM-INSTANCE trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+PL/SQL ERROR 201 at line 9, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 9, column 3
+Statement ignored
+
+Compiling QMS$MENU_ITEM trigger on form...
+Compilation error on QMS$MENU_ITEM trigger on form:
+PL/SQL ERROR 201 at line 6, column 4
+identifier 'QMS$EVENT_MENU' must be declared
+PL/SQL ERROR 0 at line 6, column 4
+Statement ignored
+
+Compiling QUERY_FIND trigger on form...
+Compilation error on QUERY_FIND trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling WHEN-WINDOW-RESIZED trigger on form...
+Compilation error on WHEN-WINDOW-RESIZED trigger on form:
+PL/SQL ERROR 201 at line 3, column 3
+identifier 'QMS$EVENT_FORM' must be declared
+PL/SQL ERROR 0 at line 3, column 3
+Statement ignored
+
+Compiling WHEN-BUTTON-PRESSED trigger on QMS$TOOLBAR data block...
+Compilation error on WHEN-BUTTON-PRESSED trigger on QMS$TOOLBAR data block:
+PL/SQL ERROR 201 at line 2, column 4
+identifier 'QMS$EVENT_TOOLBAR' must be declared
+PL/SQL ERROR 0 at line 2, column 4
+Statement ignored
+
+Compiling WHEN-LIST-CHANGED trigger on ORDER_BY item in QMS$TOOLBAR data block...
+Compilation error on WHEN-LIST-CHANGED trigger on ORDER_BY item in QMS$TOOLBAR data block:
+PL/SQL ERROR 201 at line 2, column 4
+identifier 'QMS$EVENT_TOOLBAR' must be declared
+PL/SQL ERROR 0 at line 2, column 4
+Statement ignored
+
+Compiling WHEN-RADIO-CHANGED trigger on CALENDAR data block...
+Compilation error on WHEN-RADIO-CHANGED trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling KEY-OTHERS trigger on CALENDAR data block...
+   No compilation errors.
+
+Compiling KEY-NEXT-ITEM trigger on CALENDAR data block...
+   No compilation errors.
+
+Compiling KEY-PREV-ITEM trigger on CALENDAR data block...
+   No compilation errors.
+
+Compiling KEY-ENTER trigger on CALENDAR data block...
+   No compilation errors.
+
+Compiling WHEN-BUTTON-PRESSED trigger on CALENDAR data block...
+Compilation error on WHEN-BUTTON-PRESSED trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling WHEN-LIST-CHANGED trigger on CALENDAR data block...
+Compilation error on WHEN-LIST-CHANGED trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling WHEN-MOUSE-CLICK trigger on CALENDAR data block...
+Compilation error on WHEN-MOUSE-CLICK trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling KEY-DOWN trigger on CALENDAR data block...
+Compilation error on KEY-DOWN trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling KEY-UP trigger on CALENDAR data block...
+Compilation error on KEY-UP trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling KEY-NXTREC trigger on CALENDAR data block...
+Compilation error on KEY-NXTREC trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling KEY-PRVREC trigger on CALENDAR data block...
+Compilation error on KEY-PRVREC trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling WHEN-MOUSE-DOUBLECLICK trigger on CALENDAR data block...
+Compilation error on WHEN-MOUSE-DOUBLECLICK trigger on CALENDAR data block:
+PL/SQL ERROR 201 at line 1, column 1
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 1, column 1
+Statement ignored
+
+Compiling WHEN-NEW-ITEM-INSTANCE trigger on HOUR item in CALENDAR data block...
+Compilation error on WHEN-NEW-ITEM-INSTANCE trigger on HOUR item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'QMS$EVENT_ITEM' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-NEW-ITEM-INSTANCE trigger on MINUTE item in CALENDAR data block...
+Compilation error on WHEN-NEW-ITEM-INSTANCE trigger on MINUTE item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'QMS$EVENT_ITEM' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-NEW-ITEM-INSTANCE trigger on OK item in CALENDAR data block...
+Compilation error on WHEN-NEW-ITEM-INSTANCE trigger on OK item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'QMS$EVENT_ITEM' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-BUTTON-PRESSED trigger on OK item in CALENDAR data block...
+Compilation error on WHEN-BUTTON-PRESSED trigger on OK item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'QMS$EVENT_ITEM' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-NEW-ITEM-INSTANCE trigger on CANCEL item in CALENDAR data block...
+Compilation error on WHEN-NEW-ITEM-INSTANCE trigger on CANCEL item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'QMS$EVENT_ITEM' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-BUTTON-PRESSED trigger on CANCEL item in CALENDAR data block...
+Compilation error on WHEN-BUTTON-PRESSED trigger on CANCEL item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'QMS$EVENT_ITEM' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-MOUSE-CLICK trigger on PREV_MONTH item in CALENDAR data block...
+Compilation error on WHEN-MOUSE-CLICK trigger on PREV_MONTH item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-MOUSE-CLICK trigger on NEXT_MONTH item in CALENDAR data block...
+Compilation error on WHEN-MOUSE-CLICK trigger on NEXT_MONTH item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-MOUSE-CLICK trigger on NEXT_YEAR item in CALENDAR data block...
+Compilation error on WHEN-MOUSE-CLICK trigger on NEXT_YEAR item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-MOUSE-CLICK trigger on PREV_YEAR item in CALENDAR data block...
+Compilation error on WHEN-MOUSE-CLICK trigger on PREV_YEAR item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'CALENDAR.EVENT' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compiling WHEN-NEW-ITEM-INSTANCE trigger on AM_PM item in CALENDAR data block...
+Compilation error on WHEN-NEW-ITEM-INSTANCE trigger on AM_PM item in CALENDAR data block:
+PL/SQL ERROR 201 at line 3, column 4
+identifier 'QMS$EVENT_ITEM' must be declared
+PL/SQL ERROR 0 at line 3, column 4
+Statement ignored
+
+Compilation errors have occurred.

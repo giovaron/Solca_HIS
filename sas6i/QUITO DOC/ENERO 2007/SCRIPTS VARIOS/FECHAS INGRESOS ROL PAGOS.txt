@@ -1,0 +1,8 @@
+select e.tipo_empleado,e.cedula,e.apellidos||' '||e.nombres, 
+min(e.fecha_de_ingreso),min(ise.fecha_ingreso)
+from ingresos_salidas_empleados ise,empleados_roles e
+where ise.emprol_emp_codigo(+)=e.emp_codigo and
+ise.emprol_codigo(+)=e.codigo
+group by e.tipo_empleado,e.cedula,e.apellidos||' '||e.nombres
+order by 1,3
+/

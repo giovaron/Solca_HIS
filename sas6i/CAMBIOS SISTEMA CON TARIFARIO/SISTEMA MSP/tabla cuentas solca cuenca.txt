@@ -1,0 +1,275 @@
+-- Create table
+create table CUENTAS
+(
+  DOCUMENTO                      VARCHAR2(1) default 'X' not null,
+  NUMERO                         NUMBER(10) not null,
+  DETALLE                        NUMBER(4) not null,
+  DPR_ARA_CODIGO                 VARCHAR2(1) not null,
+  DPR_ARA_CODIGO_PERTENECIENTE_A VARCHAR2(1) not null,
+  PCN_NUMERO_HC                  NUMBER(6) not null,
+  DPR_CODIGO                     VARCHAR2(1) not null,
+  DPR_CODIGO_PERTENECIENTE_A     VARCHAR2(1) not null,
+  ESTADO                         CHAR(3) default 'PND' not null,
+  FECHA                          DATE not null,
+  CANTIDAD                       NUMBER(10,3) not null,
+  MONEDA_DE_TRABAJO              CHAR(4) default 'SCRE' not null,
+  VALOR                          NUMBER(21,6) default 0 not null,
+  CRG_TIPO                       CHAR(1) not null,
+  CRG_CODIGO                     VARCHAR2(7) not null,
+  PORCENTAJE_PROMOCION           NUMBER(15,10) default 0 not null,
+  DESCUENTO_OTORGADO             NUMBER(21,6) default 0 not null,
+  IVA                            NUMBER(3,2) default 0 not null,
+  CREADO_POR                     VARCHAR2(30) default USER not null,
+  PRM_CODIGO                     VARCHAR2(2),
+  CBCINS_NUMERO                  NUMBER(6),
+  VALORE                         NUMBER(21,6) default 0,
+  IVAE                           NUMBER(3,2) default 0.1,
+  ACTUALIZADO_POR                VARCHAR2(30),
+  FECHA_ACTUALIZACION            DATE,
+  OBSERVACION                    VARCHAR2(500),
+  IVA_EXCENTO                    CHAR(1) default 'F' not null,
+  PLA_NUMERO_PLANILLA            NUMBER(9),
+  PCN_NUMERO_HC_MIGRADO          NUMBER(9),
+  ID_CARGO_IESS                  NUMBER(6),
+  UVR                            NUMBER,
+  PRC                            NUMBER,
+  PLA_PLANILLA_ANTERIOR          NUMBER(9),
+  RECATEGORIZADA                 CHAR(1),
+  TIPO_RUBRO                     VARCHAR2(1)
+)
+tablespace TBDATOSG
+  pctfree 5
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 180M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the columns 
+comment on column CUENTAS.DOCUMENTO
+  is 'Documento de agrupación';
+comment on column CUENTAS.NUMERO
+  is 'Número de cuenta generada';
+comment on column CUENTAS.DETALLE
+  is 'Relación para campos detallados';
+comment on column CUENTAS.DPR_ARA_CODIGO
+  is 'Código del área.';
+comment on column CUENTAS.DPR_ARA_CODIGO_PERTENECIENTE_A
+  is 'Código del área.';
+comment on column CUENTAS.PCN_NUMERO_HC
+  is 'Identificador';
+comment on column CUENTAS.DPR_CODIGO
+  is 'Código del departamento';
+comment on column CUENTAS.DPR_CODIGO_PERTENECIENTE_A
+  is 'Código del departamento';
+comment on column CUENTAS.ESTADO
+  is 'Estado de la cuenta';
+comment on column CUENTAS.FECHA
+  is 'Fecha de generación';
+comment on column CUENTAS.CANTIDAD
+  is 'Unidades del cargo';
+comment on column CUENTAS.MONEDA_DE_TRABAJO
+  is 'Moneda con la que trabaja';
+comment on column CUENTAS.VALOR
+  is 'Valor del cargo por unidad';
+comment on column CUENTAS.CRG_TIPO
+  is 'El tipo de cargo asignado';
+comment on column CUENTAS.CRG_CODIGO
+  is 'subtipo del código del cargo';
+comment on column CUENTAS.PORCENTAJE_PROMOCION
+  is 'Porcentaje por promoción descuento';
+comment on column CUENTAS.DESCUENTO_OTORGADO
+  is 'Descuento otorgado';
+comment on column CUENTAS.IVA
+  is 'Porcentaje IVA';
+comment on column CUENTAS.CREADO_POR
+  is 'El Nombre del usuario que crea la cuenta';
+comment on column CUENTAS.PRM_CODIGO
+  is 'El código de la promoción con la que se crea la cuenta';
+comment on column CUENTAS.CBCINS_NUMERO
+  is 'Número secuencial de cualquier tipo, etc.';
+comment on column CUENTAS.VALORE
+  is 'El valor mon. Ext';
+comment on column CUENTAS.IVAE
+  is 'El valor del IVA Ext';
+comment on column CUENTAS.ACTUALIZADO_POR
+  is 'El Nombre del usuario que actualiza la cuenta';
+comment on column CUENTAS.FECHA_ACTUALIZACION
+  is 'La fecha en la que se actualiza la cuenta';
+comment on column CUENTAS.OBSERVACION
+  is 'Observacion acerca de la cuenta cargada.';
+comment on column CUENTAS.ID_CARGO_IESS
+  is 'Identificador de los cargos  extras del IESS';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CUENTAS
+  add constraint CNTS_PK primary key (DOCUMENTO, NUMERO, DETALLE)
+  using index 
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table CUENTAS
+  add constraint CNTS_CBCINS_FK foreign key (CBCINS_NUMERO)
+  references CABECERA_INSUMOS (NUMERO);
+alter table CUENTAS
+  add constraint CNTS_DPR_FK foreign key (DPR_ARA_CODIGO, DPR_CODIGO)
+  references DEPARTAMENTOS (ARA_CODIGO, CODIGO);
+alter table CUENTAS
+  add constraint CNTS_DPR_PERTENECIENTE_A_FK foreign key (DPR_ARA_CODIGO_PERTENECIENTE_A, DPR_CODIGO_PERTENECIENTE_A)
+  references DEPARTAMENTOS (ARA_CODIGO, CODIGO);
+alter table CUENTAS
+  add constraint CNTS_PCN_FK foreign key (PCN_NUMERO_HC)
+  references PACIENTES (NUMERO_HC);
+alter table CUENTAS
+  add constraint CNTS_PCN_MIGRADO foreign key (PCN_NUMERO_HC_MIGRADO)
+  references PACIENTES (NUMERO_HC);
+alter table CUENTAS
+  add constraint CNTS_PLA_FK foreign key (PLA_NUMERO_PLANILLA)
+  references PLANILLA (NUMERO_PLANILLA);
+-- Create/Recreate check constraints 
+alter table CUENTAS
+  add constraint AVCON_211403_IVAE_000
+  check (IVAE BETWEEN 0 AND 1);
+alter table CUENTAS
+  add constraint AVCON_211403_IVA_000
+  check (IVA BETWEEN 0 AND 1);
+alter table CUENTAS
+  add constraint CNT_CANTIDAD_CHK
+  check (CANTIDAD>=0);
+alter table CUENTAS
+  add constraint CNT_PRCPRM_CHK
+  check ((PORCENTAJE_PROMOCION>=0));
+alter table CUENTAS
+  add constraint CNT_VALOR_CHK
+  check (VALOR>0)
+  disable;
+-- Create/Recreate indexes 
+create index CNTS_CBCINS_FK_I on CUENTAS (CBCINS_NUMERO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 4112K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNTS_DPR_FK_I on CUENTAS (DPR_ARA_CODIGO, DPR_CODIGO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 68000K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNTS_DPR_PERTENECIENTE_A_FK_I on CUENTAS (DPR_ARA_CODIGO_PERTENECIENTE_A, DPR_CODIGO_PERTENECIENTE_A)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 68000K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNTS_FECHA_I on CUENTAS (FECHA)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 65904K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNTS_NUMERO_I on CUENTAS (NUMERO)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNTS_PCNFCHEST on CUENTAS (PCN_NUMERO_HC, FECHA, ESTADO)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNTS_PCNMIGRADO_ESTADO on CUENTAS (PCN_NUMERO_HC_MIGRADO, ESTADO)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNTS_PCN_FK_I on CUENTAS (PCN_NUMERO_HC)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 68000K
+    minextents 1
+    maxextents unlimited
+  );
+create index INDICE_PACIENTE_MIGRADO on CUENTAS (PCN_NUMERO_HC_MIGRADO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 4M
+    minextents 1
+    maxextents unlimited
+  );
+create index PLN_NUMERO on CUENTAS (PLA_NUMERO_PLANILLA)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on CUENTAS to ADMISIONISTA;
+grant select, insert, update on CUENTAS to BOTICA;
+grant select, insert, update, delete on CUENTAS to CAJERAS;
+grant select on CUENTAS to GENERAL;
+grant select, insert, update on CUENTAS to INFORMACION;
+grant select, insert, update, delete on CUENTAS to MEDICOS;
+grant insert on CUENTAS to SECRETARIA_IMAGEN;
+grant select, insert, update on CUENTAS to SUBBODEGA;
+grant select, update on CUENTAS to TRABAJO_SOCIAL;
+grant select on CUENTAS to VISUALIZAR_CUENTA;

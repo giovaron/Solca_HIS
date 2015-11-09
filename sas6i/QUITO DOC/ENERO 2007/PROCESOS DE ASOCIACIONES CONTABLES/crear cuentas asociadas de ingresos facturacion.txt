@@ -1,0 +1,1951 @@
+DECLARE
+-- A -> PRECONSULTA SERVICIOS
+  CURSOR cCntAscPrC IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1015'
+          AND TIPO_DE_CUENTA='ING'; --='ST1015'   TURNO PRECONSULTA
+-- B -> MEDICINA INTERNA SERVICIOS
+  CURSOR cCntAscMIn IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1014'
+          AND TIPO_DE_CUENTA='ING'; --='ST1014'   TURNO MEDICINA INTERNA
+-- C -> ONCOLOGIA CLINICA SERVICIOS
+  CURSOR cCntAscOCl IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1013'
+          AND TIPO_DE_CUENTA='ING'; --='ST1013'   TURNO ONCOLOGIA CLINICA
+-- D -> GASTROENTEROLOGIA SERVICIOS
+  CURSOR cCntAscGst IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1016'
+          AND TIPO_DE_CUENTA='ING'; --='ST1016'   TURNO GASTROENTEROLOGIA
+-- E -> PEDIATRIA ONCOLOGICA SERVICIOS
+  CURSOR cCntAscPOn IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1012'
+          AND TIPO_DE_CUENTA='ING'; --='ST1012'   TURNO PEDIATRIA ONCOLOGICA
+-- F -> NEUMOLOGIA SERVICIOS
+  CURSOR cCntAscNeu IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1005'
+          AND TIPO_DE_CUENTA='ING'; --='ST1005'   TURNO NEUMOLOGIA
+-- G -> PSIQUIATRIA SERVICIOS
+  CURSOR cCntAscPsi IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1011'
+          AND TIPO_DE_CUENTA='ING'; --='ST1011'   TURNO PSIQUIATRIA
+-- H -> CUIDADOS INTENSIVOS
+  CURSOR cCntAscUCI IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SH0003'
+          AND TIPO_DE_CUENTA='ING'; --='SH0003'   DIA DE INTERNACION EN UCI
+-- I -> CUIDADOS PALIATIVOS SERVICIOS
+  CURSOR cCntAscCPl IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1010'
+          AND TIPO_DE_CUENTA='ING'; --='ST1010'   TURNO CUIDADOS PALIATIVOS 
+-- J -> EMERGENCIA SERVICIOS
+  CURSOR cCntAscEmr IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SE0001'
+          AND TIPO_DE_CUENTA='ING'; --='SE0001'   CONSULTA EMERGENCIA
+-- K -> PRE QX SERVICIOS
+  CURSOR cCntAscPqx IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1009'
+          AND TIPO_DE_CUENTA='ING'; --='ST1009'   TURNO PRE QX
+-- L -> CABEZA Y CUELLO SERVICIOS
+  CURSOR cCntAscCCu IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1008'
+          AND TIPO_DE_CUENTA='ING'; --='ST1008'   TURNO CABEZA Y CUELLO
+-- M -> MASTOLOGIA SERVICIOS
+  CURSOR cCntAscMas IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1007'
+          AND TIPO_DE_CUENTA='ING'; --='ST1007'   TURNO MASTOLOGIA
+-- N -> TUMORES MIXTOS SERVICIOS
+  CURSOR cCntAscTuM IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1004'
+          AND TIPO_DE_CUENTA='ING'; --='ST1004'   TURNO TUMORES MIXTOS
+-- O -> UROLOGIA SERVICIOS
+  CURSOR cCntAscUro IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1006'
+          AND TIPO_DE_CUENTA='ING'; --='ST1006'   TURNO UROLOGIA
+-- P -> ORTOPEDIA SERVICIOS
+  CURSOR cCntAscOrt IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1003'
+          AND TIPO_DE_CUENTA='ING'; --='ST1003'   TURNO ORTOPEDIA 
+-- Q -> NEUROCIRUGIA SERVICIOS
+  CURSOR cCntAscNrg IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1002'
+          AND TIPO_DE_CUENTA='ING'; --='ST1002'   TURNO NEUROCIRUGIA
+-- R -> GINECOLOCIA SERVICIOS
+  CURSOR cCntAscGnc IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='ST1001'
+          AND TIPO_DE_CUENTA='ING'; --='ST1001'   TURNO GINECOLOGIA
+-- S -> MEDICINA FISICA SERVICIOS
+  CURSOR cCntAscMFi IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PC0030'
+          AND TIPO_DE_CUENTA='ING'; --='PC0030'   ELECTROCARDIOGRAMA EKG
+-- T -> LABORATORIO DE IMAGEN
+  CURSOR cCntAscLIm IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PM0001'
+          AND TIPO_DE_CUENTA='ING'; --='PM0001'   MAMOGRAFIA BILATERAL
+-- U -> Lab Clinico
+  CURSOR cCntAscLClin IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PB0002'
+          AND TIPO_DE_CUENTA='ING'; --='PB0002'   SANGRE, ALISTAR 
+-- V -> LABORATORIO DE CITOLOGIA
+  CURSOR cCntAscLCit IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PH0001'
+          AND TIPO_DE_CUENTA='ING'; --='PH0001'   CIRUGIA MENOR
+-- W -> LABORATORIO DE PATOLOGIA
+  CURSOR cCntAscLPat IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PN0002'
+          AND TIPO_DE_CUENTA='ING'; --='PN0002'   ACTINA (INMUNOHISTOQUIMICA)
+-- X -> LABORATORIO DE GENETICA
+  CURSOR cCntAscLGen IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PG0001'
+          AND TIPO_DE_CUENTA='ING'; --='PG0001'   FLUIDOS CORPORALES
+-- Y -> RADIOONCOLOGIA
+  CURSOR cCntAscRad IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PN0002'
+          AND TIPO_DE_CUENTA='ING'; --='PN0002'   SESION DE ACELERADOR
+-- Z -> MEDICINA NUCLEAR
+  CURSOR cCntAscMNu IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PD0001'
+          AND TIPO_DE_CUENTA='ING'; --='PD0001'   GAMMAGRAFIA OSEA CON MDP
+-- 1 -> 1 pISO
+  CURSOR cCntAsc1P IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SH0021'
+          AND TIPO_DE_CUENTA='ING'; --='SH0021'   PIEZA BIPERSONAL PEDIATRIA
+-- 2 -> 2DO pISO
+  CURSOR cCntAsc2P IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SH0013'
+          AND TIPO_DE_CUENTA='ING'; --='SH0013'   ACOMPAÑANTE CIRUGIA
+-- 3 -> 3eR pISO
+  CURSOR cCntAsc3P IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SH0002'
+          AND TIPO_DE_CUENTA='ING'; --='SH0002'   ACOMPAÑANTE CLINICA
+-- 4 -> Quirofano
+  CURSOR cCntAscQrf IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PQ0039'
+          AND TIPO_DE_CUENTA='ING'; --='PQ0039'   MINUTO DE ANESTESIA
+-- 5 -> Quimio Ambulatoria
+  CURSOR cCntAscQmt IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PQA001'
+          AND TIPO_DE_CUENTA='ING'; --='PQA001'   DERECHO QUIMIO AMBULATORIA
+-- a -> Cruz Roja / Convenios
+-- los convenios no tienes cuentas de descuentos asociados porque en teoria no debe tener descuentos
+  CURSOR cCntAscCR IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SJ0002'
+          AND TIPO_DE_CUENTA='ING'; --='SJ0002'   CONCENTRADO GLOBULOS ROJOS
+-- b -> Conclina / Convenios
+-- los convenios no tienes cuentas de descuentos asociados porque en teoria no debe tener descuentos
+  CURSOR cCntAscCon IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PW0030'
+          AND TIPO_DE_CUENTA='ING'; --='PW0030'   CISTERNOGRAFIA RADIOISOYOPICA
+-- c -> Cemedcon / Convenios
+-- los convenios no tienes cuentas de descuentos asociados porque en teoria no debe tener descuentos
+  CURSOR cCntAscCem IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PA0013'
+          AND TIPO_DE_CUENTA='ING'; --='PA0013'   ANGIO TOMOGRAFIA
+-- d -> Oncomed / Convenios
+-- los convenios no tienes cuentas de descuentos asociados porque en teoria no debe tener descuentos
+  CURSOR cCntAscOncM IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='PU000107'
+          AND TIPO_DE_CUENTA='ING'; --='PU000107'   ANTIHISTONAS (TAPA ROJA)
+-- e -> Honorario Medico Externo / Convenios
+-- los convenios no tienes cuentas de descuentos asociados porque en teoria no debe tener descuentos
+  CURSOR cCntAscHnr IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SL0002'
+          AND TIPO_DE_CUENTA='ING'; --='SL0002'   HONORARIOS MEDICOS
+-- f -> Convenios varios / Convenios
+-- los convenios no tienes cuentas de descuentos asociados porque en teoria no debe tener descuentos
+  CURSOR cCntAscCnvVrs IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='SL0001'
+          AND TIPO_DE_CUENTA='ING'; --='SL0001'   COMPRAS EN FARMACIA EXTERNA
+-- INSUMOS Y MEDICAMENTOS QUIMIOTERAPIA
+  CURSOR cCntAscQmtMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M72062'
+          AND TIPO_DE_CUENTA='ING'; --'M72062' --  ANDROCUR  50 MG TAB
+-- INSUMOS Y MEDICAMENTOS QUIROFANO
+  CURSOR cCntAscQrfMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M500112'
+          AND TIPO_DE_CUENTA='ING'; --'M500112' --  CLORHIDRATO DE REMIFENTANILO 5 MG (ULTIVA)
+  CURSOR cCntAscQrfIns IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U01457'
+          AND TIPO_DE_CUENTA='ING'; --'U01457' --  SIERRA G4-570 EQUIPO NEUROCIRUGIA
+-- INSUMOS Y MEDICAMENTOS GASTROENTEROLOGIA
+  CURSOR cCntAscGastroMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M58084'
+          AND TIPO_DE_CUENTA='ING'; --'M58084' --  CICLOSPORINA 100 MG CAP (SANDIMMUN)
+-- INSUMOS Y MEDICAMENTOS UROLOGIA
+  CURSOR cCntAscUroMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M66022'
+          AND TIPO_DE_CUENTA='ING'; --'M66022' --  MANITOL 20% 500ML
+-- INSUMOS Y MEDICAMENTOS GINECOLOGIA
+  CURSOR cCntAscGineMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M74012'
+          AND TIPO_DE_CUENTA='ING'; --'M74012' --  ESTRIOL 15 G (OVESTIN)
+-- INSUMOS Y MEDICAMENTOS EN GENERAL
+  CURSOR cCntAscMed IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M500824'
+          AND TIPO_DE_CUENTA='ING'; --'M500824' -- LIDOCAINA  S/E 3 ML
+  CURSOR cCntAscIns IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U031376'
+          AND TIPO_DE_CUENTA='ING'; --'U031376' -- REGISTRO DE INYECCIONES
+-- A-> PRECONSULTA
+  CURSOR cItmCrgPrC IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='A'
+    and cntasc.clave_relacionada is null;
+-- B-> MEDICINA INTERNA
+  CURSOR cItmCrgMIn IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='B'
+    and cntasc.clave_relacionada is null;
+-- C-> ONCOLOGIA CLINICA
+  CURSOR cItmCrgOCl IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='C'
+    and cntasc.clave_relacionada is null;
+-- D-> GATROENTEROLOGIA
+  CURSOR cItmCrgGst IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='D'
+    and cntasc.clave_relacionada is null;
+-- E-> PEDIATRIA ONCOLOGICA
+  CURSOR cItmCrgPOn IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='E'
+    and cntasc.clave_relacionada is null;
+-- F-> NEUMOLOGIA
+  CURSOR cItmCrgNeu IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='F'
+    and cntasc.clave_relacionada is null;
+-- G-> PSIQUIATRIA
+  CURSOR cItmCrgPsi IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='G'
+    and cntasc.clave_relacionada is null;
+-- H-> CUIDADOS INTENSIVOS
+  CURSOR cItmCrgUCI IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='H'
+    and cntasc.clave_relacionada is null;
+-- I-> CUIDADOS PALIATIVOS
+  CURSOR cItmCrgCPl IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='I'
+    and cntasc.clave_relacionada is null;
+-- J-> EMERGENCIA
+  CURSOR cItmCrgEmr IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='J'
+    and cntasc.clave_relacionada is null;
+-- K-> PRE QX
+  CURSOR cItmCrgPQx IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='K'
+    and cntasc.clave_relacionada is null;
+-- L-> CABEZA Y CUELLO
+  CURSOR cItmCrgCCu IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='L'
+    and cntasc.clave_relacionada is null;
+-- M-> MASTOLOGIA
+  CURSOR cItmCrgMas IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='M'
+    and cntasc.clave_relacionada is null;
+-- N-> TUMORES MIXTOS
+  CURSOR cItmCrgTuM IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='N'
+    and cntasc.clave_relacionada is null;
+-- O-> UROLOGIA
+  CURSOR cItmCrgUro IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='O'
+    and cntasc.clave_relacionada is null;
+-- P-> ORTOPEDIA
+  CURSOR cItmCrgORT IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='P'
+    and cntasc.clave_relacionada is null;
+-- Q-> NEUROCIRUGIA
+  CURSOR cItmCrgNrg IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='Q'
+    and cntasc.clave_relacionada is null;
+-- R-> GINECOLOGIA
+  CURSOR cItmCrgGnc IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='R'
+    and cntasc.clave_relacionada is null;
+-- S-> MEDICINA FISICA
+  CURSOR cItmCrgMFi IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='S'
+    and cntasc.clave_relacionada is null;
+-- T-> LAB IMAGEN
+  CURSOR cItmCrgLIm IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='T'
+    and cntasc.clave_relacionada is null;
+-- U-> LAB CLINICO
+  CURSOR cItmCrgLClin IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='U'
+    and cntasc.clave_relacionada is null;
+-- V-> LAB CITOLOGIA
+  CURSOR cItmCrgLCiT IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='V'
+    and cntasc.clave_relacionada is null;
+-- W-> LAB PATOLOGIA
+  CURSOR cItmCrgLPat IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='W'
+    and cntasc.clave_relacionada is null;
+-- X-> LAB GENETICA
+  CURSOR cItmCrgLGen IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='X'
+    and cntasc.clave_relacionada is null;
+-- Y-> RADIOONCOLOGIA
+  CURSOR cItmCrgRad IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='Y'
+    and cntasc.clave_relacionada is null;
+-- Z-> MEDICINA NUCLEAR
+  CURSOR cItmCrgMNu IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='Z'
+    and cntasc.clave_relacionada is null;
+-- 1-> PRIMER PISO
+  CURSOR cItmCrg1P IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='1'
+    and cntasc.clave_relacionada is null;
+-- 2-> SEGUNDO PISO
+  CURSOR cItmCrg2P IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='2'
+    and cntasc.clave_relacionada is null;
+-- 3-> TERCER PISO
+  CURSOR cItmCrg3P IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='3'
+    and cntasc.clave_relacionada is null;
+-- 4-> QUIROFANO
+  CURSOR cItmCrgQrf IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='4'
+    and cntasc.clave_relacionada is null;
+-- 5-> QUIMIO AMBULATORIA
+  CURSOR cItmCrgQmt IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='5'
+    and cntasc.clave_relacionada is null;
+-- a-> Cruz Roja/Convenios
+  CURSOR cItmCrgCR IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='a'
+    and cntasc.clave_relacionada is null;
+-- b-> Conclina/Convenios
+  CURSOR cItmCrgCon IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='b'
+    and cntasc.clave_relacionada is null;
+-- c-> Cemedcon/Convenios
+  CURSOR cItmCrgCem IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='c'
+    and cntasc.clave_relacionada is null;
+-- d-> Oncomed/Convenios
+  CURSOR cItmCrgOncM IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='d'
+    and cntasc.clave_relacionada is null;
+-- e-> Honorarios Medicos/Convenios
+  CURSOR cItmCrgHnr IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='e'
+    and cntasc.clave_relacionada is null;
+-- f-> Convenios Varios /Convenios
+  CURSOR cItmCrgCnvVrs IS
+    select distinct crg.tipo||crg.codigo clave
+    from cargos crg,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=crg.tipo||crg.codigo
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and crg.agrcnt_tipo='f'
+    and cntasc.clave_relacionada is null;
+-- ITEMS INSUMOS Y MEDICAMENTOS quimioterapeuticos
+  CURSOR cItmQmt IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc -- La vista ya excluye la seccion 72 QUIMIOTERAPEUTICOS
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) NOT IN ('P','S')
+    and sUbstr(clave,2,2)='72';
+--- ITEMS INSUMOS Y MEDICAMENTOS QUIROFANO excluyendo los quimioterapeuticos
+  CURSOR cItmQrfMed IS
+    select clave
+    from nuevos_items_QRF,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) != 'U';
+  CURSOR cItmQrfIns IS
+    select clave
+    from nuevos_items_QRF,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) != 'M';
+--- ITEMS INSUMOS Y MEDICAMENTOS GASTROENTEROLOGIA
+  CURSOR cItmGastroMed IS
+    select clave
+    from nuevos_items_Gastro,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null;
+--- ITEMS INSUMOS Y MEDICAMENTOS UROLOGIA
+  CURSOR cItmUroMed IS
+    select clave
+    from nuevos_items_uro,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null;
+--- ITEMS INSUMOS Y MEDICAMENTOS GINECOLOGIA
+  CURSOR cItmGineMed IS
+    select clave
+    from nuevos_items_gine,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null;
+-- ITEMS INSUMOS Y MEDICAMENTOS excluyendo los quimioterapeuticos, QUIROFANO, GASTROENTEROLOGIA, GINECOLOGIA Y UROLOGIA
+  CURSOR cItmMed IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) = 'M'
+    and sUbstr(clave,2,2)!='72';
+  CURSOR cItmIns IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ING'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) != 'M'
+    and sUbstr(clave,2,2)!='72';
+  i Number:=0;
+  j Number:=0;
+BEGIN
+-- SAVEPOINT;
+-- A -> PRECONSULTA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgPrC LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscPrC LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' Preconsulta '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- B -> MEDICINA INTERNA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgMin LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMin LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' Medicina Interna '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- C -> ONCOLOGIA CLINICA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgOCl LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscOcl LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' Oncologia Clinica '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- D -> Gastroenterologia
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgGst LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscGst LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' Gastroenterologia '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- E -> PEDIATRIA ONCOLOGICA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgPON LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscPOn LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' Pediatria Oncologica '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- F -> NEUMOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgNeu LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscNeu LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' Neumologia '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- G -> PSIQUIATRIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgPsi LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscPsi LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' Psiquiatria '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- H -> CUIDADOS INTENSIVOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgUCI LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscUCI LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' UCI '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- I -> CUIDADOS PALIATIVOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgCPl LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscCPl LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' CUIDADOS PALIATIVOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- J -> EMERGENCIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgEmr LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscEmr LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' EMERGENCIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- K -> PRE QX Y ANESTESIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgPqx LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscPqx LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' PRE QX '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- L -> CABEZA Y CUELLO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgCCu LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscCCu LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' CABEZA Y CUELLO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- M -> MASTOLOGIA Y MELANOMAS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgMas LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMas LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MASTOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- N -> TUMORES MIXTOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgTuM LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscTuM LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' TUMORES MIXTOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- O -> UROLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgUro LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscUro LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' UROLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- P -> ORTOPEDIA Y TRAUMATOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgOrt LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscOrt LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' ORTOPEDIA Y TRAUMATOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- Q -> NEUROCIRUGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgNrg LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscNrg LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' NEUROCIRUGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- R -> GINECOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgGnc LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscGnc LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' GINECOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- S -> MEDICINA FISICA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgMFi LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMFi LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICINA FISICA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- T -> LABORATORIO IMAGEN
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgLIm LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscLIm LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' LABORATORIO IMAGEN '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- U -> LABORATORIO CLINICO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgLClin LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscLCLin LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' LABORATORIO CLINICO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- V -> LABORATORIO CITOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgLCit LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscLCit LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' LABORATORIO CITOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- W -> LABORATORIO PATOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgLPat LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscLPat LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' LABORATORIO PATOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- X -> LABORATORIO GENETICA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgLGen LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscLGen LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' LABORATORIO GENETICA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- Y -> RADIOONCOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgRad LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscRad LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' RADIOONCOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- Z -> MEDICINA NUCLEAR
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgMnu LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMnu LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICINA NUCLEAR '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- 1 -> PRIMER PISO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg1P LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc1P LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' PRIMER PISO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- 2 -> SEGUNDO PISO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg2P LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc2P LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' SEGUNDO PISO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- 3 -> TERCER PISO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg3P LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc3P LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' TERCER PISO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- 4 -> QUIROFANO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgQrf LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQrf LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' QUIROFANO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- 5 -> QUIMIOTERAPIA AMBULATORIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgQmt LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQmt LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' QUIMIOTERAPIA AMBULATORIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- a -> CRUZ ROJA/CONVENIOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgCR LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscCR LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' CRUZ ROJA/CONVENIOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- b -> CONCLINA/CONVENIOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgCon LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscCon LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' CONCLINA/CONVENIOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- c -> CEMEDCON/CONVENIOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgCem LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscCem LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' CEMEDCON/CONVENIOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- d -> ONCOMED/CONVENIOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgOncM LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscOncM LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' ONCOMED/CONVENIOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- e -> HONORARIOS/CONVENIOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgHnr LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscHnr LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' HONORARIOS/CONVENIOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- f -> CONVENIOS VARIOS /CONVENIOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgCnvVrs LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscCnvVrs LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' CONVENIOS VARIOS/CONVENIOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- INSUMOS y MEDICAMENTOS QUIMIOTERAPEUTICOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmQmt LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQmtMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' INSUMOS y MEDICAMENTOS QUIMIOTERAPEUTICOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS QUIROFANO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmQrfMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQrfMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS QUIROFANO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- INSUMOS QUIROFANO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmQrfIns LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscQrfIns LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' INSUMOS QUIROFANO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS GASTROENTEROLOGIA 
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmGastroMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscGastroMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS GASTROENTEROLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS UROLOGIA 
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmUroMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscUroMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS UROLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS GINECOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmGineMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscGineMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS GINECOLOGIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- MEDICAMENTOS EN GENERAL
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmMed LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMed LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' MEDICAMENTOS EN GENERAL '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+-- INSUMOS EN GENERAL
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmIns LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscIns LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(' INSUMOS EN GENERAL '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE(' '||to_char(j));
+  DBMS_OUTPUT.PUT_LINE('TERMINANDO ');
+--COMMIT;
+EXCEPTION
+WHEN OTHERS THEN
+  DBMS_OUTPUT.PUT_LINE('ERROR '||SQLERRM);
+  ROLLBACK;
+  RAISE;
+END;            
+/

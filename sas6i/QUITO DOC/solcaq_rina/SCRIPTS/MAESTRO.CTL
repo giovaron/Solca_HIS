@@ -1,0 +1,20 @@
+LOAD DATA
+INFILE 'F:\RINA\SOLCAQ\maestro.txt'
+BADFILE 'F:\RINA\SOLCAQ\maestro.bad'
+APPEND
+INTO TABLE ACTIVOS_FIJOS_MAESTRO
+FIELDS TERMINATED BY '?'
+(DESCRIPCION,            
+FECHA_INGRESO,          
+VALOR_INICIAL ,         
+VALOR_ACTUAL   ,        
+MARCA           ,       
+MODELO          ,       
+NUMERO_SERIE    ,       
+VIDA_UTIL        ,      
+PORCENTAJE_DEPRECIACION,
+OBSERVACIONES,          
+CODIGO_PROPIO,        
+UBICACION)
+
+

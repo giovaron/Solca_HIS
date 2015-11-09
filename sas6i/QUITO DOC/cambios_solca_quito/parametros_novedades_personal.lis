@@ -1,0 +1,150 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\parametros_novedades_personal.lis
+
+Generated on Thu Jul 27  15:24:22 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table PARAMETROS_NOVEDADES_PERSONAL                                                                          * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                                        
+                                         Cluster                                                                                
+                                      Index Only                                      No                                        
+
+                                          Cached                                                                                
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   65536                                        
+                                     Next Extent                                   65536                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                TBDATOSP                                        
+                                        Parallel                                      No                                        
+                                         Comment                                                                                
+Column PRMROL_EMP_CODIGO                                                                                     * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                       3                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column PRMROL_CODIGO                                                                                         * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                       5                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column NOVEDAD                                                                                               * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     240                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Index PRMNVDPRS_PRMROL_FK_I                                                                                  * NOT IN DATABASE * ***
+                                          Unique                                      No                                        
+                                          Global                                      No                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                  Index Reversed                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   51200                                        
+                                     Next Extent                                   51200                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                       PRMROL_EMP_CODIGO                       PRMROL_EMP_CODIGO
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                           PRMROL_CODIGO                           PRMROL_CODIGO
+Primary Key PRMNVDPRS_PK                                                                                     * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                 Exception Table                                                                                
+                                      Key Column                       PRMROL_EMP_CODIGO                                        
+                                      Key Column                           PRMROL_CODIGO                                        
+                                      Key Column                                 NOVEDAD                                        
+
+Index PRMNVDPRS_PK                                                                                           * NOT IN DATABASE * ***
+                                          Unique                                     Yes                                        
+                                          Global                                     Yes                                        
+                                       Bitmapped                                      No                                        
+                              Compute Statistics                                      No                                        
+                                         Reverse                                      No                                        
+                                          Nosort                                      No                                        
+
+
+
+                            Initial Transactions                                                                                
+                                Max Transactions                                                                                
+                                    Percent Free                                                                                
+                                    Percent Used                                                                                
+                                 Initial Extents                                   51200                                        
+                                     Next Extent                                   51200                                        
+                                     Min Extents                                       1                                        
+                                     Max Extents                                      -1                                        
+                                Percent Increase                                      25                                        
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                              TBINDICESP                                        
+                                        Parallel                                      No                                        
+
+Foreign Key PRMNVDPRS_PRMROL_FK                                                                              * NOT IN DATABASE * ***
+                                         Enabled                                     Yes                                        
+                                        Deferred                                      No                                        
+                                       Immediate                                      No                                        
+                                  Cascade Delete                                RESTRICT                                        
+                                  Cascade Update                                RESTRICT                                        
+                                 Exception Table                                                                                
+                                      Join Table                        PARAMETROS_ROLES                                        
+                                      Key Column                       PRMROL_EMP_CODIGO                                        
+                                      Key Column                           PRMROL_CODIGO                                        
+
+                               Referenced Column             PARAMETROS_ROLES.EMP_CODIGO                                        
+                               Referenced Column                 PARAMETROS_ROLES.CODIGO                                        
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                         --------------------------------------------------
+                                         Table PARAMETROS_NOVEDADES_PERSONAL Differences: 1
+                                         --------------------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

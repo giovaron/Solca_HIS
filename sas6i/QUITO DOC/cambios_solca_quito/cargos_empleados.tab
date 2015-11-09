@@ -1,0 +1,17 @@
+-- Y:\sas\guiones\cambios_solca_quito\cargos_empleados.tab
+--
+-- Generated for Oracle 9i on Tue Aug 08  09:03:59 2006 by Server Generator 6.5.96.5.6
+ 
+
+PROMPT Altering Table 'CARGOS_EMPLEADOS' 
+ALTER TABLE CARGOS_EMPLEADOS 
+ ADD (GRADO VARCHAR2(1) DEFAULT '1' NOT NULL
+ )
+ MODIFY (OCPEMP_CODIGO VARCHAR2(20) NOT NULL
+ )
+/
+
+COMMENT ON COLUMN CARGOS_EMPLEADOS.OCPEMP_CODIGO IS 'Código de la Ocupación'
+/
+
+

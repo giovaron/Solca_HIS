@@ -1,0 +1,1130 @@
+IS
+
+-- Sub-Program Units
+/* Calcular los saldos de una cuenta */
+FUNCTION CALCULAR_SALDOS
+ (VCODEMP VARCHAR2
+ ,VCODCUENTA VARCHAR2
+ ,DFECHA_DESDE DATE
+ ,DFECHA_HASTA DATE
+ ,VTIPO_MONEDA VARCHAR2
+ ,BCALCULAR_INICIALES BOOLEAN := TRUE
+ )
+ RETURN NUMBER
+ IS
+ BEGIN
+DECLARE
+  CURSOR cSaldosIME IS
+-- Consultamos los saldos iniciales
+    SELECT SUM(HABERE-DEBEE)
+    FROM SALDOS SLD,PLAN_DE_CUENTAS_COMPLETO PLNCNT
+    WHERE SLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO=PLNCNT.EMP_CODIGO AND
+    SLD.SS_S_A_SC_CNT_MYR_CODIGO=PLNCNT.MYR_CODIGO AND
+    SLD.SS_S_A_SC_CNT_CODIGO=PLNCNT.CNT_CODIGO AND
+    SLD.SS_S_A_SC_CODIGO=PLNCNT.SCNT_CODIGO AND
+    SLD.SS_S_A_CODIGO=PLNCNT.AXL_CODIGO AND
+    SLD.SS_S_CODIGO=PLNCNT.SAXL_CODIGO AND
+    SLD.SS_CODIGO=PLNCNT.SAXL2_CODIGO AND
+    SLD.S_CODIGO=PLNCNT.SAXL3_CODIGO AND
+    PLNCNT.CODIGO=vCodCuenta AND
+    PLNCNT.EMP_CODIGO=vCodEmp AND
+    ESTADO_MOVIMIENTO='N' AND ESTADO='I'
+    AND FECHA=TRUNC(dFecha_Desde,'YYYY');
+  CURSOR cSaldosIML IS
+-- Consultamos los saldos iniciales
+    SELECT SUM(HABER-DEBE)
+    FROM SALDOS SLD,PLAN_DE_CUENTAS_COMPLETO PLNCNT
+    WHERE SLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO=PLNCNT.EMP_CODIGO AND
+    SLD.SS_S_A_SC_CNT_MYR_CODIGO=PLNCNT.MYR_CODIGO AND
+    SLD.SS_S_A_SC_CNT_CODIGO=PLNCNT.CNT_CODIGO AND
+    SLD.SS_S_A_SC_CODIGO=PLNCNT.SCNT_CODIGO AND
+    SLD.SS_S_A_CODIGO=PLNCNT.AXL_CODIGO AND
+    SLD.SS_S_CODIGO=PLNCNT.SAXL_CODIGO AND
+    SLD.SS_CODIGO=PLNCNT.SAXL2_CODIGO AND
+    SLD.S_CODIGO=PLNCNT.SAXL3_CODIGO AND
+    PLNCNT.CODIGO=vCodCuenta AND
+    PLNCNT.EMP_CODIGO=vCodEmp AND
+    ESTADO_MOVIMIENTO='N' AND ESTADO='I'
+    AND FECHA=TRUNC(dFecha_Desde,'YYYY');
+  CURSOR cSaldosME IS
+-- Vemos sin saldo iniciales
+    SELECT SUM(HABERE-DEBEE)
+    FROM SALDOS SLD,PLAN_DE_CUENTAS_COMPLETO PLNCNT
+    WHERE FECHA >= dFecha_Desde AND FECHA<dFecha_hasta AND
+    SLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO=PLNCNT.EMP_CODIGO AND
+    SLD.SS_S_A_SC_CNT_MYR_CODIGO=PLNCNT.MYR_CODIGO AND
+    SLD.SS_S_A_SC_CNT_CODIGO=PLNCNT.CNT_CODIGO AND
+    SLD.SS_S_A_SC_CODIGO=PLNCNT.SCNT_CODIGO AND
+    SLD.SS_S_A_CODIGO=PLNCNT.AXL_CODIGO AND
+    SLD.SS_S_CODIGO=PLNCNT.SAXL_CODIGO AND
+    SLD.SS_CODIGO=PLNCNT.SAXL2_CODIGO AND
+    SLD.S_CODIGO=PLNCNT.SAXL3_CODIGO AND
+    PLNCNT.CODIGO=vCodCuenta AND
+    PLNCNT.EMP_CODIGO=vCodEmp AND
+    ESTADO_MOVIMIENTO='N' AND ESTADO NOT IN ('I','C');
+  CURSOR cSaldosML IS
+-- vemos sin saldos iniciales
+    SELECT SUM(HABER-DEBE)
+    FROM SALDOS SLD,PLAN_DE_CUENTAS_COMPLETO PLNCNT
+    WHERE FECHA >= dFecha_Desde AND FECHA<dFecha_hasta AND
+    SLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO=PLNCNT.EMP_CODIGO AND
+    SLD.SS_S_A_SC_CNT_MYR_CODIGO=PLNCNT.MYR_CODIGO AND
+    SLD.SS_S_A_SC_CNT_CODIGO=PLNCNT.CNT_CODIGO AND
+    SLD.SS_S_A_SC_CODIGO=PLNCNT.SCNT_CODIGO AND
+    SLD.SS_S_A_CODIGO=PLNCNT.AXL_CODIGO AND
+    SLD.SS_S_CODIGO=PLNCNT.SAXL_CODIGO AND
+    SLD.SS_CODIGO=PLNCNT.SAXL2_CODIGO AND
+    SLD.S_CODIGO=PLNCNT.SAXL3_CODIGO AND
+    PLNCNT.CODIGO=vCodCuenta AND
+    PLNCNT.EMP_CODIGO=vCodEmp AND
+    ESTADO_MOVIMIENTO='N' AND ESTADO NOT IN ('I','C');
+  nSaldo NUMBER;
+  nSaldoI NUMBER;
+BEGIN
+  IF vTipo_Moneda='ML' THEN
+    IF bCalcular_Iniciales THEN
+-- solo vemos los saldos iniciales cuando se indica asi
+      OPEN cSaldosIML;
+      FETCH cSaldosIML INTO nSaldoI;
+      CLOSE cSaldosIML;
+    END IF;
+    OPEN cSaldosML;
+    FETCH cSaldosML INTO nSaldo;
+    CLOSE cSaldosML;
+  ELSE
+    IF bCalcular_Iniciales THEN
+-- solo vemos los saldos iniciales cuando se indica asi
+      OPEN cSaldosIME;
+      FETCH cSaldosIME INTO nSaldoI;
+      CLOSE cSaldosIME;
+    END IF;
+    OPEN cSaldosME;
+    FETCH cSaldosME INTO nSaldo;
+    CLOSE cSaldosME;
+  END IF;
+  IF SUBSTR(vCodcuenta,1,1) NOT IN (2,3,4) THEN
+    RETURN -(NVL(nSaldoI,0)+NVL(nSaldo,0));
+  ELSE
+    RETURN NVL(nSaldoI,0)+NVL(nSaldo,0);
+  END IF;
+END;
+END CALCULAR_SALDOS; 
+
+/* Actualiza el estado de Mayorizado de los saldos resumen */
+PROCEDURE  ACTUALIZAR_CAMPO_MAYORIZACION
+  (VCODEMP  VARCHAR2
+  ,VCODMYR  VARCHAR2
+  ,DFECHA  DATE
+  )
+  IS
+ BEGIN
+DECLARE
+  dFechaAct DATE:=TO_DATE(TO_CHAR(dFecha,'DD/MM/YYYY')||' 23:59','DD/MM/YYYY HH24:MI');
+BEGIN
+-- Actualizamos los cuentas mayorizadas para que no consten como mayorizadas
+-- Se actualizan para todas las cuentas del MAYOR rSaldo.SS_S_A_SC_CNT_MYR_CODIGO
+-- con esa fecha solo de las de resumen
+  UPDATE SALDOS
+  SET MAYORIZADO='F'
+  WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=vCodEmp AND 
+          SS_S_A_SC_CNT_MYR_CODIGO=vCodMyr AND
+          FECHA=dFechaAct AND ESTADO_MOVIMIENTO='N' AND
+          ESTADO='R';
+END;
+END ACTUALIZAR_CAMPO_MAYORIZACION; 
+
+/* Mayoriza los movimientos */
+PROCEDURE  MAYORIZAR
+  (VCODEMP  VARCHAR2
+  ,DFECHADESDE  DATE
+  ,DFECHAHASTA  DATE
+  )
+  IS
+ BEGIN
+DECLARE
+-- Creamos el cursor de saldos para mayorizar entre dFechaDesde y dFechaHasta
+-- solo las cuentas indicadas por vCodCuenta (que por defecto es %')
+-- y que sean de movimiento
+  vCodCuenta VARCHAR2(200):='%';-- Siempre mayorizara de todas las cuentas
+  CURSOR cSld IS
+    SELECT SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,
+SS_S_A_SC_CNT_CODIGO,SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,
+SS_CODIGO,S_CODIGO,
+SS_S_A_SC_CNT_MYR_CODIGO||SS_S_A_SC_CNT_CODIGO||SS_S_A_SC_CODIGO||
+SS_S_A_CODIGO||SS_S_CODIGO||SS_CODIGO||S_CODIGO CODIGO,FECHA,SUM(DEBE) DEBE,SUM(HABER) HABER,SUM(DEBEE) DEBEE,SUM(HABERE) HABERE
+    FROM SALDOS
+    WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=vCodEmp AND 
+SS_S_A_SC_CNT_MYR_CODIGO||SS_S_A_SC_CNT_CODIGO||SS_S_A_SC_CODIGO||
+SS_S_A_CODIGO||SS_S_CODIGO||SS_CODIGO||S_CODIGO LIKE DECODE(vCodCuenta,'%','%',vCodCuenta||'%') AND
+          FECHA BETWEEN dFechaDesde AND dFechaHasta AND ESTADO='N' AND ESTADO_MOVIMIENTO='N'
+    GROUP BY SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,
+SS_S_A_SC_CNT_CODIGO,SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,
+SS_CODIGO,S_CODIGO,
+SS_S_A_SC_CNT_MYR_CODIGO||SS_S_A_SC_CNT_CODIGO||SS_S_A_SC_CODIGO||
+SS_S_A_CODIGO||SS_S_CODIGO||SS_CODIGO||S_CODIGO,FECHA
+    ORDER BY CODIGO ASC,FECHA ASC;
+  vMascara VARCHAR2(100):='00000';
+  vCodigo VARCHAR2(1000);
+  nHaber NUMBER:=0;
+  nHaberE NUMBER:=0;
+  nDebe NUMBER:=0;
+  nDebeE NUMBER:=0;
+  vMovimientos BOOLEAN; -- sirve para no crear datos resumen de cuentas de movimientos
+  dFecha DATE;
+  Tablas_Bloqueadas EXCEPTION;
+  RBS_NoDisponible EXCEPTION;
+  PRAGMA EXCEPTION_INIT(Tablas_Bloqueadas,-54);
+  PRAGMA EXCEPTION_INIT(RBS_NoDisponible,-1598);
+BEGIN
+  SAVEPOINT A;
+--  SET TRANSACTION USE ROLLBACK SEGMENT RBS_CNTBLD;
+-- Primeramente bloqueamos las tablas para impedir cualquier accion en la mismas
+-- ni siquiere se puede insertar registros
+  LOCK TABLE SALDOS IN EXCLUSIVE MODE NOWAIT;
+  LOCK TABLE MOVIMIENTOS IN EXCLUSIVE MODE NOWAIT;
+  LOCK TABLE COMPROBANTES IN EXCLUSIVE MODE NOWAIT;
+-- Actualizamos la tabla de saldos de los movimientos para que el campo mayorizado refleje la mayorizacion
+  UPDATE SALDOS
+  SET MAYORIZADO='V'
+  WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=vCodEmp AND 
+SS_S_A_SC_CNT_MYR_CODIGO||SS_S_A_SC_CNT_CODIGO||SS_S_A_SC_CODIGO||
+SS_S_A_CODIGO||SS_S_CODIGO||SS_CODIGO||S_CODIGO LIKE DECODE(vCodCuenta,'%','%',vCodCuenta||'%') AND
+  FECHA BETWEEN dFechaDesde AND dFechaHasta AND ESTADO='N' AND MAYORIZADO!='V' AND ESTADO_MOVIMIENTO='N';
+-- Actualizamos el estado de mayorizado de los comprobantes excepto de los anulados
+  UPDATE COMPROBANTES
+  SET MAYORIZADO='V'
+  WHERE FECHA BETWEEN dFechaDesde AND dFechaHasta AND MAYORIZADO!='V' AND ESTADO!='A';
+  IF vCodCuenta!='%' THEN
+-- No se implemeta por ahora, deberia verificarse que para actualizar los saldos
+-- hacia arriba desde vCodCuentas solo hubiera insertado entre esas fecha para que funciones
+-- NO SE IMPLEMENTA POR AHORA
+-- Si el codigo de cuenta no es %, actualizamos hacia arriba pero restando los saldos
+-- del debe y haber anteriores para que en base a los nuevos acutalize.
+    FOR rSaldos IN cSld LOOP
+      vMovimientos:=TRUE;
+      dFecha:=TO_DATE(TO_CHAR(rSaldos.Fecha,'DD/MM/YYYY')||' 23:59','DD/MM/YYYY HH24:MI');
+      vCodigo:=rSaldos.SS_S_A_SC_CNT_MYR_CODIGO||
+               rSaldos.SS_S_A_SC_CNT_CODIGO||
+               rSaldos.SS_S_A_SC_CODIGO||
+               rSaldos.SS_S_A_CODIGO||
+               rSaldos.SS_S_CODIGO||
+               rSaldos.SS_CODIGO;
+      IF rSaldos.S_CODIGO!=vMascara THEN
+        CALCULAR_HABER_DEBE(vCodemp,vCodCuenta,TRUNC(dFecha),dFecha,nHaber,nHaberE,nDebe,nDebeE);
+        vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+      END IF;
+-- Actualizamos los saldos, restando del saldo anterior;
+      IF rSaldos.SS_CODIGO!=vMascara THEN
+        IF NOT vMovimientos THEN
+-- Restamos del saldo resumen los valores anteriores para actualizar con los nuevos
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',-nDebe,-nDebeE); 
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',-nHaber,-nHaberE); 
+        ELSE
+          CALCULAR_HABER_DEBE(vCodemp,vCodCuenta,TRUNC(dFecha),dFecha,nHaber,nHaberE,nDebe,nDebeE);
+          vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+        END IF;
+      END IF;
+      vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_CODIGO));
+-- Actualizamos los saldos, restando del saldo anterior;
+      IF rSaldos.SS_S_CODIGO!=vMascara THEN
+        IF NOT vMovimientos THEN
+-- Restamos del saldo resumen los valores anteriores para actualizar con los nuevos
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',-nDebe,-nDebeE); 
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',-nHaber,-nHaberE); 
+        ELSE
+          CALCULAR_HABER_DEBE(vCodemp,vCodCuenta,TRUNC(dFecha),dFecha,nHaber,nHaberE,nDebe,nDebeE);
+          vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+        END IF;
+      END IF;
+      vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_CODIGO));
+      IF rSaldos.SS_S_A_CODIGO!=vMascara THEN
+        IF NOT vMovimientos THEN
+-- Restamos del saldo resumen los valores anteriores para actualizar con los nuevos
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',-nDebe,-nDebeE); 
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',-nHaber,-nHaberE); 
+        ELSE
+          CALCULAR_HABER_DEBE(vCodemp,vCodCuenta,TRUNC(dFecha),dFecha,nHaber,nHaberE,nDebe,nDebeE);
+          vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+        END IF;
+      END IF;
+      vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_CODIGO));
+      IF rSaldos.SS_S_A_SC_CODIGO!=vMascara THEN
+        IF NOT vMovimientos THEN
+-- Restamos del saldo resumen los valores anteriores para actualizar con los nuevos
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',-nDebe,-nDebeE); 
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',-nHaber,-nHaberE); 
+        ELSE
+          CALCULAR_HABER_DEBE(vCodemp,vCodCuenta,TRUNC(dFecha),dFecha,nHaber,nHaberE,nDebe,nDebeE);
+          vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+        END IF;
+      END IF;
+      vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_SC_CODIGO));
+      IF rSaldos.SS_S_A_SC_CNT_CODIGO!=vMascara THEN
+        IF NOT vMovimientos THEN
+-- Restamos del saldo resumen los valores anteriores para actualizar con los nuevos
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',-nDebe,-nDebeE); 
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',-nHaber,-nHaberE); 
+        ELSE
+          CALCULAR_HABER_DEBE(vCodemp,vCodCuenta,TRUNC(dFecha),dFecha,nHaber,nHaberE,nDebe,nDebeE);
+          vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+        END IF;
+      END IF;
+      vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_SC_CNT_CODIGO));
+      IF rSaldos.SS_S_A_SC_CNT_MYR_CODIGO!=vMascara THEN
+        IF NOT vMovimientos THEN
+-- Restamos del saldo resumen los valores anteriores para actualizar con los nuevos
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',-nDebe,-nDebeE); 
+          CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',-nHaber,-nHaberE); 
+        ELSE
+          CALCULAR_HABER_DEBE(vCodemp,vCodCuenta,TRUNC(dFecha),dFecha,nHaber,nHaberE,nDebe,nDebeE);
+          vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+        END IF;
+      END IF;
+--      vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_SC_CNT_MYR_CODIGO));
+-- Una vez restados los saldos anteriores, mandamos a actualizar con los nuevos saldos
+-- siguiendo el proceso normal como si se mandara a mayorizar todo
+    END LOOP;
+  ELSE
+-- si el codigo de cuenta es % 
+-- mandamos a anular todos los saldos resumen de la cuenta y comprendido entre las fechas desde y hasta
+    UPDATE SALDOS
+    SET ESTADO_MOVIMIENTO='A'
+    WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=vCodEmp AND
+           REPLACE(SS_S_A_SC_CNT_MYR_CODIGO||SS_S_A_SC_CNT_CODIGO||SS_S_A_SC_CODIGO||
+           SS_S_A_CODIGO||SS_S_CODIGO||SS_CODIGO||S_CODIGO,'00000','') LIKE DECODE(vCodCuenta,'%','%',vCodCuenta||'%') AND
+           FECHA BETWEEN dFechaDesde AND dFechaHasta AND 
+           ESTADO_MOVIMIENTO='N' AND ESTADO='R';
+  END IF;
+-- Despues de anulados o restados los saldos resumen anteriores, vamos a crear los nuevos saldos resumen
+-- a continuacion va el procesamiento NORMAL
+  FOR rSaldos IN cSld LOOP
+    vMovimientos:=TRUE;
+    dFecha:=TO_DATE(TO_CHAR(rSaldos.Fecha,'DD/MM/YYYY')||' 23:59','DD/MM/YYYY HH24:MI');
+    vCodigo:=rSaldos.SS_S_A_SC_CNT_MYR_CODIGO||
+               rSaldos.SS_S_A_SC_CNT_CODIGO||
+               rSaldos.SS_S_A_SC_CODIGO||
+               rSaldos.SS_S_A_CODIGO||
+               rSaldos.SS_S_CODIGO||
+               rSaldos.SS_CODIGO;
+    IF rSaldos.S_CODIGO!=vMascara THEN
+      vMovimientos:=FALSE; -- Si la cuenta es del ultimo nivel, enceramos vMovimientos para poder crear datos resumen
+    END IF;
+    IF rSaldos.SS_CODIGO!=vMascara THEN
+      IF rSaldos.DEBE>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',rSaldos.Debe,rSaldos.DebeE);
+      END IF;
+      IF rSaldos.HABER>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',rSaldos.HABER,rSaldos.HABERE);
+      END IF;
+      vMovimientos:=FALSE;
+    END IF;
+    vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_CODIGO));
+    IF rSaldos.SS_S_CODIGO!=vMascara THEN
+      IF rSaldos.DEBE>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',rSaldos.Debe,rSaldos.DebeE);
+      END IF;
+      IF rSaldos.HABER>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',rSaldos.HABER,rSaldos.HABERE);
+      END IF;
+      vMovimientos:=FALSE;
+    END IF;
+    vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_CODIGO));
+    IF rSaldos.SS_S_A_CODIGO!=vMascara THEN
+      IF rSaldos.DEBE>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',rSaldos.Debe,rSaldos.DebeE);
+      END IF;
+      IF rSaldos.HABER>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',rSaldos.HABER,rSaldos.HABERE);
+      END IF;
+      vMovimientos:=FALSE;
+    END IF;
+    vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_CODIGO));
+    IF rSaldos.SS_S_A_SC_CODIGO!=vMascara THEN
+      IF rSaldos.DEBE>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',rSaldos.Debe,rSaldos.DebeE);
+      END IF;
+      IF rSaldos.HABER>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',rSaldos.HABER,rSaldos.HABERE);
+      END IF;
+      vMovimientos:=FALSE;
+    END IF;
+    vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_SC_CODIGO));
+    IF rSaldos.SS_S_A_SC_CNT_CODIGO!=vMascara THEN
+      IF rSaldos.DEBE>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',rSaldos.Debe,rSaldos.DebeE);
+      END IF;
+      IF rSaldos.HABER>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',rSaldos.HABER,rSaldos.HABERE);
+      END IF;
+      vMovimientos:=FALSE;
+    END IF;
+    vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_SC_CNT_CODIGO));
+    IF rSaldos.SS_S_A_SC_CNT_MYR_CODIGO!=vMascara THEN
+      IF rSaldos.DEBE>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'DB',rSaldos.Debe,rSaldos.DebeE);
+      END IF;
+      IF rSaldos.HABER>0 AND NOT vMovimientos THEN
+        CREAR_SALDO_RESUMEN(vCodEmp,vCodigo,dFecha,'CR',rSaldos.HABER,rSaldos.HABERE);
+      END IF;
+--      vMovimientos:=FALSE;
+--      vCodigo:=SUBSTR(vCodigo,1,LENGTH(vCodigo)-LENGTH(rSaldos.SS_S_A_SC_CNT_MYR_CODIGO));
+    END IF;
+  END LOOP;
+  COMMIT;
+EXCEPTION
+  WHEN Tablas_Bloqueadas THEN
+    ROLLBACK;-- Con esto se desbloquea las tablas
+    QMS$ERRORS.SHOW_MESSAGE('CNT-00017');
+  WHEN RBS_NoDisponible THEN
+    ROLLBACK;-- Con esto se desbloquea las tablas
+    QMS$ERRORS.SHOW_MESSAGE('CNT-00018','RBS_CNTBLD');
+  WHEN OTHERS THEN
+    QMS$ErrorS.Unhandled_Exception ('procedimiento CNTGNR.MAYORIZAR');
+END;
+END MAYORIZAR; 
+
+/* Calcula el Debe y el Haber solo de las cuentas mayorizadas */
+PROCEDURE  CALCULAR_HABER_DEBE
+  (VCODEMP  VARCHAR2
+  ,VCODCUENTA  VARCHAR2
+  ,DFECHA_DESDE  DATE
+  ,DFECHA_HASTA  DATE
+  ,NHABER  OUT  NUMBER
+  ,NHABERE  OUT  NUMBER
+  ,NDEBE  OUT  NUMBER
+  ,NDEBEE  OUT  NUMBER
+  ,VESTADO_SALDOS  VARCHAR2  :=  'N'
+  )
+  IS
+ BEGIN
+-- Calcula el debe y el haber solo de los saldos mayorizados
+DECLARE
+  CURSOR cSaldos IS
+    SELECT NVL(SUM(HABER),0),NVL(SUM(HABERE),0),NVL(SUM(DEBE),0),NVL(SUM(DEBEE),0)
+    FROM SALDOS SLD,PLAN_DE_CUENTAS_COMPLETO PLNCNT
+    WHERE FECHA BETWEEN dFecha_Desde AND dFecha_hasta AND
+    SLD.SS_S_A_SC_CNT_MYR_EMP_CODIGO=PLNCNT.EMP_CODIGO AND
+    SLD.SS_S_A_SC_CNT_MYR_CODIGO=PLNCNT.MYR_CODIGO AND
+    SLD.SS_S_A_SC_CNT_CODIGO=PLNCNT.CNT_CODIGO AND
+    SLD.SS_S_A_SC_CODIGO=PLNCNT.SCNT_CODIGO AND
+    SLD.SS_S_A_CODIGO=PLNCNT.AXL_CODIGO AND
+    SLD.SS_S_CODIGO=PLNCNT.SAXL_CODIGO AND
+    SLD.SS_CODIGO=PLNCNT.SAXL2_CODIGO AND
+    SLD.S_CODIGO=PLNCNT.SAXL3_CODIGO AND
+    PLNCNT.CODIGO=vCodCuenta AND
+    PLNCNT.EMP_CODIGO=vCodEmp AND
+    ESTADO=vEstado_Saldos AND
+    ESTADO_MOVIMIENTO='N' AND MAYORIZADO='V';
+  nSaldo NUMBER;
+BEGIN
+  OPEN cSaldos;
+  FETCH cSaldos INTO nHaber,nHaberE,nDebe,nDebeE;
+  CLOSE cSaldos;
+END;
+END CALCULAR_HABER_DEBE; 
+
+/* Crear los saldos Resumen */
+PROCEDURE  CREAR_SALDO_RESUMEN
+  (VCODEMP  VARCHAR2
+  ,VCODCUENTA  VARCHAR2
+  ,DFECHA  DATE
+  ,VTIPO_SALDO  VARCHAR2
+  ,NSALDO  NUMBER
+  ,NSALDOE  VARCHAR2
+  ,VESTADO_SALDO  VARCHAR2  :=  'R'
+  )
+  IS
+ BEGIN
+-- Primero anulamos cualquier movimiento de saldos resumen si es necesario
+  IF vTipo_Saldo='DB' THEN
+    UPDATE SALDOS
+      SET DEBE=DEBE+nSaldo,DEBEE=DEBEE+nSaldoE
+      WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=vCodEmp AND
+            REPLACE(SS_S_A_SC_CNT_MYR_CODIGO||SS_S_A_SC_CNT_CODIGO||SS_S_A_SC_CODIGO||
+            SS_S_A_CODIGO||SS_S_CODIGO||SS_CODIGO||S_CODIGO,'00000','')=vCodCuenta AND
+            FECHA=dFECHA AND DEBE>0 AND HABER=0 AND ESTADO=vEstado_Saldo AND ESTADO_MOVIMIENTO='N';
+    IF sql%rowcount!=1 THEN
+-- si no actualizo ninguna linea es que no existe todavia una, por lo tanto la creamos
+      INSERT INTO SALDOS (SLD_ID,
+                        MONEDA,
+                        MAYORIZADO,
+                        ESTADO,
+                        ESTADO_MOVIMIENTO,
+                        SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                        SS_S_A_SC_CNT_MYR_CODIGO,
+                        SS_S_A_SC_CNT_CODIGO,
+                        SS_S_A_SC_CODIGO,
+                        SS_S_A_CODIGO,
+                        SS_S_CODIGO,
+                        SS_CODIGO,
+                        S_CODIGO,
+                        FECHA,
+                        DEBE,HABER,DEBEE,HABERE)
+      SELECT SLD_SEQ.NEXTVAL,MONEDA_DE_TRABAJO,'V',vEstado_Saldo,'N',vCodEmp,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,AXL_CODIGO,
+           SAXL_CODIGO,SAXL2_CODIGO,SAXL3_CODIGO,dFecha,nSaldo,0,nSaldoE,0
+      FROM PLAN_DE_CUENTAS_COMPLETO
+      WHERE codigo=vCodCuenta AND EMP_CODIGO=vCodEmp AND CUENTA_DE_DIARIO='F';
+    END IF;
+  ELSE
+    UPDATE SALDOS
+      SET HABER=HABER+nSaldo,HABERE=HABERE+nSaldoE
+      WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=vCodEmp AND
+            REPLACE(SS_S_A_SC_CNT_MYR_CODIGO||SS_S_A_SC_CNT_CODIGO||SS_S_A_SC_CODIGO||
+            SS_S_A_CODIGO||SS_S_CODIGO||SS_CODIGO||S_CODIGO,'00000','')=vCodCuenta AND
+            FECHA=dFECHA AND HABER>0  AND DEBE=0 AND ESTADO=vEstado_Saldo AND ESTADO_MOVIMIENTO='N';
+    IF sql%rowcount!=1 THEN
+-- si no actualizo ninguna linea es que no existe todavia una, por lo tanto la creamos
+      INSERT INTO SALDOS (SLD_ID,
+                        MONEDA,
+                        MAYORIZADO,
+                        ESTADO,
+                        ESTADO_MOVIMIENTO,
+                        SS_S_A_SC_CNT_MYR_EMP_CODIGO,
+                        SS_S_A_SC_CNT_MYR_CODIGO,
+                        SS_S_A_SC_CNT_CODIGO,
+                        SS_S_A_SC_CODIGO,
+                        SS_S_A_CODIGO,
+                        SS_S_CODIGO,
+                        SS_CODIGO,
+                        S_CODIGO,
+                        FECHA,
+                        DEBE,HABER,DEBEE,HABERE)
+      SELECT SLD_SEQ.NEXTVAL,MONEDA_DE_TRABAJO,'V',vEstado_Saldo,'N',vCodEmp,MYR_CODIGO,CNT_CODIGO,SCNT_CODIGO,AXL_CODIGO,
+           SAXL_CODIGO,SAXL2_CODIGO,SAXL3_CODIGO,dFecha,0,nSaldo,0,nSaldoE
+      FROM PLAN_DE_CUENTAS_COMPLETO
+      WHERE codigo=vCodCuenta AND EMP_CODIGO=vCodEmp AND CUENTA_DE_DIARIO='F';
+    END IF;
+  END IF;
+END; 
+
+/* Marca como no mayorizado un comprobantes */
+PROCEDURE  DESMAYORIZAR_COMPROBANTE
+  (VEMPCODIGO  EMPRESAS.CODIGO%TYPE
+  ,VTPOCMP  TIPOS_DE_COMPROBANTES.CODIGO%TYPE
+  ,DFECHA  DATE
+  ,NCLAVE  COMPROBANTES.CLAVE%TYPE
+  )
+  IS
+ BEGIN
+UPDATE COMPROBANTES
+SET MAYORIZADO='F'
+WHERE TPOCMPEMP_EMP_CODIGO=vEmpCodigo 
+AND TPOCMPEMP_TPOCMP_CODIGO=vTpoCmp
+AND FECHA=dFecha
+AND CLAVE=nClave
+AND MAYORIZADO='V' AND ESTADO!='A';
+END DESMAYORIZAR_COMPROBANTE; 
+
+/* Cerrar el a?o fiscal de la contabilidad */
+PROCEDURE CERRAR_BALANCE
+ (VEMPCOD VARCHAR2
+ ,DFECHABAL DATE
+ ,VMONEDA VARCHAR2
+ )
+ IS
+BEGIN
+-- Cerramos el a?o fiscal de la contabilidad
+-- PARMETROS
+--     vEmpcod -> El codigo de la empresa
+--     dFechaBal -> la fecha (a?o) del balance
+--     vMoneda -> la moneda local de trabajo
+-- Mensajes de Error utilizados
+-- CNT-1500 -> Pregunta si desea cerrar nuevamente un a?o ya cerrado
+-- CNT-1501 -> Deben cerrarse todos los meses para cerrar el a?o
+-- CNT-1502 -> Deben mayorizarse todos los movimientos para cerrar el a?o
+-- CNT-1503 -> Es obligatorio tener una cuenta de utilidad
+-- CNT-1504 -> La cuenta de utilidad no debe tener saldos iniciales ni finales
+-- CNT-1505 -> La cuenta de utilidad no debe tener movimientos
+-- CNT-1506 -> No se pueden cerrar a?os intermedios 
+-- CNT-1507 -> Cierre de a?o exitoso
+-- CNT-1508 -> Tablas de la contabilidad estan bloqueadas
+-- CNT-1509 -> Solo se puede cerrar el a?o de acuerdo al a?o fiscal de la sesion
+DECLARE
+  vMascara VARCHAR2(100):='00000';
+-- Cursor que devuelve el numero de meses no cerrados
+  CURSOR cCrrMes IS
+    SELECT COUNT(*)
+    FROM CIERRES_DE_MES
+    WHERE TO_CHAR(mes,'YYYY')=TO_CHAR(dFechaBal,'YYYY')
+          AND ESTADO!='C' AND EMP_CODIGO=vEmpCod;
+-- cursor que devuelve las fechas saldos no mayorizados de los movimientos
+-- durante ese periodo fiscal
+  CURSOR CSalNoMyr IS
+    SELECT TRUNC(FECHA,'DD')
+    FROM SALDOS
+    WHERE TO_CHAR(FECHA,'YYYY')=TO_CHAR(dFechaBal,'YYYY')
+          AND ESTADO='N' AND SS_S_A_SC_CNT_MYR_EMP_CODIGO=vEmpCod
+          AND ESTADO_MOVIMIENTO='N' AND MAYORIZADO='F'
+    GROUP BY TRUNC(FECHA,'DD');
+-- Cursor para ver si posterior a este a?o ya esta cerrado el a?o
+  CURSOR cOtrCrr IS
+    SELECT COUNT(*)
+    FROM SALDOS
+    WHERE TRUNC(FECHA,'YYYY')>TRUNC(dFechaBal+366,'YYYY')
+          AND SS_S_A_SC_CNT_MYR_EMP_CODIGO=vEmpCod
+          AND SS_S_A_SC_CNT_MYR_CODIGO       ='1'
+          AND SS_S_A_SC_CNT_CODIGO           =vMascara
+          AND SS_S_A_SC_CODIGO               =vMascara
+          AND SS_S_A_CODIGO                  =vMascara
+          AND SS_S_CODIGO                    =vMascara
+          AND SS_CODIGO                      =vMascara
+          AND S_CODIGO                       =vMascara
+          AND ESTADO_MOVIMIENTO='N' AND ESTADO='C';
+-- Cursor donde recorremos todo el plan de cuentas para cerrar el a?o
+  CURSOR CCnt IS
+    SELECT *
+    FROM PLAN_DE_CUENTAS_COMPLETO
+    WHERE EMP_CODIGO=vEmpCod
+          AND MYR_CODIGO!=vMascara
+    ORDER BY CODIGO;
+-- Cursor que contiene solo la cuenta de utilidades de este a?o
+  CURSOR cCntUtl IS
+    SELECT CODIGO
+    FROM PLAN_DE_CUENTAS_COMPLETO
+    WHERE EMP_CODIGO=vEmpCod
+          AND MYR_CODIGO='3'
+          AND TIPO_DE_CUENTA='UTL'
+          AND CUENTA_DE_DIARIO='V';
+-- Cursor que devuelve todas las caracteristicas de la cuenta de utilidad 
+  CURSOR cCntSupUtl(vCodUtl VARCHAR2) IS
+    SELECT *
+    FROM PLAN_DE_CUENTAS
+    WHERE CODIGO=vCodUtl;
+  nNum NUMBER:=0;
+  dFechaIniNvoBal DATE:=TRUNC(dFechaBal+366,'YYYY'); --queda una a?o mas exactamente con 00:00
+  dFechaFinBal DATE:=dFechaIniNvoBal-(1/86400); -- Fecha fin que quede con 23:59:59
+  nHaber NUMBER;
+  nHaberE NUMBER;
+  nDebe NUMBER;
+  nDebeE NUMBER;
+  nHaberI NUMBER;
+  nHaberEI NUMBER;
+  nDebeI NUMBER;
+  nDebeEI NUMBER;
+  nUtilidad NUMBER:=0;
+  nUtilidadE NUMBER:=0;
+  nDebeUtl NUMBER:=0;
+  nDebeEUtl NUMBER:=0;
+  nHaberUtl NUMBER:=0;
+  nHaberEUtl NUMBER:=0;
+  dFechaNoMyr DATE;
+  vFechaNoMyr VARCHAR2(2000):='';
+  vCodUtl PLAN_DE_CUENTAS_COMPLETO.CODIGO%TYPE;
+  vTipo PLAN_DE_CUENTAS_COMPLETO.CUENTA_DE_DIARIO%TYPE;
+  RBS_NoDisponible EXCEPTION;
+  PRAGMA EXCEPTION_INIT(RBS_NoDisponible,-1598);
+  YA_CERRANDO EXCEPTION;
+  PRAGMA EXCEPTION_INIT(YA_CERRANDO,-54);
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('EMPEZANDO A CERRAR EL A?O');
+ -- Primero vemos si en este a?o es factible cerrar el mismo
+  OPEN cOtrCrr;
+  FETCH cOtrCrr INTO nNum;
+  CLOSE cOtrCrr;
+  IF nNum>0 THEN
+    QMS$ERRORS.SHOW_MESSAGE('CNT-1506'); -- No se puede cerrar nuevamente a?os en intermedios entre otros a?os cerrados
+  END IF;
+-- Trabajamos con un segmento de rollbak grande creado por nosotros
+  SAVEPOINT A;
+--  SET TRANSACTION USE ROLLBACK SEGMENT RBS_CNTBLD;
+-- Primero vemos que todos los meses este cerrados
+  OPEN cCrrMes;
+  FETCH cCrrMes INTO nNum;
+  CLOSE cCrrMes;
+  IF nNum>0 THEN
+    ROLLBACK;
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01501'); -- es obligatorio cerrar los meses
+  END IF;
+  OPEN cSalNoMyr;
+  FETCH cSalNoMyr INTO dFechaNoMyr;
+  LOOP
+    IF cSalNoMyr%FOUND THEN
+      vFechaNoMyr:=vFechaNoMyr||TO_CHAR(dFechaNoMyr,'DD/MM/YYYY')||'  ';
+      nNum:=1;
+      FETCH cSalNoMyr INTO dFechaNoMyr;
+    END IF;
+    EXIT WHEN cSalNoMyr%NOTFOUND;
+  END LOOP;
+  CLOSE cSalNoMyr;
+  IF nNum>0 THEN
+    ROLLBACK;
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01502',vFechaNoMyr); -- es obligatorio mayorizar todos los movimientos
+  END IF;
+  nNum:=0;
+-- Vemos que la cuenta de utilidad tenga el saldo inicial en cero
+  OPEN cCntUtl;
+  FETCH cCntUtl INTO vCodUtl;
+  IF cCntUtl%NOTFOUND THEN
+    ROLLBACK;
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01503'); -- es obligatorio tener una cuenta de utilidad del ejercicio para cerrar el a?o
+  ELSE
+    CLOSE cCntUtl;
+    CNTGNR.CALCULAR_HABER_DEBE(vEmpCod,vCodUtl,dFechaBal,dFechaFinBal,nHaberI,nHaberEI,nDebeI,nDebeEI,'I'); -- Calculamos los iniciales primero
+    IF nHaberI>0 OR nDebeI>0 THEN
+      ROLLBACK;
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01504',vCodUtl); -- los saldo iniciales de la cuenta de utilidad deben ser cero
+    END IF;
+    CNTGNR.CALCULAR_HABER_DEBE(vEmpCod,vCodUtl,dFechaBal,dFechaFinBal,nHaber,nHaberE,nDebe,nDebeE,vTipo);
+    IF nHaber>0 OR nDebe>0 THEN
+      ROLLBACK;
+      QMS$ERRORS.SHOW_MESSAGE('CNT-01505',vCodUtl); -- La cuenta a utilizarse para utilidades no puede tener movimientos
+    END IF;
+  END IF;
+  LOCK TABLE SALDOS IN EXCLUSIVE MODE NOWAIT;
+  LOCK TABLE MOVIMIENTOS IN EXCLUSIVE MODE NOWAIT;
+  LOCK TABLE COMPROBANTES IN EXCLUSIVE MODE NOWAIT;
+-- siempre que llega hasta aca anulamos los saldo finales e iniciales anteriores
+-- Recordar que en la forma debe haber preguntado si deseea cerrar nuevamente el a?o
+  UPDATE SALDOS /*** FINALES ***/
+    SET ESTADO_MOVIMIENTO='A'
+    WHERE ESTADO='C' AND FECHA=dFechaFinBal;
+  UPDATE SALDOS /*** INICIALES ***/
+    SET ESTADO_MOVIMIENTO='A'
+    WHERE ESTADO='I' AND FECHA=dFechaIniNvoBal;
+-- Antes de nada cualquier saldo resumen que no este anulado lo marcamos como mayorizado
+-- para que calcule bien el debe y haber de los resumenes
+  UPDATE SALDOS
+    SET MAYORIZADO='V'
+    WHERE FECHA BETWEEN dFechaBal AND dFechaFinBal
+    AND ESTADO='R' AND ESTADO_MOVIMIENTO='N' AND MAYORIZADO='F';
+-- Ahora si a continuacion fijamos los saldos finales de este periodo contable
+-- y los saldo iniciales del siguiente
+  FOR rCnt IN cCnt LOOP
+    IF rCnt.CUENTA_DE_DIARIO='V' THEN
+      vTipo:='N'; -- si es cuenta de diario el estado del saldo es Normal (N)
+    ELSE
+      vTipo:='R'; -- si no es cuenta de diario el estado del saldo es Resumen (R)
+    END IF;
+    CNTGNR.CALCULAR_HABER_DEBE(vEmpCod,rCnt.CODIGO,dFechaBal,dFechaFinBal,nHaberI,nHaberEI,nDebeI,nDebeEI,'I'); -- Calculamos los iniciales primero
+    CNTGNR.CALCULAR_HABER_DEBE(vEmpCod,rCnt.CODIGO,dFechaBal,dFechaFinBal,nHaber,nHaberE,nDebe,nDebeE,vTipo);
+/************ SALDOS FINALES DE TODAS LA CUENTAS *********/
+-- Primero creamos los saldo finales
+-- EL HABER
+    nHaber:=nHaber+nHaberI;
+    nHaberE:=nHaberE+nHaberEI;
+    nDebe:=nDebe+nDebeI;
+    nDebeE:=nDebeE+nDebeEI;
+/*                  ******************                            */
+/* AHORA VEMOS LA UTILIDAD DE RESTAR ACTIVO - PASIVO Y PATRIMONIO */
+-- EL CALCULO DE LA UTILIDAD ESTA MAL
+    IF rCnt.Codigo='1' AND rCnt.CNT_CODIGO=vMascara THEN
+      nUtilidad:=nDebe-nHaber;
+      nUtilidadE:=nDebeE-nHaberE;
+QMS$ERRORS.SHOW_DEBUG_INFO('debe-haber '||TO_CHAR(nDebe-nHaber,'999G999G999G990D00'));
+QMS$ERRORS.SHOW_DEBUG_INFO('UTILIDAD 1 '||TO_CHAR(nUtilidad,'999G999G999G990D00'));
+    END IF;
+    IF rCnt.Codigo='2' AND rCnt.CNT_CODIGO=vMascara  THEN
+      nUtilidad:=nUtilidad-(nHaber-nDebe);
+      nUtilidadE:=nUtilidadE-(nHaberE-nDebeE);
+QMS$ERRORS.SHOW_DEBUG_INFO('debe-haber '||TO_CHAR(ndebe-nhaber,'999G999G999G990D00'));
+QMS$ERRORS.SHOW_DEBUG_INFO('UTILIDAD 2 '||TO_CHAR(nUtilidad,'999G999G999G990D00'));
+    END IF;
+    IF rCnt.Codigo='3' AND rCnt.CNT_CODIGO=vMascara  THEN
+      nUtilidad:=nUtilidad-(nHaber-nDebe);
+      nUtilidadE:=nUtilidadE-(nHaberE-nDebeE);
+QMS$ERRORS.SHOW_DEBUG_INFO('debe-haber '||TO_CHAR(ndebe-nhaber,'999G999G999G990D00'));
+QMS$ERRORS.SHOW_DEBUG_INFO('UTILIDAD 3 '||TO_CHAR(nUtilidad,'999G999G999G990D00'));
+      IF nUtilidad>=0 THEN
+-- Si la utilidad es positiva va en el haber
+        nHaberUtl:=nUtilidad;
+        nHaberEUtl:=nUtilidadE;
+        nDebeUtl:=0;
+        nDebeEUtl:=0;
+      ELSE
+-- si la utilidad es negativa va en el debe
+        nHaberUtl:=0;
+        nHaberEUtl:=0;
+        nDebeUtl:=-nUtilidad;
+        nDebeEUtl:=-nUtilidade;
+      END IF;
+QMS$ERRORS.SHOW_DEBUG_INFO('HABER UTILIDAD '||TO_CHAR(nHaberUtl));
+QMS$ERRORS.SHOW_DEBUG_INFO('DEBE UTILIDAD '||TO_CHAR(nDebeUtl));
+    END IF;
+/*                  ******************                            */
+/************ SALDOS FINALES DE LAS CUENTAS DE ACTIVOS, PASIVOS Y PATRIMONIOS *********/
+    INSERT INTO SALDOS (SLD_ID,MONEDA,MAYORIZADO,ESTADO,ESTADO_MOVIMIENTO,
+           SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,SS_S_A_SC_CNT_CODIGO,
+           SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,SS_CODIGO,S_CODIGO,FECHA,
+           DEBE,HABER,DEBEE,HABERE,MVM_MVM_ID)
+                VALUES (SLD_SEQ.NEXTVAL,vMoneda,'V','C','N',vEmpCod,rCnt.MYR_CODIGO,
+           rCnt.CNT_CODIGO,rCnt.SCNT_CODIGO,rCnt.AXL_CODIGO,rCnt.SAXL_CODIGO,
+           rCnt.SAXL2_CODIGO,rCnt.SAXL3_CODIGO,dFechaFinBal,0,nHaber,0,nHaberE,NULL);
+-- EL DEBE
+    INSERT INTO SALDOS (SLD_ID,MONEDA,MAYORIZADO,ESTADO,ESTADO_MOVIMIENTO,
+           SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,SS_S_A_SC_CNT_CODIGO,
+           SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,SS_CODIGO,S_CODIGO,FECHA,
+           DEBE,HABER,DEBEE,HABERE,MVM_MVM_ID)
+                VALUES (SLD_SEQ.NEXTVAL,vMoneda,'V','C','N',vEmpCod,rCnt.MYR_CODIGO,
+           rCnt.CNT_CODIGO,rCnt.SCNT_CODIGO,rCnt.AXL_CODIGO,rCnt.SAXL_CODIGO,
+           rCnt.SAXL2_CODIGO,rCnt.SAXL3_CODIGO,dFechaFinBal,nDebe,0,nDebeE,0,NULL);
+/************ SALDOS INICIALES DE LAS CUENTAS DE ACTIVOS, PASIVOS Y PATRIMONIOS *********/
+-- Ahora creamos los nuevos saldo iniciales
+    IF rCnt.MYR_CODIGO IN ('1','2','3') THEN
+-- solo las cuentas de activos, pasivos y patrimonio pasan los saldos finales a los iniciales
+-- EL HABER
+      INSERT INTO SALDOS (SLD_ID,MONEDA,MAYORIZADO,ESTADO,ESTADO_MOVIMIENTO,
+           SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,SS_S_A_SC_CNT_CODIGO,
+           SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,SS_CODIGO,S_CODIGO,FECHA,
+           DEBE,HABER,DEBEE,HABERE,MVM_MVM_ID)
+                VALUES (SLD_SEQ.NEXTVAL,vMoneda,'V','I','N',vEmpCod,rCnt.MYR_CODIGO,
+           rCnt.CNT_CODIGO,rCnt.SCNT_CODIGO,rCnt.AXL_CODIGO,rCnt.SAXL_CODIGO,
+           rCnt.SAXL2_CODIGO,rCnt.SAXL3_CODIGO,dFechaIniNvoBal,0,nHaber,0,nHaberE,NULL);
+-- EL DEBE
+      INSERT INTO SALDOS (SLD_ID,MONEDA,MAYORIZADO,ESTADO,ESTADO_MOVIMIENTO,
+           SS_S_A_SC_CNT_MYR_EMP_CODIGO,SS_S_A_SC_CNT_MYR_CODIGO,SS_S_A_SC_CNT_CODIGO,
+           SS_S_A_SC_CODIGO,SS_S_A_CODIGO,SS_S_CODIGO,SS_CODIGO,S_CODIGO,FECHA,
+           DEBE,HABER,DEBEE,HABERE,MVM_MVM_ID)
+                VALUES (SLD_SEQ.NEXTVAL,vMoneda,'V','I','N',vEmpCod,rCnt.MYR_CODIGO,
+           rCnt.CNT_CODIGO,rCnt.SCNT_CODIGO,rCnt.AXL_CODIGO,rCnt.SAXL_CODIGO,
+           rCnt.SAXL2_CODIGO,rCnt.SAXL3_CODIGO,dFechaIniNvoBal,nDebe,0,nDebeE,0,NULL);
+    END IF;
+  END LOOP;
+QMS$ERRORS.SHOW_DEBUG_INFO('TERMINO DE CREAR LOS SALDO FINALES E INICIALES');
+-- FALTA SUMAR AL DEBE O AL HABER DE LOS PADRES DE LA CUENTA DE UTILIDAD LA UTILIDAD
+  nNum:=0;
+  FOR rCntUtl IN cCntSupUtl(vCodUtl) LOOP
+-- Aqui actualizamos la cuenta de utilidas y sus cuentas superiores
+    nNum:=1;
+    IF rCntUtl.SAXL3_CODIGO!=vMascara THEN
+-- Actulizamos la cuenta de sub auxiliar 3 con la utilidad
+QMS$ERRORS.SHOW_DEBUG_INFO('SAXL3'||rCntUtl.SAXL3_CODIGO);
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=rCntUtl.SAXL_CODIGO
+            AND SS_CODIGO=rCntUtl.SAXL2_CODIGO
+            AND S_CODIGO=rCntUtl.SAXL3_CODIGO
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=rCntUtl.SAXL_CODIGO
+            AND SS_CODIGO=rCntUtl.SAXL2_CODIGO
+            AND S_CODIGO=rCntUtl.SAXL3_CODIGO
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+    END IF;
+    IF rCntUtl.SAXL2_CODIGO!=vMascara THEN
+-- Actulizamos la cuenta de sub auxiliar 2 con la utilidad
+QMS$ERRORS.SHOW_DEBUG_INFO('SAXL2'||rCntUtl.SAXL2_CODIGO);
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=rCntUtl.SAXL_CODIGO
+            AND SS_CODIGO=rCntUtl.SAXL2_CODIGO
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=rCntUtl.SAXL_CODIGO
+            AND SS_CODIGO=rCntUtl.SAXL2_CODIGO
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+    END IF;
+    IF rCntUtl.SAXL_CODIGO!=vMascara THEN
+-- Actulizamos la cuenta de sub auxiliar con la utilidad
+QMS$ERRORS.SHOW_DEBUG_INFO('SAXL'||rCntUtl.SAXL_CODIGO);
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=rCntUtl.SAXL_CODIGO
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=rCntUtl.SAXL_CODIGO
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+    END IF;
+    IF rCntUtl.AXL_CODIGO!=vMascara THEN
+-- Actulizamos la cuenta de auxiliar con la utilidad
+QMS$ERRORS.SHOW_DEBUG_INFO('AXL'||rCntUtl.AXL_CODIGO);
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=rCntUtl.AXL_CODIGO
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+    END IF;
+    IF rCntUtl.SCNT_CODIGO!=vMascara THEN
+-- Actulizamos la Sub Cuenta con la utilidad
+QMS$ERRORS.SHOW_DEBUG_INFO('SCNT'||rCntUtl.SCNT_CODIGO);
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=vMascara
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=rCntUtl.SCNT_CODIGO
+            AND SS_S_A_CODIGO=vMascara
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+    END IF;
+    IF rCntUtl.CNT_CODIGO!=vMascara THEN
+-- Actulizamos la Sub Cuenta con la utilidad
+QMS$ERRORS.SHOW_DEBUG_INFO('CNT '||rCntUtl.CNT_CODIGO);
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=vMascara
+            AND SS_S_A_CODIGO=vMascara
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=rCntUtl.CNT_CODIGO
+            AND SS_S_A_SC_CODIGO=vMascara
+            AND SS_S_A_CODIGO=vMascara
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+    END IF;
+    IF rCntUtl.MYR_CODIGO!=vMascara THEN
+-- Actulizamos la Sub Cuenta con la utilidad
+QMS$ERRORS.SHOW_DEBUG_INFO('MYR '||rCntUtl.MYR_CODIGO);
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=vMascara
+            AND SS_S_A_SC_CODIGO=vMascara
+            AND SS_S_A_CODIGO=vMascara
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO=rCntUtl.EMP_CODIGO
+            AND SS_S_A_SC_CNT_MYR_CODIGO=rCntUtl.MYR_CODIGO
+            AND SS_S_A_SC_CNT_CODIGO=vMascara
+            AND SS_S_A_SC_CODIGO=vMascara
+            AND SS_S_A_CODIGO=vMascara
+            AND SS_S_CODIGO=vMascara
+            AND SS_CODIGO=vMascara
+            AND S_CODIGO=vMascara
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+    END IF;
+  END LOOP;
+  IF nNum=0 THEN
+ -- Aqui ya no deberia entrar porque antes verifico el codigo del cuenta de utilidad
+    ROLLBACK;
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01503'); -- es obligatorio tener una cuenta de utilidad del ejercicio para cerrar el a?o
+  ELSE
+-- Actualizamos la fecha de inicio del balance
+    UPDATE PARAMETROS_EMPRESAS
+    SET VALOR=TO_CHAR(dFechaIniNvoBal,'DD/MM/YYYY HH24:MI')
+    WHERE EMP_CODIGO=vEmpCod
+      AND PRMAPL_NOMBRE='INICIO_BALANCE';
+-- Actualizamos la fecha de final de balance hasta por 6 meses para dar
+-- chance de revisar el balance el proximo a?o hasta por 6 meses
+    UPDATE PARAMETROS_EMPRESAS
+    SET VALOR=TO_CHAR(dFechaIniNvoBal+550,'DD/MM/YYYY HH24:MI')
+    WHERE EMP_CODIGO=vEmpCod
+      AND PRMAPL_NOMBRE='FINAL_BALANCE';
+  END IF;
+  COMMIT;
+-- AÑADIDO PARA FUNDACION PABLO JARAMILLO 26/ABRIL/2006
+      IF nHaberUtl>0 THEN
+        UPDATE SALDOS
+        SET HABER=HABER+nHaberUtl,HABERE=HABERE+nHaberEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO='HMS'
+            AND SS_S_A_SC_CNT_MYR_CODIGO='3'
+            AND SS_S_A_SC_CNT_CODIGO='1'
+            AND SS_S_A_SC_CODIGO='1'
+            AND SS_S_A_CODIGO='04'
+            AND SS_S_CODIGO='00000'
+            AND SS_CODIGO='00000'
+            AND S_CODIGO='00000'
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND HABER>=0 AND ROWNUM=1;
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=DEBE+nDebeUtl,DEBEE=DEBEE+nDebeEUtl
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO='HMS'
+            AND SS_S_A_SC_CNT_MYR_CODIGO='3'
+            AND SS_S_A_SC_CNT_CODIGO='1'
+            AND SS_S_A_SC_CODIGO='1'
+            AND SS_S_A_CODIGO='04'
+            AND SS_S_CODIGO='00000'
+            AND SS_CODIGO='00000'
+            AND S_CODIGO='00000'
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal AND DEBE>=0 AND ROWNUM=1;
+      END IF;
+      IF SQL%ROWCOUNT!=1 THEN
+        QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Error Actualizando la cuenta de variacion patrimonial');
+      ELSE
+        UPDATE SALDOS
+        SET DEBE=0,HABER=0
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO='HMS'
+            AND SS_S_A_SC_CNT_MYR_CODIGO='3'
+            AND SS_S_A_SC_CNT_CODIGO='1'
+            AND SS_S_A_SC_CODIGO='1'
+            AND SS_S_A_CODIGO='05'
+            AND SS_S_CODIGO='00000'
+            AND SS_CODIGO='00000'
+            AND S_CODIGO='00000'
+            AND MAYORIZADO='V'
+            AND ESTADO='I'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA=dFechaIniNvoBal;
+        DELETE SALDOS
+        WHERE SS_S_A_SC_CNT_MYR_EMP_CODIGO='HMS'
+            AND SS_S_A_SC_CNT_MYR_CODIGO='3'
+            AND SS_S_A_SC_CNT_CODIGO='1'
+            AND SS_S_A_SC_CODIGO='1'
+            AND SS_S_A_CODIGO='05'
+            AND SS_S_CODIGO='00000'
+            AND SS_CODIGO='00000'
+            AND S_CODIGO='00000'
+            AND MAYORIZADO='V'
+            AND ESTADO_MOVIMIENTO='N'
+            AND FECHA<dFechaIniNvoBal;
+      END IF;
+-- FIN ADICION PABLO JARAMILLO
+  QMS$ERRORS.SHOW_MESSAGE('CNT-01507');-- Se cerro el a?o con exito
+EXCEPTION
+  WHEN YA_CERRANDO THEN
+    ROLLBACK;-- Con esto se desbloquea las tablas
+    QMS$ERRORS.SHOW_MESSAGE('CNT-01508'); -- Las tablas de la contabilidad estan siendo ocupadas
+  WHEN RBS_NoDisponible THEN
+    ROLLBACK;-- Con esto se desbloquea las tablas
+    QMS$ERRORS.SHOW_MESSAGE('CNT-00018','RBS_CNTBLD');
+  WHEN OTHERS THEN
+    ROLLBACK;
+    QMS$ErrorS.Unhandled_Exception ('procedimiento Cerrar_Balance');
+END;
+END CERRAR_BALANCE;
+
+-- PL/SQL Block
+END  CNTGNR;

@@ -1,0 +1,19 @@
+DESC CARGOS_PERSONAL;
+
+CODIGO                          NOT NULL NUMBER(10)
+DESCRIPCION                     NOT NULL VARCHAR2(64)
+
+
+DESC EMPLEADOS_PERSONAL
+CEDULA                          NOT NULL VARCHAR2(15)
+APELLIDOS                       NOT NULL VARCHAR2(35)
+NOMBRES                         NOT NULL VARCHAR2(35)
+PRQ_CODIGO                               VARCHAR2(2)
+PRQ_CNT_CODIGO                           VARCHAR2(2)
+PRQ_CNT_PRV_CODIGO                       VARCHAR2(2)
+FECHA_NACIMIENTO                         DATE
+ESTADO_CIVIL                    NOT NULL VARCHAR2(1)
+SEXO                            NOT NULL VARCHAR2(1)
+DIRECCION                                VARCHAR2(128)
+TELEFONO                                 VARCHAR2(32)
+CARNET_SEGURO                            VARCHAR2(15)

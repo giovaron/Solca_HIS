@@ -1,0 +1,18 @@
+-- C:\tmp\INTERCONSULTAS1.tab
+--
+-- Generated for Oracle 9i on Thu Jun 09  11:34:42 2011 by Server Generator 6.5.96.5.6
+ 
+
+PROMPT Altering Table 'INTERCONSULTAS' 
+ALTER TABLE INTERCONSULTAS 
+ ADD (MINUTOS NUMBER(3)
+ )
+/
+
+PROMPT Altering Table 'INTERCONSULTAS_JN' 
+ALTER TABLE INTERCONSULTAS_JN 
+ ADD (MINUTOS NUMBER(3)
+ )
+/
+
+

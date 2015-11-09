@@ -1,0 +1,9 @@
+printer "wide180"
+
+height   66
+width    180
+
+after page control(L)
+
+return control(M)
+linefeed      control(J)

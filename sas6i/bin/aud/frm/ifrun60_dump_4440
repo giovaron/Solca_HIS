@@ -1,0 +1,40 @@
+[06/05/06 16:46:02 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=4440]
+	>> ERROR: Abnormal termination, Error Code: C0000005 ACCESS_VIOLATION
+
+======================= STACK DUMP =======================
+
+Fault address:  679C33EC 01:000223EC
+Module: C:\IDS6I\BIN\NLSRTL33.dll
+
+System Information:
+Operating System: Windows NT Version 5.0 Build 2195 Service Pack 4
+Command line: C:\IDS6I\BIN\ifrun60.EXE "D:\sas\bin\aud\frm\audsrignr.fmx"
+FORM/BLOCK/FIELD: SIS0012F:MDE.RUN_REPORT
+Last Trigger: WHEN-BUTTON-PRESSED - (In Progress)
+Msg: <NULL>
+Last Builtin: RUN_REPORT_OBJECT - (In Progress)
+
+Registers:
+EAX:00000000
+EBX:016AD908
+ECX:0012C09C
+EDX:016AD24C
+ESI:00000000
+EDI:0012C0EC
+CS:EIP:001B:679C33EC
+SS:ESP:0023:0012C074  EBP:0012C078
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010246
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+0x0012c078 0027fc57 0012c09c 00000000 016ad24c 016ad0f8 0x679c33ec          
+0x0012c104 002fc332 00000004 00000000 0000000b 016a50e4 0x0027fc57          
+0x0012cf6c 002f4699 016ceeb0 00000003 01db1c14 000000f7 0x002fc332          
+0x0012cf84 664b049b 016ceeb0 00000003 01db1c14 016bbc68 0x002f4699          
+0x0012e084 6646452a 016ceeb0 016bbc68 0206cd10 00000008 0x664b049b          
+0x0012e0ec 67e28edc 016bbc68 016ceeb0 004de698 016adf1c 0x6646452a          
+0x016bb224 016adf1c 67deac90 67deacd0 00297ab0 00000000 0x67e28edc          
+0x004de698 00000001 0000000a 004de4e0 67fbcf2f 0024189a 0x016adf1c          
+------------------- End of Stack Trace -------------------
+
+

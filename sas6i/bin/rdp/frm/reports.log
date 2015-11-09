@@ -1,0 +1,1619 @@
+
+Starting report ROLRPTORGEMP [Wed Mar 23 14:17:20 2005] ...
+REP-0110: Unable to open file 'ROLRPTORGEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTORGEMP'.
+End report ROLRPTORGEMP [Wed Mar 23 14:17:20 2005].
+
+Starting report ROLRPTORGEMP [Wed Mar 23 14:17:40 2005] ...
+End report ROLRPTORGEMP [Wed Mar 23 14:18:19 2005].
+
+Starting report ROLRPTORGEMP [Wed Mar 23 14:19:03 2005] ...
+End report ROLRPTORGEMP [Wed Mar 23 14:21:57 2005].
+
+Starting report ROLRPTORGEMP [Thu Mar 24 11:52:23 2005] ...
+REP-0110: Unable to open file 'ROLRPTORGEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTORGEMP'.
+End report ROLRPTORGEMP [Thu Mar 24 11:52:24 2005].
+
+Starting report ROLRPTORGEMP [Thu Mar 24 11:52:45 2005] ...
+End report ROLRPTORGEMP [Thu Mar 24 11:54:59 2005].
+
+Starting report ACTFJORPTASGDPR [Thu Mar 24 12:09:35 2005] ...
+REP-0110: Unable to open file 'ACTFJORPTASGDPR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ACTFJORPTASGDPR'.
+End report ACTFJORPTASGDPR [Thu Mar 24 12:09:35 2005].
+
+Starting report ACTFJORPTASGDPR [Thu Mar 24 12:10:06 2005] ...
+REP-0110: Unable to open file 'ACTFJORPTASGDPR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ACTFJORPTASGDPR'.
+End report ACTFJORPTASGDPR [Thu Mar 24 12:10:07 2005].
+
+Starting report ACTFJORPTASGDPR [Thu Mar 24 12:10:17 2005] ...
+REP-0110: Unable to open file 'ACTFJORPTASGDPR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ACTFJORPTASGDPR'.
+End report ACTFJORPTASGDPR [Thu Mar 24 12:10:18 2005].
+
+Starting report ROLRPTAVEIESS [Mon Mar 28 15:32:49 2005] ...
+End report ROLRPTAVEIESS [Mon Mar 28 15:32:50 2005].
+
+Starting report ROLRPTAVSIESS [Mon Mar 28 15:32:50 2005] ...
+End report ROLRPTAVSIESS [Mon Mar 28 15:32:51 2005].
+
+Starting report ROLRPTNVDIESS [Mon Mar 28 15:32:51 2005] ...
+End report ROLRPTNVDIESS [Mon Mar 28 15:32:52 2005].
+
+Starting report ROLRPTDNOIESS [Mon Mar 28 15:32:52 2005] ...
+End report ROLRPTDNOIESS [Mon Mar 28 15:32:53 2005].
+
+Starting report ROLRPTVRSIESS [Mon Mar 28 15:32:53 2005] ...
+End report ROLRPTVRSIESS [Mon Mar 28 15:32:55 2005].
+
+Starting report ROLRPTDTLROL [Tue Mar 29 10:28:40 2005] ...
+End report ROLRPTDTLROL [Tue Mar 29 10:28:48 2005].
+
+Starting report ROLRPTLSTEMP [Thu Apr 28 13:04:48 2005] ...
+End report ROLRPTLSTEMP [Thu Apr 28 13:06:24 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:04:29 2005] ...
+REP-0099: Report is aborted upon user request.
+End report CNTRVSSLDR [Thu Apr 28 15:05:17 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:07:45 2005] ...
+End report CNTRVSSLDR [Thu Apr 28 15:08:40 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:10:28 2005] ...
+REP-0099: Report is aborted upon user request.
+End report CNTRVSSLDR [Thu Apr 28 15:11:14 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:11:30 2005] ...
+REP-0099: Report is aborted upon user request.
+End report CNTRVSSLDR [Thu Apr 28 15:12:16 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:13:05 2005] ...
+REP-0099: Report is aborted upon user request.
+End report CNTRVSSLDR [Thu Apr 28 15:13:50 2005].
+
+Starting report ROLRPTPRMEMP [Thu May 26 09:08:31 2005] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Thu May 26 09:08:31 2005].
+
+Starting report ROLRPTPRMEMP [Thu May 26 09:09:47 2005] ...
+REP-3002: Error initializing printer.  Please make sure a printer is installed.
+
+End report ROLRPTPRMEMP [Thu May 26 09:09:53 2005].
+
+Starting report ROLRPTPRMEMP [Thu May 26 09:10:30 2005] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Thu May 26 09:10:35 2005].
+
+Starting report ROLRPTPRMEMP [Thu May 26 09:10:56 2005] ...
+End report ROLRPTPRMEMP [Thu May 26 09:11:25 2005].
+
+Starting report ROLRPTPRMEMP [Thu May 26 09:11:36 2005] ...
+End report ROLRPTPRMEMP [Thu May 26 09:26:04 2005].
+
+Starting report ROLRPTPRMEMP [Thu May 26 09:26:20 2005] ...
+End report ROLRPTPRMEMP [Thu May 26 09:55:54 2005].
+
+Starting report RPTEMPCNTCST [Thu May 26 10:05:42 2005] ...
+End report RPTEMPCNTCST [Thu May 26 10:06:24 2005].
+
+Starting report ROLRPTCFRROL [Thu May 26 10:31:33 2005] ...
+End report ROLRPTCFRROL [Thu May 26 10:32:09 2005].
+
+Starting report ROLRPTROLTOTCHQ [Thu May 26 10:32:36 2005] ...
+End report ROLRPTROLTOTCHQ [Thu May 26 10:32:52 2005].
+
+Starting report ROLRPTINDROLIESS [Mon May 30 15:44:33 2005] ...
+End report ROLRPTINDROLIESS [Mon May 30 15:46:11 2005].
+
+Starting report ROLRPTINDROL [Mon May 30 15:52:23 2005] ...
+End report ROLRPTINDROL [Mon May 30 15:53:50 2005].
+
+Starting report RPTEMPCNTCST [Wed Jun 01 13:02:07 2005] ...
+End report RPTEMPCNTCST [Wed Jun 01 13:03:30 2005].
+
+Starting report ROLRPTFRM [Wed Jun 01 13:03:43 2005] ...
+End report ROLRPTFRM [Wed Jun 01 13:06:10 2005].
+
+Starting report ROLRPTAVEIESS [Mon Jun 13 09:32:02 2005] ...
+End report ROLRPTAVEIESS [Mon Jun 13 09:32:04 2005].
+
+Starting report ROLRPTAVSIESS [Mon Jun 13 09:32:04 2005] ...
+End report ROLRPTAVSIESS [Mon Jun 13 09:32:05 2005].
+
+Starting report ROLRPTNVDIESS [Mon Jun 13 09:32:05 2005] ...
+End report ROLRPTNVDIESS [Mon Jun 13 09:32:18 2005].
+
+Starting report ROLRPTDNOIESS [Mon Jun 13 09:32:42 2005] ...
+End report ROLRPTDNOIESS [Mon Jun 13 09:32:44 2005].
+
+Starting report ROLRPTVRSIESS [Mon Jun 13 09:32:44 2005] ...
+End report ROLRPTVRSIESS [Mon Jun 13 09:32:47 2005].
+
+Starting report ROLRPTFCHEMP [Mon Jun 20 14:53:33 2005] ...
+REP-0110: Unable to open file 'ROLRPTFCHEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTFCHEMP'.
+End report ROLRPTFCHEMP [Mon Jun 20 14:53:34 2005].
+
+Starting report ROLRPTDTLROL [Wed Jun 29 11:47:58 2005] ...
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+End report ROLRPTDTLROL [Wed Jun 29 11:47:59 2005].
+
+Starting report ROLRPTNVDDSC [Wed Jun 29 11:50:10 2005] ...
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+End report ROLRPTNVDDSC [Wed Jun 29 11:50:12 2005].
+
+Starting report ROLRPTNVDDSC [Wed Jun 29 11:51:51 2005] ...
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+End report ROLRPTNVDDSC [Wed Jun 29 11:51:52 2005].
+
+Starting report ROLRPTGRN [Mon Jul 11 09:13:31 2005] ...
+REP-0110: Unable to open file 'ROLRPTGRN'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTGRN'.
+End report ROLRPTGRN [Mon Jul 11 09:13:32 2005].
+
+Starting report ROLRPTGRN [Mon Jul 11 09:14:12 2005] ...
+End report ROLRPTGRN [Mon Jul 11 09:18:11 2005].
+
+Starting report ROLRPTGRN [Mon Jul 11 09:18:27 2005] ...
+End report ROLRPTGRN [Mon Jul 11 09:20:03 2005].
+
+Starting report ROLRPTGRN [Mon Jul 11 09:21:26 2005] ...
+End report ROLRPTGRN [Mon Jul 11 09:21:30 2005].
+
+Starting report ROLRPTGRN [Mon Jul 11 09:21:36 2005] ...
+End report ROLRPTGRN [Mon Jul 11 09:22:13 2005].
+
+Starting report ROLRPTPRMEMP [Mon Jul 11 09:24:03 2005] ...
+End report ROLRPTPRMEMP [Mon Jul 11 09:24:29 2005].
+
+Starting report ROLRPTFNDRSV [Mon Jul 11 09:25:50 2005] ...
+End report ROLRPTFNDRSV [Mon Jul 11 09:26:28 2005].
+
+Starting report ROLRPTSRI [Fri Jul 22 10:16:13 2005] ...
+REP-0110: Unable to open file 'ROLRPTSRI'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTSRI'.
+End report ROLRPTSRI [Fri Jul 22 10:16:14 2005].
+
+Starting report ROLRPTSRI [Fri Jul 22 10:16:52 2005] ...
+End report ROLRPTSRI [Fri Jul 22 10:16:57 2005].
+
+Starting report ROLRPTSRI [Fri Jul 22 10:17:01 2005] ...
+End report ROLRPTSRI [Fri Jul 22 10:17:28 2005].
+
+Starting report ROLRPTCFRROL [Wed Jul 27 16:41:29 2005] ...
+REP-0110: Unable to open file 'ROLRPTCFRROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTCFRROL'.
+End report ROLRPTCFRROL [Wed Jul 27 16:41:30 2005].
+
+Starting report ROLRPTCFRROL [Wed Jul 27 16:43:50 2005] ...
+End report ROLRPTCFRROL [Wed Jul 27 16:44:15 2005].
+
+Starting report ROLRPTROLTOTCHQ [Wed Jul 27 16:54:37 2005] ...
+REP-0110: Unable to open file 'ROLRPTROLTOTCHQ'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTROLTOTCHQ'.
+End report ROLRPTROLTOTCHQ [Wed Jul 27 16:54:38 2005].
+
+Starting report ROLRPTROLTOTCHQ [Wed Jul 27 16:55:27 2005] ...
+End report ROLRPTROLTOTCHQ [Wed Jul 27 16:56:53 2005].
+
+Starting report ROLRPTGRN [Wed Aug 17 10:18:21 2005] ...
+End report ROLRPTGRN [Wed Aug 17 10:20:06 2005].
+
+Starting report ROLRPTGRN [Wed Aug 17 10:20:08 2005] ...
+End report ROLRPTGRN [Wed Aug 17 10:20:23 2005].
+
+Starting report RPTEMPCNTCST [Wed Aug 17 11:26:01 2005] ...
+End report RPTEMPCNTCST [Wed Aug 17 12:13:16 2005].
+
+Starting report ROLRPTCFRROL [Wed Aug 17 12:16:35 2005] ...
+End report ROLRPTCFRROL [Wed Aug 17 12:16:56 2005].
+
+Starting report ROLRPTCFRROL [Wed Aug 17 12:17:00 2005] ...
+End report ROLRPTCFRROL [Wed Aug 17 12:17:23 2005].
+
+Starting report ROLRPTCFRROL [Wed Aug 17 14:20:40 2005] ...
+
+Error submitting report [Wed Aug 17 14:40:46 2005] ...
+REP-0060: Unable to run synchronous job concurrently with another report.
+End report ROLRPTCFRROL [Wed Aug 17 14:40:50 2005].
+
+Starting report CNTINGCMP [Wed Aug 17 14:40:51 2005] ...
+End report CNTINGCMP [Wed Aug 17 14:55:28 2005].
+
+Starting report ROLRPTAVEIESS [Fri Sep 02 10:29:13 2005] ...
+REP-0110: Unable to open file 'ROLRPTAVEIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTAVEIESS'.
+End report ROLRPTAVEIESS [Fri Sep 02 10:29:13 2005].
+
+Starting report ROLRPTAVSIESS [Fri Sep 02 10:29:13 2005] ...
+REP-0110: Unable to open file 'ROLRPTAVSIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTAVSIESS'.
+End report ROLRPTAVSIESS [Fri Sep 02 10:29:14 2005].
+
+Starting report ROLRPTNVDIESS [Fri Sep 02 10:29:14 2005] ...
+REP-0110: Unable to open file 'ROLRPTNVDIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTNVDIESS'.
+End report ROLRPTNVDIESS [Fri Sep 02 10:29:15 2005].
+
+Starting report ROLRPTDNOIESS [Fri Sep 02 10:29:15 2005] ...
+REP-0110: Unable to open file 'ROLRPTDNOIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDNOIESS'.
+End report ROLRPTDNOIESS [Fri Sep 02 10:29:16 2005].
+
+Starting report ROLRPTVRSIESS [Fri Sep 02 10:29:16 2005] ...
+REP-0110: Unable to open file 'ROLRPTVRSIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTVRSIESS'.
+End report ROLRPTVRSIESS [Fri Sep 02 10:29:17 2005].
+
+Starting report ROLRPTAVEIESS [Fri Sep 02 10:29:47 2005] ...
+End report ROLRPTAVEIESS [Fri Sep 02 10:29:48 2005].
+
+Starting report ROLRPTAVSIESS [Fri Sep 02 10:29:48 2005] ...
+End report ROLRPTAVSIESS [Fri Sep 02 10:29:49 2005].
+
+Starting report ROLRPTNVDIESS [Fri Sep 02 10:29:49 2005] ...
+End report ROLRPTNVDIESS [Fri Sep 02 10:30:09 2005].
+
+Starting report ROLRPTDNOIESS [Fri Sep 02 10:30:09 2005] ...
+End report ROLRPTDNOIESS [Fri Sep 02 10:30:13 2005].
+
+Starting report ROLRPTVRSIESS [Fri Sep 02 10:30:13 2005] ...
+End report ROLRPTVRSIESS [Fri Sep 02 10:30:16 2005].
+
+Starting report ROLRPTAVEIESS [Fri Sep 02 10:37:31 2005] ...
+End report ROLRPTAVEIESS [Fri Sep 02 10:37:34 2005].
+
+Starting report ROLRPTAVSIESS [Fri Sep 02 10:37:35 2005] ...
+End report ROLRPTAVSIESS [Fri Sep 02 10:37:36 2005].
+
+Starting report ROLRPTNVDIESS [Fri Sep 02 10:37:36 2005] ...
+End report ROLRPTNVDIESS [Fri Sep 02 10:37:38 2005].
+
+Starting report ROLRPTDNOIESS [Fri Sep 02 10:37:38 2005] ...
+End report ROLRPTDNOIESS [Fri Sep 02 10:37:40 2005].
+
+Starting report ROLRPTVRSIESS [Fri Sep 02 10:37:40 2005] ...
+End report ROLRPTVRSIESS [Fri Sep 02 10:37:42 2005].
+
+Starting report ROLRPTAVEIESS [Fri Sep 02 10:39:08 2005] ...
+End report ROLRPTAVEIESS [Fri Sep 02 10:39:11 2005].
+
+Starting report ROLRPTAVSIESS [Fri Sep 02 10:39:11 2005] ...
+End report ROLRPTAVSIESS [Fri Sep 02 10:39:12 2005].
+
+Starting report ROLRPTNVDIESS [Fri Sep 02 10:39:12 2005] ...
+End report ROLRPTNVDIESS [Fri Sep 02 10:39:14 2005].
+
+Starting report ROLRPTDNOIESS [Fri Sep 02 10:39:14 2005] ...
+End report ROLRPTDNOIESS [Fri Sep 02 10:39:15 2005].
+
+Starting report ROLRPTVRSIESS [Fri Sep 02 10:39:15 2005] ...
+REP-1803: Unable to open destination file 'C:\VARIACION_SUELDO082005.TXT'.
+End report ROLRPTVRSIESS [Fri Sep 02 10:39:16 2005].
+
+Starting report ROLRPTAVEIESS [Fri Sep 02 10:40:24 2005] ...
+End report ROLRPTAVEIESS [Fri Sep 02 10:40:24 2005].
+
+Starting report ROLRPTAVSIESS [Fri Sep 02 10:40:24 2005] ...
+End report ROLRPTAVSIESS [Fri Sep 02 10:40:25 2005].
+
+Starting report ROLRPTNVDIESS [Fri Sep 02 10:40:25 2005] ...
+End report ROLRPTNVDIESS [Fri Sep 02 10:40:27 2005].
+
+Starting report ROLRPTDNOIESS [Fri Sep 02 10:40:27 2005] ...
+End report ROLRPTDNOIESS [Fri Sep 02 10:40:28 2005].
+
+Starting report ROLRPTVRSIESS [Fri Sep 02 10:40:28 2005] ...
+End report ROLRPTVRSIESS [Fri Sep 02 10:40:31 2005].
+
+Starting report ROLRPTAVEIESS [Fri Sep 02 10:26:15 2005] ...
+REP-0110: Unable to open file 'ROLRPTAVEIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTAVEIESS'.
+End report ROLRPTAVEIESS [Fri Sep 02 10:26:16 2005].
+
+Starting report ROLRPTAVSIESS [Fri Sep 02 10:26:16 2005] ...
+REP-0110: Unable to open file 'ROLRPTAVSIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTAVSIESS'.
+End report ROLRPTAVSIESS [Fri Sep 02 10:26:16 2005].
+
+Starting report ROLRPTNVDIESS [Fri Sep 02 10:26:16 2005] ...
+REP-0110: Unable to open file 'ROLRPTNVDIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTNVDIESS'.
+End report ROLRPTNVDIESS [Fri Sep 02 10:26:17 2005].
+
+Starting report ROLRPTDNOIESS [Fri Sep 02 10:26:17 2005] ...
+REP-0110: Unable to open file 'ROLRPTDNOIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDNOIESS'.
+End report ROLRPTDNOIESS [Fri Sep 02 10:26:18 2005].
+
+Starting report ROLRPTVRSIESS [Fri Sep 02 10:26:18 2005] ...
+REP-0110: Unable to open file 'ROLRPTVRSIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTVRSIESS'.
+End report ROLRPTVRSIESS [Fri Sep 02 10:26:19 2005].
+
+Starting report FCTGNRFCT [Fri Sep 02 14:35:33 2005] ...
+REP-0110: Unable to open file 'FCTGNRFCT'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'FCTGNRFCT'.
+End report FCTGNRFCT [Fri Sep 02 14:35:37 2005].
+
+Starting report CNTCBRLSTCRTPNDXCOTC [Fri Sep 02 14:40:46 2005] ...
+REP-1401: 'cf_modo_de_pagoformula': Fatal PL/SQL error occurred.
+End report CNTCBRLSTCRTPNDXCOTC [Fri Sep 02 14:43:04 2005].
+
+Starting report CNTCBRLSTCRTPNDXCOTC [Fri Sep 02 14:48:16 2005] ...
+REP-1401: 'cf_modo_de_pagoformula': Fatal PL/SQL error occurred.
+End report CNTCBRLSTCRTPNDXCOTC [Fri Sep 02 14:48:27 2005].
+
+Starting report ROLRPTGRN [Tue Sep 06 14:36:52 2005] ...
+End report ROLRPTGRN [Tue Sep 06 14:36:58 2005].
+
+Starting report ROLRPTAVEIESS [Wed Sep 07 08:46:07 2005] ...
+End report ROLRPTAVEIESS [Wed Sep 07 08:46:08 2005].
+
+Starting report ROLRPTAVSIESS [Wed Sep 07 08:46:08 2005] ...
+End report ROLRPTAVSIESS [Wed Sep 07 08:46:09 2005].
+
+Starting report ROLRPTNVDIESS [Wed Sep 07 08:46:09 2005] ...
+End report ROLRPTNVDIESS [Wed Sep 07 08:46:14 2005].
+
+Starting report ROLRPTDNOIESS [Wed Sep 07 08:46:14 2005] ...
+End report ROLRPTDNOIESS [Wed Sep 07 08:46:16 2005].
+
+Starting report ROLRPTVRSIESS [Wed Sep 07 08:46:16 2005] ...
+End report ROLRPTVRSIESS [Wed Sep 07 08:46:18 2005].
+
+Starting report ROLRPTXIIIEMP [Wed Sep 07 10:11:49 2005] ...
+End report ROLRPTXIIIEMP [Wed Sep 07 10:12:09 2005].
+
+Starting report ROLRPTXIVEMP [Wed Sep 07 10:12:20 2005] ...
+End report ROLRPTXIVEMP [Wed Sep 07 10:12:40 2005].
+
+Starting report ROLRPTGRN [Thu Sep 08 09:21:55 2005] ...
+End report ROLRPTGRN [Thu Sep 08 09:23:33 2005].
+
+Starting report ROLRPTPRMEMP [Wed Oct 05 11:59:18 2005] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Wed Oct 05 11:59:20 2005].
+
+Starting report ROLRPTPRMEMP [Wed Oct 05 12:04:54 2005] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Wed Oct 05 12:04:54 2005].
+
+Starting report ROLRPTINDROLIESS [Wed Oct 05 12:34:15 2005] ...
+REP-0110: Unable to open file 'ROLRPTINDROLIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTINDROLIESS'.
+End report ROLRPTINDROLIESS [Wed Oct 05 12:34:16 2005].
+
+Starting report ROLRPTINDROLBNF [Wed Oct 05 12:34:42 2005] ...
+REP-0110: Unable to open file 'ROLRPTINDROLBNF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTINDROLBNF'.
+End report ROLRPTINDROLBNF [Wed Oct 05 12:34:42 2005].
+
+Starting report ROLRPTPRMEMP [Wed Oct 05 12:35:20 2005] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Wed Oct 05 12:35:21 2005].
+
+Starting report ROLRPTDTLIESS [Wed Oct 05 12:38:41 2005] ...
+REP-0110: Unable to open file 'ROLRPTDTLIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLIESS'.
+End report ROLRPTDTLIESS [Wed Oct 05 12:38:42 2005].
+
+Starting report ROLRPTDTLIESS [Wed Oct 05 12:41:21 2005] ...
+REP-0110: Unable to open file 'ROLRPTDTLIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLIESS'.
+End report ROLRPTDTLIESS [Wed Oct 05 12:41:22 2005].
+
+Starting report ROLRPTDTLIESS [Wed Oct 05 12:41:28 2005] ...
+End report ROLRPTDTLIESS [Wed Oct 05 12:41:58 2005].
+
+Starting report ROLRPTINDROLIESS [Wed Oct 05 12:42:13 2005] ...
+End report ROLRPTINDROLIESS [Wed Oct 05 12:44:17 2005].
+
+Starting report ROLRPTCHQBNO [Tue Nov 15 10:57:37 2005] ...
+End report ROLRPTCHQBNO [Tue Nov 15 10:59:56 2005].
+
+Starting report ROLRPTXIIIEMP [Tue Dec 06 09:16:44 2005] ...
+End report ROLRPTXIIIEMP [Tue Dec 06 09:19:13 2005].
+
+Starting report ROLRPTINDROLIESS [Wed Dec 07 11:44:23 2005] ...
+End report ROLRPTINDROLIESS [Wed Dec 07 11:50:53 2005].
+
+Starting report ROLRPTPRMEMP [Wed Dec 07 12:04:05 2005] ...
+End report ROLRPTPRMEMP [Wed Dec 07 12:06:30 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 11:38:44 2005] ...
+REP-0110: Unable to open file 'ROLRPTBNOCTR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTBNOCTR'.
+End report ROLRPTBNOCTR [Thu Dec 15 11:38:45 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 11:39:20 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 11:39:39 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 11:39:42 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 11:39:46 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 11:39:55 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 11:40:13 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 11:40:31 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 11:40:35 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 11:49:09 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 11:51:01 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 11:51:07 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 11:52:47 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 12:46:02 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 12:47:03 2005].
+
+Starting report ROLRPTBNOCTR [Thu Dec 15 12:47:06 2005] ...
+End report ROLRPTBNOCTR [Thu Dec 15 12:47:48 2005].
+
+Starting report ROLRPTSRI [Mon Dec 19 16:10:59 2005] ...
+End report ROLRPTSRI [Mon Dec 19 16:15:01 2005].
+
+Starting report ROLRPTPRMEMP [Wed Jan 04 11:10:26 2006] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Wed Jan 04 11:10:26 2006].
+
+Starting report ROLRPTPRMEMP [Wed Jan 04 11:11:39 2006] ...
+REP-3002: Error initializing printer.  Please make sure a printer is installed.
+
+End report ROLRPTPRMEMP [Wed Jan 04 11:11:43 2006].
+
+Starting report ROLRPTPRMEMP [Wed Jan 04 11:15:02 2006] ...
+End report ROLRPTPRMEMP [Wed Jan 04 11:15:28 2006].
+
+Starting report ROLRPTPRMEMP [Wed Jan 04 11:19:38 2006] ...
+End report ROLRPTPRMEMP [Wed Jan 04 11:19:54 2006].
+
+Starting report ROLRPTFRM107 [Tue Jan 17 10:36:45 2006] ...
+REP-1401: 'cg$cf_valor5': Fatal PL/SQL error occurred.
+REP-0594: No report output generated.
+End report ROLRPTFRM107 [Tue Jan 17 10:36:57 2006].
+
+Starting report ROLRPTFRM107 [Tue Jan 17 10:37:00 2006] ...
+REP-1401: 'cg$cf_valor5': Fatal PL/SQL error occurred.
+REP-0594: No report output generated.
+End report ROLRPTFRM107 [Tue Jan 17 10:37:11 2006].
+
+Starting report ROLRPTFRM107 [Tue Jan 17 10:37:15 2006] ...
+REP-1401: 'cg$cf_valor5': Fatal PL/SQL error occurred.
+REP-0594: No report output generated.
+End report ROLRPTFRM107 [Tue Jan 17 10:37:23 2006].
+
+Starting report ROLRPTFRM107 [Mon Jan 23 11:39:19 2006] ...
+REP-0613: Value does not match mask 'DD/MM/YYYY'.
+ORA-01858: a non-numeric character was found where a numeric was expected
+
+REP-0091: Invalid value for parameter 'pNombreEmpresa'.
+End report ROLRPTFRM107 [Mon Jan 23 11:39:24 2006].
+
+Starting report ROLRPTFRM107 [Mon Jan 23 11:39:35 2006] ...
+REP-0613: Value does not match mask 'DD/MM/YYYY'.
+ORA-01858: a non-numeric character was found where a numeric was expected
+
+REP-0091: Invalid value for parameter 'pNombreEmpresa'.
+End report ROLRPTFRM107 [Mon Jan 23 11:39:45 2006].
+
+Starting report ROLRPTFRM107 [Mon Jan 23 11:40:58 2006] ...
+REP-0613: Value does not match mask 'DD/MM/YYYY'.
+ORA-01858: a non-numeric character was found where a numeric was expected
+
+REP-0091: Invalid value for parameter 'pNombreEmpresa'.
+End report ROLRPTFRM107 [Mon Jan 23 11:42:15 2006].
+
+Starting report ROLRPTFRM107 [Mon Jan 23 11:42:30 2006] ...
+REP-0613: Value does not match mask 'DD/MM/YYYY'.
+ORA-01858: a non-numeric character was found where a numeric was expected
+
+REP-0091: Invalid value for parameter 'pNombreEmpresa'.
+End report ROLRPTFRM107 [Mon Jan 23 11:42:39 2006].
+
+Starting report ROLRPTFRM107 [Mon Jan 23 11:58:41 2006] ...
+REP-0613: Value does not match mask 'DD/MM/YYYY'.
+ORA-01858: a non-numeric character was found where a numeric was expected
+
+REP-0091: Invalid value for parameter 'pNombreEmpresa'.
+End report ROLRPTFRM107 [Mon Jan 23 11:58:52 2006].
+
+Starting report ROLRPTFRM107 [Mon Jan 23 12:04:03 2006] ...
+End report ROLRPTFRM107 [Mon Jan 23 12:04:25 2006].
+
+Starting report ROLRPTDTLROL [Fri Mar 03 16:27:16 2006] ...
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+End report ROLRPTDTLROL [Fri Mar 03 16:27:16 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:06:07 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:06:07 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:07:18 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:07:26 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:07:32 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:07:34 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:08:02 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:08:05 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:08:07 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:08:09 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:08:11 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:08:13 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:08:20 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:08:21 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:08:56 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:09:20 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 16:12:53 2006] ...
+Fin del informe ROLRPTDTLROL [Thu Mar 09 16:14:14 2006].
+
+Arrancando el informe ROLRPTDTLIESS [Thu Mar 09 16:14:35 2006] ...
+Fin del informe ROLRPTDTLIESS [Thu Mar 09 16:15:52 2006].
+
+Arrancando el informe ROLRPTFRM [Thu Mar 09 16:56:45 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM'.
+Fin del informe ROLRPTFRM [Thu Mar 09 16:56:45 2006].
+
+Arrancando el informe ROLRPTFRM [Thu Mar 09 16:57:31 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM'.
+Fin del informe ROLRPTFRM [Thu Mar 09 16:57:31 2006].
+
+Arrancando el informe ROLRPTPRM [Thu Mar 09 16:57:50 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTPRM'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTPRM'.
+Fin del informe ROLRPTPRM [Thu Mar 09 16:57:50 2006].
+
+Arrancando el informe ROLRPTLSTEMP [Thu Mar 09 16:58:09 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTLSTEMP'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTLSTEMP'.
+Fin del informe ROLRPTLSTEMP [Thu Mar 09 16:58:09 2006].
+
+Arrancando el informe ROLRPTEMP [Thu Mar 09 16:58:25 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTEMP'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTEMP'.
+Fin del informe ROLRPTEMP [Thu Mar 09 16:58:26 2006].
+
+Arrancando el informe ROLRPTGRN [Thu Mar 09 16:59:41 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTGRN'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTGRN'.
+Fin del informe ROLRPTGRN [Thu Mar 09 16:59:41 2006].
+
+Arrancando el informe ROLRPTFRM107 [Thu Mar 09 17:00:01 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM107'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM107'.
+Fin del informe ROLRPTFRM107 [Thu Mar 09 17:00:01 2006].
+
+Arrancando el informe ROLRPTSRI [Thu Mar 09 17:00:48 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTSRI'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTSRI'.
+Fin del informe ROLRPTSRI [Thu Mar 09 17:00:48 2006].
+
+Arrancando el informe ROLRPTPLIESSH [Thu Mar 09 17:01:05 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTPLIESSH'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTPLIESSH'.
+Fin del informe ROLRPTPLIESSH [Thu Mar 09 17:01:06 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 17:01:21 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+Fin del informe ROLRPTDTLROL [Thu Mar 09 17:01:21 2006].
+
+Arrancando el informe ROLRPTSRI [Thu Mar 09 17:02:19 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTSRI'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTSRI'.
+Fin del informe ROLRPTSRI [Thu Mar 09 17:02:19 2006].
+
+Arrancando el informe ROLRPTSRI [Thu Mar 09 17:02:29 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTSRI'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTSRI'.
+Fin del informe ROLRPTSRI [Thu Mar 09 17:02:30 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 17:09:23 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+Fin del informe ROLRPTDTLROL [Thu Mar 09 17:09:23 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 17:09:36 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+Fin del informe ROLRPTDTLROL [Thu Mar 09 17:09:36 2006].
+
+Arrancando el informe ROLRPTFRM [Thu Mar 09 17:10:22 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTFRM'.
+Fin del informe ROLRPTFRM [Thu Mar 09 17:10:22 2006].
+
+Arrancando el informe ROLRPTPRM [Thu Mar 09 17:10:32 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTPRM'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTPRM'.
+Fin del informe ROLRPTPRM [Thu Mar 09 17:10:32 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 17:10:42 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+Fin del informe ROLRPTDTLROL [Thu Mar 09 17:10:43 2006].
+
+Arrancando el informe ROLRPTDTLROL [Thu Mar 09 17:10:53 2006] ...
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+REP-1070: Error al abrir o salvar un documento.
+REP-0110: No se puede abrir el fichero 'ROLRPTDTLROL'.
+Fin del informe ROLRPTDTLROL [Thu Mar 09 17:10:54 2006].
+
+Starting report ROLRPTDTLROL [Mon Jul 17 11:43:09 2006] ...
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+End report ROLRPTDTLROL [Mon Jul 17 11:43:09 2006].
+
+Starting report ROLRPTDTLROL [Mon Jul 17 11:43:33 2006] ...
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+End report ROLRPTDTLROL [Mon Jul 17 11:43:33 2006].
+
+Starting report ROLRPTDTLROL [Mon Jul 17 11:43:43 2006] ...
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+End report ROLRPTDTLROL [Mon Jul 17 11:43:46 2006].
+
+Starting report ROLRPTINDROLIESS [Wed Aug 09 12:36:47 2006] ...
+REP-0110: Unable to open file 'ROLRPTINDROLIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTINDROLIESS'.
+End report ROLRPTINDROLIESS [Wed Aug 09 12:36:47 2006].
+
+Starting report ROLRPTINDROLIESS [Wed Aug 09 12:37:17 2006] ...
+End report ROLRPTINDROLIESS [Wed Aug 09 12:37:43 2006].
+
+Starting report ROLRPTINDROLIESS [Wed Aug 09 12:42:13 2006] ...
+End report ROLRPTINDROLIESS [Wed Aug 09 12:42:23 2006].
+
+Starting report ROLRPTDTLROL [Wed Aug 09 12:42:42 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report ROLRPTDTLROL [Wed Aug 09 12:42:42 2006].
+
+Starting report ROLRPTDTLROL [Wed Aug 09 12:42:46 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report ROLRPTDTLROL [Wed Aug 09 12:42:46 2006].
+
+Starting report ROLRPTDTLROL [Mon Sep 11 15:38:40 2006] ...
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLROL'.
+End report ROLRPTDTLROL [Mon Sep 11 15:38:40 2006].
+
+Starting report ROLRPTDTLIESS [Mon Sep 11 15:40:29 2006] ...
+End report ROLRPTDTLIESS [Mon Sep 11 15:40:41 2006].
+
+Starting report ROLRPTDTLIESS [Mon Sep 11 15:40:48 2006] ...
+End report ROLRPTDTLIESS [Mon Sep 11 17:15:28 2006].
+
+Starting report ROLRPTNVDDSC [Wed Sep 13 10:57:11 2006] ...
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+End report ROLRPTNVDDSC [Wed Sep 13 10:57:11 2006].
+
+Starting report ROLRPTINDROL [Fri Sep 22 12:48:03 2006] ...
+REP-0110: Unable to open file 'ROLRPTINDROL'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTINDROL'.
+End report ROLRPTINDROL [Fri Sep 22 12:48:03 2006].
+
+Starting report ROLRPTINDROL [Fri Sep 22 12:48:31 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTINDROL [Fri Sep 22 12:48:43 2006].
+
+Starting report ROLRPTINDROL [Fri Sep 22 12:48:47 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report ROLRPTINDROL [Fri Sep 22 12:48:48 2006].
+
+Starting report ROLRPTINDROL [Fri Sep 22 12:48:51 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report ROLRPTINDROL [Fri Sep 22 12:48:52 2006].
+
+Starting report ROLRPTINDROL [Fri Sep 22 12:48:57 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTINDROL [Fri Sep 22 12:49:05 2006].
+
+Starting report ROLRPTINDROL [Fri Sep 22 12:51:21 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTINDROL [Fri Sep 22 12:51:30 2006].
+
+Starting report ROLRPTINDROL [Fri Sep 22 12:51:34 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report ROLRPTINDROL [Fri Sep 22 12:51:35 2006].
+
+Starting report ROLRPTDTLROL [Tue Sep 26 10:25:32 2006] ...
+End report ROLRPTDTLROL [Tue Sep 26 10:25:46 2006].
+
+Starting report ROLRPTDTLROL [Tue Sep 26 10:48:43 2006] ...
+End report ROLRPTDTLROL [Tue Sep 26 10:53:12 2006].
+
+Starting report ROLRPTDTLIESS [Tue Sep 26 11:39:54 2006] ...
+End report ROLRPTDTLIESS [Tue Sep 26 11:40:31 2006].
+
+Starting report ROLRPTDTLBNF [Tue Sep 26 11:57:12 2006] ...
+End report ROLRPTDTLBNF [Tue Sep 26 11:57:48 2006].
+
+Starting report ROLRPTROLFRMIESS [Tue Sep 26 12:44:25 2006] ...
+End report ROLRPTROLFRMIESS [Tue Sep 26 12:44:31 2006].
+
+Starting report ROLRPTROLFRMBNF [Tue Sep 26 12:51:55 2006] ...
+End report ROLRPTROLFRMBNF [Tue Sep 26 12:52:03 2006].
+
+Starting report ROLRPTCHQ [Wed Sep 27 10:45:05 2006] ...
+End report ROLRPTCHQ [Wed Sep 27 10:45:39 2006].
+
+Starting report ROLRPTPLNIESS [Mon Oct 02 13:10:06 2006] ...
+End report ROLRPTPLNIESS [Mon Oct 02 13:10:23 2006].
+
+Starting report ROLRPTPLNIESS [Mon Oct 02 13:11:30 2006] ...
+End report ROLRPTPLNIESS [Mon Oct 02 13:11:55 2006].
+
+Starting report ROLRPTINDROL [Tue Oct 03 11:35:33 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTINDROL [Tue Oct 03 11:35:46 2006].
+
+Starting report ROLRPTINDROL [Tue Oct 03 11:56:50 2006] ...
+End report ROLRPTINDROL [Tue Oct 03 11:57:04 2006].
+
+Starting report ROLRPTINDROLIESS [Tue Oct 03 12:08:22 2006] ...
+End report ROLRPTINDROLIESS [Tue Oct 03 12:08:39 2006].
+
+Starting report ROLRPTINDROLIESS [Tue Oct 03 12:08:45 2006] ...
+End report ROLRPTINDROLIESS [Tue Oct 03 12:09:20 2006].
+
+Starting report ROLRPTINDROLBNF [Tue Oct 03 12:09:38 2006] ...
+End report ROLRPTINDROLBNF [Tue Oct 03 12:09:50 2006].
+
+Starting report ROLRPTINDROLBNF [Tue Oct 03 12:09:54 2006] ...
+End report ROLRPTINDROLBNF [Tue Oct 03 12:10:10 2006].
+
+Starting report ROLRPTINDROLBNF [Tue Oct 03 12:11:29 2006] ...
+End report ROLRPTINDROLBNF [Tue Oct 03 12:12:19 2006].
+
+Starting report ROLRPTROLTOT [Tue Oct 03 12:18:04 2006] ...
+REP-0110: Unable to open file 'ROLRPTROLTOT'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTROLTOT'.
+End report ROLRPTROLTOT [Tue Oct 03 12:18:05 2006].
+
+Starting report ROLRPTROLTOTCHQ [Tue Oct 03 12:19:39 2006] ...
+REP-0110: Unable to open file 'ROLRPTROLTOTCHQ'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTROLTOTCHQ'.
+End report ROLRPTROLTOTCHQ [Tue Oct 03 12:19:40 2006].
+
+Starting report ROLRPTROLTOT [Tue Oct 03 12:51:41 2006] ...
+End report ROLRPTROLTOT [Tue Oct 03 12:51:42 2006].
+
+Starting report ROLRPTROLTOT [Tue Oct 03 12:52:00 2006] ...
+End report ROLRPTROLTOT [Tue Oct 03 12:52:01 2006].
+
+Starting report ROLRPTROLTOT [Tue Oct 03 12:52:14 2006] ...
+End report ROLRPTROLTOT [Tue Oct 03 12:52:18 2006].
+
+Starting report ROLRPTROLTOT [Tue Oct 03 12:52:24 2006] ...
+End report ROLRPTROLTOT [Tue Oct 03 12:52:37 2006].
+
+Starting report ROLRPTROLTOT [Tue Oct 03 12:57:27 2006] ...
+End report ROLRPTROLTOT [Tue Oct 03 12:57:30 2006].
+
+Starting report ROLRPTROLTOT [Tue Oct 03 12:57:37 2006] ...
+End report ROLRPTROLTOT [Tue Oct 03 12:57:55 2006].
+
+Starting report ROLRPTROLTOTCHQ [Tue Oct 03 13:00:29 2006] ...
+End report ROLRPTROLTOTCHQ [Tue Oct 03 13:21:52 2006].
+
+Starting report ROLRPTPLNIESS [Thu Jan 05 10:59:19 2006] ...
+End report ROLRPTPLNIESS [Thu Jan 05 11:02:43 2006].
+
+Starting report ROLRPTROLTOTCHQ [Thu Jan 05 11:39:22 2006] ...
+
+Error submitting report [Thu Jan 05 11:42:16 2006] ...
+REP-0060: Unable to run synchronous job concurrently with another report.
+End report ROLRPTROLTOTCHQ [Thu Jan 05 11:42:19 2006].
+
+Starting report ROLRPTPLNIESS [Thu Jan 05 11:42:21 2006] ...
+End report ROLRPTPLNIESS [Thu Jan 05 11:44:51 2006].
+
+Starting report ROLRPTROLTOTCHQ [Thu Jan 05 11:45:16 2006] ...
+End report ROLRPTROLTOTCHQ [Thu Jan 05 11:45:29 2006].
+
+Starting report ROLRPTPRMEMP [Thu Jan 05 11:46:13 2006] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Thu Jan 05 11:46:14 2006].
+
+Starting report ROLRPTPRMEMP [Thu Jan 05 11:46:16 2006] ...
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRMEMP'.
+End report ROLRPTPRMEMP [Thu Jan 05 11:46:17 2006].
+
+Starting report ROLRPTPRMEMP [Thu Oct 05 12:23:19 2006] ...
+End report ROLRPTPRMEMP [Thu Oct 05 12:23:48 2006].
+
+Starting report ROLRPTPRMEMP [Thu Oct 05 12:25:16 2006] ...
+End report ROLRPTPRMEMP [Thu Oct 05 12:38:24 2006].
+
+Starting report ROLRPTPRMEMP [Thu Oct 05 12:45:52 2006] ...
+End report ROLRPTPRMEMP [Thu Oct 05 12:46:09 2006].
+
+Starting report ROLRPTPLNIESS [Thu Oct 05 13:01:15 2006] ...
+End report ROLRPTPLNIESS [Thu Oct 05 13:01:29 2006].
+
+Starting report ROLRPTSRI [Fri Oct 06 08:52:22 2006] ...
+REP-0110: Unable to open file 'ROLRPTSRI'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTSRI'.
+End report ROLRPTSRI [Fri Oct 06 08:52:22 2006].
+
+Starting report ROLRPTSRI [Fri Oct 06 08:52:31 2006] ...
+REP-0110: Unable to open file 'ROLRPTSRI'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTSRI'.
+End report ROLRPTSRI [Fri Oct 06 08:52:31 2006].
+
+Starting report ROLRPTSRI [Fri Oct 06 08:52:40 2006] ...
+REP-0110: Unable to open file 'ROLRPTSRI'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTSRI'.
+End report ROLRPTSRI [Fri Oct 06 08:52:40 2006].
+
+Starting report ROLRPTSRI [Fri Oct 06 09:19:40 2006] ...
+End report ROLRPTSRI [Fri Oct 06 09:21:18 2006].
+
+Starting report ROLRPTSRI [Fri Oct 06 09:24:25 2006] ...
+End report ROLRPTSRI [Fri Oct 06 09:25:48 2006].
+
+Starting report ROLRPTSRI [Fri Oct 06 10:48:25 2006] ...
+End report ROLRPTSRI [Fri Oct 06 10:49:07 2006].
+
+Starting report ROLRPTROLTOTCHQ [Fri Oct 06 11:43:25 2006] ...
+End report ROLRPTROLTOTCHQ [Fri Oct 06 11:43:53 2006].
+
+Starting report ROLRPTCFRROL [Fri Oct 06 11:45:05 2006] ...
+End report ROLRPTCFRROL [Fri Oct 06 11:45:55 2006].
+
+Starting report ROLRPTROLTOTCHQ [Fri Oct 06 11:46:08 2006] ...
+REP-0099: Report is aborted upon user request.
+End report ROLRPTROLTOTCHQ [Fri Oct 06 11:46:10 2006].
+
+Starting report ROLRPTROLTOTCHQ [Fri Oct 06 11:46:10 2006] ...
+REP-0099: Report is aborted upon user request.
+End report ROLRPTROLTOTCHQ [Fri Oct 06 11:46:11 2006].
+
+Starting report ROLRPTROLTOTCHQ [Fri Oct 06 11:46:24 2006] ...
+End report ROLRPTROLTOTCHQ [Fri Oct 06 11:46:37 2006].
+
+Starting report ROLRPTCFRROL [Fri Oct 06 11:54:53 2006] ...
+End report ROLRPTCFRROL [Fri Oct 06 11:55:16 2006].
+
+Starting report ROLRPTCFRROL [Tue Oct 10 09:24:57 2006] ...
+End report ROLRPTCFRROL [Tue Oct 10 09:26:41 2006].
+
+Starting report ROLRPTORGEMP [Tue Oct 10 10:18:19 2006] ...
+End report ROLRPTORGEMP [Tue Oct 10 10:18:45 2006].
+
+Starting report ROLRPTLSTEMP [Tue Oct 10 10:21:37 2006] ...
+End report ROLRPTLSTEMP [Tue Oct 10 10:22:15 2006].
+
+Starting report ROLRPTXIIIEMP [Tue Oct 10 10:30:12 2006] ...
+REP-0110: Unable to open file 'ROLRPTXIIIEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTXIIIEMP'.
+End report ROLRPTXIIIEMP [Tue Oct 10 10:30:13 2006].
+
+Starting report ROLRPTXIIIEMP [Tue Oct 10 11:06:25 2006] ...
+End report ROLRPTXIIIEMP [Tue Oct 10 11:06:41 2006].
+
+Starting report ROLRPTXIVEMP [Tue Oct 10 11:06:50 2006] ...
+REP-0110: Unable to open file 'ROLRPTXIVEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTXIVEMP'.
+End report ROLRPTXIVEMP [Tue Oct 10 11:06:51 2006].
+
+Starting report ROLRPTCHQBNO [Tue Oct 10 11:07:05 2006] ...
+REP-0110: Unable to open file 'ROLRPTCHQBNO'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTCHQBNO'.
+End report ROLRPTCHQBNO [Tue Oct 10 11:07:05 2006].
+
+Starting report ROLRPTCHQBNO [Tue Oct 10 11:07:35 2006] ...
+REP-0110: Unable to open file 'ROLRPTCHQBNO'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTCHQBNO'.
+End report ROLRPTCHQBNO [Tue Oct 10 11:07:36 2006].
+
+Starting report ROLRPTCHQBNO [Tue Oct 10 11:08:04 2006] ...
+REP-0110: Unable to open file 'ROLRPTCHQBNO'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTCHQBNO'.
+End report ROLRPTCHQBNO [Tue Oct 10 11:08:04 2006].
+
+Starting report ROLRPTXIVINS [Tue Oct 10 11:08:13 2006] ...
+REP-0110: Unable to open file 'ROLRPTXIVINS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTXIVINS'.
+End report ROLRPTXIVINS [Tue Oct 10 11:08:13 2006].
+
+Starting report ROLRPTFNDRSV [Tue Oct 10 11:08:52 2006] ...
+REP-0110: Unable to open file 'ROLRPTFNDRSV'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTFNDRSV'.
+End report ROLRPTFNDRSV [Tue Oct 10 11:08:52 2006].
+
+Starting report ROLRPTXIVEMP [Tue Oct 10 11:09:22 2006] ...
+REP-0110: Unable to open file 'ROLRPTXIVEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTXIVEMP'.
+End report ROLRPTXIVEMP [Tue Oct 10 11:09:22 2006].
+
+Starting report ROLRPTXIIIINS [Tue Oct 10 11:23:33 2006] ...
+REP-0110: Unable to open file 'ROLRPTXIIIINS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTXIIIINS'.
+End report ROLRPTXIIIINS [Tue Oct 10 11:23:33 2006].
+
+Starting report ROLRPTXIIIINS [Tue Oct 10 11:28:36 2006] ...
+REP-0110: Unable to open file 'ROLRPTXIIIINS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTXIIIINS'.
+End report ROLRPTXIIIINS [Tue Oct 10 11:28:37 2006].
+
+Starting report ROLRPTXIVEMP [Tue Oct 10 13:12:14 2006] ...
+End report ROLRPTXIVEMP [Tue Oct 10 13:12:27 2006].
+
+Starting report ROLRPTXIVEMP [Tue Oct 10 13:14:42 2006] ...
+End report ROLRPTXIVEMP [Tue Oct 10 13:14:59 2006].
+
+Starting report ROLRPTXIVINS [Tue Oct 10 13:15:03 2006] ...
+REP-0110: Unable to open file 'ROLRPTXIVINS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTXIVINS'.
+End report ROLRPTXIVINS [Tue Oct 10 13:15:04 2006].
+
+Starting report ROLRPTXIVEMP [Wed Oct 11 08:38:23 2006] ...
+End report ROLRPTXIVEMP [Wed Oct 11 08:39:11 2006].
+
+Starting report ROLRPTXIVINS [Wed Oct 11 08:39:19 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTXIVINS [Wed Oct 11 08:40:52 2006].
+
+Starting report ROLRPTFNDRSV [Wed Oct 11 09:20:39 2006] ...
+End report ROLRPTFNDRSV [Wed Oct 11 09:21:01 2006].
+
+Starting report ROLRPTBNOCTR [Wed Oct 11 09:22:34 2006] ...
+REP-0110: Unable to open file 'ROLRPTBNOCTR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTBNOCTR'.
+End report ROLRPTBNOCTR [Wed Oct 11 09:22:34 2006].
+
+Starting report ROLRPTBNOCTR [Thu Oct 12 08:34:28 2006] ...
+REP-0110: Unable to open file 'ROLRPTBNOCTR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTBNOCTR'.
+End report ROLRPTBNOCTR [Thu Oct 12 08:34:28 2006].
+
+Starting report ROLRPTSLDDCT [Thu Oct 12 08:58:41 2006] ...
+REP-0110: Unable to open file 'ROLRPTSLDDCT'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTSLDDCT'.
+End report ROLRPTSLDDCT [Thu Oct 12 08:58:41 2006].
+
+Starting report ROLRPTBNOCTR [Thu Oct 12 10:29:37 2006] ...
+End report ROLRPTBNOCTR [Thu Oct 12 10:30:10 2006].
+
+Starting report ROLRPTNVDDSC [Thu Oct 12 11:21:00 2006] ...
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTNVDDSC'.
+End report ROLRPTNVDDSC [Thu Oct 12 11:21:00 2006].
+
+Starting report ROLRPTPLNIESS [Mon Nov 06 11:59:33 2006] ...
+End report ROLRPTPLNIESS [Mon Nov 06 12:03:52 2006].
+
+Starting report ROLRPTPLNIESS [Mon Nov 06 12:04:05 2006] ...
+End report ROLRPTPLNIESS [Mon Nov 06 12:08:41 2006].
+
+Starting report ACTFJORPTASGUSUFCH [Mon Nov 06 12:28:20 2006] ...
+End report ACTFJORPTASGUSUFCH [Mon Nov 06 12:28:42 2006].
+
+Starting report ACTFJORPTASGDPR [Mon Nov 06 14:16:12 2006] ...
+End report ACTFJORPTASGDPR [Mon Nov 06 14:21:13 2006].
+
+Starting report ACTFJORPTASGDPR [Mon Nov 06 14:32:07 2006] ...
+End report ACTFJORPTASGDPR [Mon Nov 06 14:32:19 2006].
+
+Starting report ROLRPTXIVEMP [Tue Nov 14 11:57:48 2006] ...
+End report ROLRPTXIVEMP [Tue Nov 14 11:57:59 2006].
+
+Starting report ROLRPTCHQBNO [Thu Nov 23 10:34:17 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTCHQBNO [Thu Nov 23 10:34:25 2006].
+
+Starting report ROLRPTINDROL [Fri Dec 01 10:17:30 2006] ...
+REP-1849: Failed while printing.
+REP-1849: Failed while printing.
+REP-1849: Failed while printing.
+REP-1849: Failed while printing.
+End report ROLRPTINDROL [Fri Dec 01 10:21:51 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:17:34 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:17:42 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:17:46 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:17:49 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:17:53 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:17:56 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:17:58 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:18:00 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:18:03 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:18:05 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:18:08 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:18:10 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:18:13 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:18:15 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 09:18:22 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 09:18:25 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 15:24:37 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 15:24:44 2006].
+
+Starting report ROLRPTEMP [Thu Dec 07 15:32:27 2006] ...
+REP-0110: Unable to open file 'ROLRPTEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTEMP'.
+End report ROLRPTEMP [Thu Dec 07 15:32:27 2006].
+
+Starting report ROLRPTEMP [Thu Dec 07 15:32:41 2006] ...
+REP-0110: Unable to open file 'ROLRPTEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTEMP'.
+End report ROLRPTEMP [Thu Dec 07 15:32:41 2006].
+
+Starting report ROLRPTEMP [Thu Dec 07 15:32:48 2006] ...
+REP-0110: Unable to open file 'ROLRPTEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTEMP'.
+End report ROLRPTEMP [Thu Dec 07 15:32:48 2006].
+
+Starting report ROLRPTEMP [Thu Dec 07 15:33:06 2006] ...
+REP-0110: Unable to open file 'ROLRPTEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTEMP'.
+End report ROLRPTEMP [Thu Dec 07 15:33:07 2006].
+
+Starting report ROLRPTPRM [Thu Dec 07 15:33:13 2006] ...
+REP-0110: Unable to open file 'ROLRPTPRM'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRM'.
+End report ROLRPTPRM [Thu Dec 07 15:33:13 2006].
+
+Starting report ROLRPTPRM [Thu Dec 07 15:33:17 2006] ...
+REP-0110: Unable to open file 'ROLRPTPRM'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPRM'.
+End report ROLRPTPRM [Thu Dec 07 15:33:18 2006].
+
+Starting report ROLRPTDTLROL [Thu Dec 07 15:33:29 2006] ...
+End report ROLRPTDTLROL [Thu Dec 07 15:33:46 2006].
+
+Starting report ROLRPTFRM [Thu Dec 07 15:34:40 2006] ...
+REP-0110: Unable to open file 'ROLRPTFRM'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTFRM'.
+End report ROLRPTFRM [Thu Dec 07 15:34:40 2006].
+
+Starting report ROLRPTINDROL [Thu Dec 07 15:40:53 2006] ...
+End report ROLRPTINDROL [Thu Dec 07 15:40:56 2006].
+
+Starting report ROLRPTGRN [Thu Dec 07 15:48:52 2006] ...
+REP-0110: Unable to open file 'ROLRPTGRN'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTGRN'.
+End report ROLRPTGRN [Thu Dec 07 15:48:53 2006].
+
+Starting report ROLRPTPLIESSH [Thu Dec 07 15:50:45 2006] ...
+REP-0110: Unable to open file 'ROLRPTPLIESSH'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPLIESSH'.
+End report ROLRPTPLIESSH [Thu Dec 07 15:50:45 2006].
+
+Starting report ROLRPTPLIESSH [Thu Dec 07 15:50:57 2006] ...
+REP-0110: Unable to open file 'ROLRPTPLIESSH'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPLIESSH'.
+End report ROLRPTPLIESSH [Thu Dec 07 15:50:57 2006].
+
+Starting report ROLRPTPLIESSH [Thu Dec 07 15:51:31 2006] ...
+REP-0110: Unable to open file 'ROLRPTPLIESSH'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTPLIESSH'.
+End report ROLRPTPLIESSH [Thu Dec 07 15:51:31 2006].
+
+Starting report ROLRPTBNOCTR [Mon Dec 18 14:53:47 2006] ...
+End report ROLRPTBNOCTR [Mon Dec 18 14:53:59 2006].
+
+Starting report ROLRPTINDROL [Mon Jan 29 22:53:53 2007] ...
+End report ROLRPTINDROL [Mon Jan 29 22:54:49 2007].
+
+Starting report ROLRPTINDROL [Mon Jan 29 22:54:54 2007] ...
+End report ROLRPTINDROL [Mon Jan 29 22:55:28 2007].
+
+Starting report ROLRPTINDROL [Thu Feb 01 14:33:14 2007] ...
+End report ROLRPTINDROL [Thu Feb 01 14:33:37 2007].
+
+Starting report ROLRPTINDROL [Thu Feb 01 14:41:23 2007] ...
+End report ROLRPTINDROL [Thu Feb 01 14:42:18 2007].
+
+Starting report ROLRPTINDROL [Fri Feb 02 08:34:32 2007] ...
+End report ROLRPTINDROL [Fri Feb 02 08:36:00 2007].
+
+Starting report ROLRPTDTLBNF [Fri Feb 02 10:40:42 2007] ...
+End report ROLRPTDTLBNF [Fri Feb 02 10:41:34 2007].
+
+Starting report ROLRPTDTLBNF [Fri Feb 02 10:42:18 2007] ...
+End report ROLRPTDTLBNF [Fri Feb 02 10:46:41 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 10:54:43 2007] ...
+End report ROLRPTDTLIESS [Fri Feb 02 10:57:22 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 12:36:43 2007] ...
+End report ROLRPTDTLIESS [Fri Feb 02 12:38:04 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 12:39:22 2007] ...
+REP-0110: Unable to open file 'ROLRPTDTLIESS'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTDTLIESS'.
+End report ROLRPTDTLIESS [Fri Feb 02 12:39:27 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 12:43:15 2007] ...
+REP-1813: Object 'F_ALIAS' too large to fit in matrix cell.
+REP-0594: No report output generated.
+End report ROLRPTDTLIESS [Fri Feb 02 12:44:06 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 12:46:00 2007] ...
+End report ROLRPTDTLIESS [Fri Feb 02 12:49:46 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 12:50:29 2007] ...
+End report ROLRPTDTLIESS [Fri Feb 02 12:51:35 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 12:56:00 2007] ...
+End report ROLRPTDTLIESS [Fri Feb 02 12:57:58 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 13:00:42 2007] ...
+End report ROLRPTDTLIESS [Fri Feb 02 13:40:48 2007].
+
+Starting report ROLRPTDTLIESS [Fri Feb 02 13:40:55 2007] ...
+End report ROLRPTDTLIESS [Fri Feb 02 13:42:57 2007].
+
+Starting report ROLRPTDTLROL [Fri Feb 02 13:43:55 2007] ...
+End report ROLRPTDTLROL [Fri Feb 02 13:44:50 2007].
+
+Starting report ROLRPTDTLROL [Fri Feb 02 14:33:11 2007] ...
+End report ROLRPTDTLROL [Fri Feb 02 14:34:21 2007].
+
+Starting report ROLRPTDTLROL [Fri Feb 02 14:43:06 2007] ...
+End report ROLRPTDTLROL [Fri Feb 02 14:43:51 2007].
+
+Starting report ROLRPTINDROL [Thu Feb 08 23:49:31 2007] ...
+End report ROLRPTINDROL [Thu Feb 08 23:49:49 2007].
+
+Starting report ROLRPTINDROL [Thu Feb 08 23:49:57 2007] ...
+End report ROLRPTINDROL [Thu Feb 08 23:50:30 2007].
+
+Starting report ROLRPTINDROL [Thu Feb 08 23:54:24 2007] ...
+End report ROLRPTINDROL [Thu Feb 08 23:55:28 2007].
+
+Starting report ROLRPTINDROL [Thu Feb 08 23:57:18 2007] ...
+End report ROLRPTINDROL [Thu Feb 08 23:57:55 2007].
+
+Starting report ROLRPTDTLROL [Wed Mar 07 15:43:40 2007] ...
+End report ROLRPTDTLROL [Wed Mar 07 15:43:48 2007].
+
+Starting report ROLRPTDTLROL [Wed Mar 07 15:43:55 2007] ...
+End report ROLRPTDTLROL [Wed Mar 07 15:44:59 2007].
+
+Starting report ROLRPTBNOCTR [Wed Mar 28 18:04:52 2007] ...
+End report ROLRPTBNOCTR [Wed Mar 28 18:05:20 2007].
+
+Starting report ROLRPTROLTOT [Thu Mar 29 18:52:56 2007] ...
+End report ROLRPTROLTOT [Thu Mar 29 18:53:20 2007].
+
+Starting report ROLRPTROLTOTCHQ [Thu Mar 29 18:53:36 2007] ...
+End report ROLRPTROLTOTCHQ [Thu Mar 29 18:53:53 2007].
+
+Starting report ROLRPTDTLROL [Thu Mar 29 18:54:16 2007] ...
+End report ROLRPTDTLROL [Thu Mar 29 18:55:41 2007].
+
+Starting report ROLRPTROLTOTCHQ [Thu Mar 29 18:57:10 2007] ...
+End report ROLRPTROLTOTCHQ [Thu Mar 29 18:57:35 2007].
+
+Starting report ROLRPTROLTOTCHQ [Thu Mar 29 18:58:14 2007] ...
+End report ROLRPTROLTOTCHQ [Thu Mar 29 18:58:25 2007].
+
+Starting report ROLRPTROLTOT [Thu Mar 29 18:58:44 2007] ...
+End report ROLRPTROLTOT [Thu Mar 29 18:58:53 2007].
+
+Starting report ROLRPTROLTOT [Thu Mar 29 19:00:19 2007] ...
+End report ROLRPTROLTOT [Thu Mar 29 19:01:16 2007].
+
+Starting report ROLRPTCHQBNO [Tue Apr 03 12:41:36 2007] ...
+
+Error submitting report [Tue Apr 03 12:41:43 2007] ...
+REP-0060: Unable to run synchronous job concurrently with another report.
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTCHQBNO [Tue Apr 03 12:41:49 2007].
+
+Starting report ROLRPTBNOCTR [Tue Apr 03 12:41:50 2007] ...
+End report ROLRPTBNOCTR [Tue Apr 03 12:42:15 2007].
+
+Starting report ROLRPTBNOCTR [Tue Apr 03 12:44:11 2007] ...
+End report ROLRPTBNOCTR [Tue Apr 03 12:47:14 2007].
+
+Starting report ROLRPTSRI [Thu Apr 12 15:06:47 2007] ...
+REP-1510: Group Manager: unable to compute column 'CF_CONTADOR'.
+End report ROLRPTSRI [Thu Apr 12 15:07:02 2007].
+
+Starting report ROLRPTSRI [Thu Apr 12 15:07:16 2007] ...
+REP-1510: Group Manager: unable to compute column 'CF_CONTADOR'.
+End report ROLRPTSRI [Thu Apr 12 15:07:27 2007].
+
+Starting report ROLRPTSRI [Thu Apr 12 15:10:26 2007] ...
+End report ROLRPTSRI [Thu Apr 12 15:40:04 2007].
+
+Starting report ROLRPTDTLIESS [Tue Apr 24 11:15:16 2007] ...
+REP-0099: Report is aborted upon user request.
+End report ROLRPTDTLIESS [Tue Apr 24 11:15:27 2007].
+
+Starting report ROLRPTDTLIESS [Tue Apr 24 11:15:30 2007] ...
+End report ROLRPTDTLIESS [Tue Apr 24 11:16:50 2007].
+
+Starting report ROLRPTDTLIESS [Tue Apr 24 11:21:39 2007] ...
+End report ROLRPTDTLIESS [Tue Apr 24 11:24:12 2007].
+
+Starting report ROLRPTDTLIESS [Tue Apr 24 11:24:15 2007] ...
+End report ROLRPTDTLIESS [Tue Apr 24 11:39:45 2007].
+
+Starting report ROLRPTINDROL [Tue Apr 24 14:27:52 2007] ...
+End report ROLRPTINDROL [Tue Apr 24 14:28:11 2007].
+
+Starting report ROLRPTDTLIESS [Tue May 08 15:15:49 2007] ...
+End report ROLRPTDTLIESS [Tue May 08 15:18:26 2007].
+
+Starting report ROLRPTDTLIESS [Tue May 08 16:27:08 2007] ...
+End report ROLRPTDTLIESS [Tue May 08 16:42:51 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 11:07:43 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 11:09:51 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 11:09:55 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 11:12:08 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 11:12:16 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 11:12:36 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 11:12:39 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 11:13:26 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 11:13:29 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 11:14:24 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 12:39:58 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 12:40:26 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 12:42:09 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 12:44:06 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 12:52:42 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 12:53:12 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 12:53:17 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 12:53:35 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 19:25:49 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 19:26:53 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 20:13:37 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 20:22:13 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 20:22:14 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 20:23:48 2007].
+
+Starting report ROLRPTCFRROL [Wed Jun 13 20:24:01 2007] ...
+End report ROLRPTCFRROL [Wed Jun 13 20:37:35 2007].
+
+Starting report ROLRPTCFRROL [Fri Jun 15 17:07:20 2007] ...
+End report ROLRPTCFRROL [Fri Jun 15 17:07:36 2007].
+
+Starting report ROLRPTCFRROL [Fri Jun 15 17:07:40 2007] ...
+End report ROLRPTCFRROL [Fri Jun 15 17:08:35 2007].
+
+Starting report ROLRPTCFRROL [Fri Jun 15 17:08:39 2007] ...
+End report ROLRPTCFRROL [Fri Jun 15 17:08:48 2007].
+
+Starting report ROLRPTDTLIESS [Tue Jun 19 10:32:16 2007] ...
+REP-0509: Invalid number.
+End report ROLRPTDTLIESS [Tue Jun 19 12:03:40 2007].
+
+Starting report ROLRPTBNOCTR [Wed Jul 04 11:03:14 2007] ...
+End report ROLRPTBNOCTR [Wed Jul 04 11:13:25 2007].
+
+Starting report ROLRPTBNOCTR [Wed Jul 04 11:13:31 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTBNOCTR [Wed Jul 04 11:43:28 2007].
+
+Starting report ROLRPTDTLIESS [Wed Jul 04 11:47:41 2007] ...
+End report ROLRPTDTLIESS [Wed Jul 04 14:37:19 2007].
+
+Starting report ROLRPTDTLIESS [Wed Jul 04 14:51:09 2007] ...
+End report ROLRPTDTLIESS [Wed Jul 04 15:05:31 2007].
+
+Starting report ROLRPTDTLROL [Wed Jul 11 09:30:44 2007] ...
+End report ROLRPTDTLROL [Wed Jul 11 09:30:52 2007].
+
+Starting report ROLRPTDTLROL [Wed Jul 11 09:30:56 2007] ...
+End report ROLRPTDTLROL [Wed Jul 11 09:31:00 2007].
+
+Starting report ROLRPTDTLROL [Wed Jul 11 09:31:03 2007] ...
+End report ROLRPTDTLROL [Wed Jul 11 09:32:07 2007].
+
+Starting report ROLRPTXIVINS [Tue Jul 31 08:32:26 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTXIVINS [Tue Jul 31 08:32:44 2007].
+
+Starting report ROLRPTCHQBNO [Tue Jul 31 08:36:15 2007] ...
+End report ROLRPTCHQBNO [Tue Jul 31 08:37:01 2007].
+
+Starting report ROLRPTCHQBNO [Tue Jul 31 08:37:06 2007] ...
+End report ROLRPTCHQBNO [Tue Jul 31 08:37:26 2007].
+
+Starting report ROLRPTXIVINS [Tue Jul 31 08:37:41 2007] ...
+End report ROLRPTXIVINS [Tue Jul 31 08:38:06 2007].
+
+Starting report ROLRPTXIVINS [Tue Jul 31 08:38:54 2007] ...
+End report ROLRPTXIVINS [Tue Jul 31 08:48:27 2007].
+
+Starting report ROLRPTCHQBNO [Tue Jul 31 08:53:57 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTCHQBNO [Tue Jul 31 08:54:18 2007].
+
+Starting report ROLRPTINDROL [Mon Sep 03 12:21:03 2007] ...
+End report ROLRPTINDROL [Mon Sep 03 12:24:59 2007].
+
+Starting report ROLRPTINDROL [Mon Sep 03 12:32:05 2007] ...
+End report ROLRPTINDROL [Mon Sep 03 12:32:24 2007].
+
+Starting report ROLRPTINDROL [Mon Sep 03 12:34:49 2007] ...
+End report ROLRPTINDROL [Mon Sep 03 12:35:08 2007].
+
+Starting report ROLRPTINDROL [Mon Sep 03 12:37:07 2007] ...
+End report ROLRPTINDROL [Mon Sep 03 12:37:27 2007].
+
+Starting report ROLRPTDTLROL [Mon Oct 08 12:40:18 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTDTLROL [Mon Oct 08 12:40:55 2007].
+
+Starting report ROLRPTNVDDSC [Mon Oct 08 12:41:15 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTNVDDSC [Mon Oct 08 12:41:53 2007].
+
+Starting report ROLRPTINDROL [Mon Oct 08 12:42:22 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTINDROL [Mon Oct 08 12:42:52 2007].
+
+Starting report ROLRPTXIVEMP [Mon Oct 08 12:44:05 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTXIVEMP [Mon Oct 08 12:44:55 2007].
+
+Starting report ROLRPTXIIIEMP [Mon Oct 08 12:44:58 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTXIIIEMP [Mon Oct 08 12:45:17 2007].
+
+Starting report ROLRPTFNDRSV [Mon Oct 08 12:45:22 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTFNDRSV [Mon Oct 08 12:45:43 2007].
+
+Starting report ROLRPTBNOCTR [Mon Oct 08 12:45:49 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTBNOCTR [Mon Oct 08 12:46:05 2007].
+
+Starting report ROLRPTBNOCTR [Mon Oct 08 12:46:10 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report ROLRPTBNOCTR [Mon Oct 08 12:46:15 2007].
+
+Starting report ROLRPTLQD [Mon Oct 08 12:46:36 2007] ...
+REP-0110: Unable to open file 'ROLRPTLQD'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTLQD'.
+End report ROLRPTLQD [Mon Oct 08 12:46:37 2007].
+
+Starting report ROLRPTLQD [Mon Oct 08 12:46:52 2007] ...
+REP-0110: Unable to open file 'ROLRPTLQD'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTLQD'.
+End report ROLRPTLQD [Mon Oct 08 12:46:52 2007].
+
+Starting report ROLRPTFCHEMP [Mon Oct 08 12:49:15 2007] ...
+REP-0110: Unable to open file 'ROLRPTFCHEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTFCHEMP'.
+End report ROLRPTFCHEMP [Mon Oct 08 12:49:15 2007].
+
+Starting report ROLRPTFCHEMP [Mon Oct 08 12:49:20 2007] ...
+REP-0110: Unable to open file 'ROLRPTFCHEMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'ROLRPTFCHEMP'.
+End report ROLRPTFCHEMP [Mon Oct 08 12:49:21 2007].
+
+Starting report ROLRPTCFRROL [Wed Oct 10 10:03:45 2007] ...
+End report ROLRPTCFRROL [Wed Oct 10 10:38:24 2007].
+
+Starting report ROLRPTCFRROL [Wed Oct 10 10:44:52 2007] ...
+End report ROLRPTCFRROL [Wed Oct 10 10:46:01 2007].
+
+Starting report ROLRPTFRM107 [Wed Jan 23 16:37:06 2008] ...
+End report ROLRPTFRM107 [Wed Jan 23 16:41:51 2008].
+
+Starting report ROLRPTCFRROL [Mon Mar 24 10:59:23 2008] ...
+End report ROLRPTCFRROL [Mon Mar 24 11:12:58 2008].
+
+Starting report ROLRPTROLTOT [Mon Mar 31 10:15:37 2008] ...
+End report ROLRPTROLTOT [Mon Mar 31 10:16:18 2008].
+
+Starting report ROLRPTROLTOTCHQ [Mon Mar 31 10:16:46 2008] ...
+End report ROLRPTROLTOTCHQ [Mon Mar 31 10:17:06 2008].
+
+Starting report ROLRPTCFRROL [Mon Mar 31 10:31:39 2008] ...
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report ROLRPTCFRROL [Mon Mar 31 10:31:57 2008].
+
+Starting report ROLRPTCFRROL [Mon Mar 31 10:32:00 2008] ...
+End report ROLRPTCFRROL [Mon Mar 31 10:34:44 2008].
+
+Starting report ROLRPTPLNIESS [Fri Apr 11 13:56:43 2008] ...
+REP-0099: Report is aborted upon user request.
+End report ROLRPTPLNIESS [Fri Apr 11 13:58:07 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 13:58:13 2008] ...
+End report ROLRPTSRI [Fri Apr 11 13:59:41 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 14:03:51 2008] ...
+End report ROLRPTSRI [Fri Apr 11 14:03:54 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 14:04:02 2008] ...
+End report ROLRPTSRI [Fri Apr 11 14:04:06 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 14:04:10 2008] ...
+End report ROLRPTSRI [Fri Apr 11 14:04:15 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 14:04:20 2008] ...
+End report ROLRPTSRI [Fri Apr 11 14:04:32 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 14:04:37 2008] ...
+End report ROLRPTSRI [Fri Apr 11 14:05:57 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 14:06:14 2008] ...
+End report ROLRPTSRI [Fri Apr 11 14:12:47 2008].
+
+Starting report SRIRPTREOCMNS [Fri Apr 11 14:13:17 2008] ...
+End report SRIRPTREOCMNS [Fri Apr 11 14:13:20 2008].
+
+Starting report SRIRPTREOCMNS [Fri Apr 11 14:13:31 2008] ...
+End report SRIRPTREOCMNS [Fri Apr 11 14:13:34 2008].
+
+Starting report SRIRPTREOCMNS [Fri Apr 11 14:13:40 2008] ...
+End report SRIRPTREOCMNS [Fri Apr 11 14:17:33 2008].
+
+Starting report ROLRPTSRI [Fri Apr 11 14:18:00 2008] ...
+End report ROLRPTSRI [Fri Apr 11 14:18:28 2008].

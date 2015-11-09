@@ -1,0 +1,7 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\ICSC\CONVENIOS_EQUIVALENCIAS_MOD.drp
+--
+-- Generated for Oracle 9i on Wed Nov 16  11:27:55 2011 by Server Generator 6.5.96.5.6
+
+
+ALTER TABLE CG_REF_CODES DROP COLUMN RV_TYPE
+/

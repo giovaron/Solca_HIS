@@ -1,0 +1,469 @@
+
+Reconcile Report: \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\PROMOCIONES.lis
+
+Generated on Mon Jun 20  03:08:08 2011 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table PROMOCIONES                                                                                                               
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                               Permanent
+                                         Cluster                                                                                
+                                      Index Only                                      No                                      No
+
+                                          Cached                                                                        No Cache
+                            Initial Transactions                                                                               1
+                                Max Transactions                                                                             255
+                                    Percent Free                                                                              10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           24576
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSP
+                                        Parallel                                      No                                      No
+                                         Comment                                                                                
+Column PRM_PCN_NUMERO_HC                                                   * DIFFERENT *                           * DIFFERENT *
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       7                                       9 ***
+                                           Scale                                       0                                        
+                                       Mandatory                                     Yes                                      No ***
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column CODIGO                                                                   - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                       2                                       2
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                  código de la promoción                  código de la promoción
+Column PRS_CODIGO                                                               - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                       4                                       4
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                     Código del personal                     Código del personal
+Column DESCRIPCION                                                              - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                      40                                      40
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment    Nombre descriptivo de la promociones    Nombre descriptivo de la promociones
+Column FECHA                                                                    - same -                                - same -
+                                        Datatype                                    DATE                                    DATE
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                 SYSDATE                                 SYSDATE
+                                          Domain                                                                                
+                                         Comment Fecha en la que se ingresa el promoc... Fecha en la que se ingresa el promoc...
+Column ESTADO_DE_DISPONIBILIDAD                                                 - same -                                - same -
+                                        Datatype                                    CHAR                                    CHAR
+                                      Max Length                                       1                                       1
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                     'D'                                     'D'
+                                          Domain                ESTADO_DE_DISPONIBILIDAD                                         ***
+                                         Comment Si esta disponible, fuera de servici... Si esta disponible, fuera de servici...
+Column OBSERVACION                                                              - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     240                                     240
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment     Notas adicionales para la promoción     Notas adicionales para la promoción
+Column INGRESO_MINIMO                                                           - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                      21                                      21
+                                           Scale                                       6                                       6
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                       0                                       0
+                                          Domain                                  DINERO                                         ***
+                                         Comment                                                                                
+Column INGRESO_MAXIMO                                                           - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                      21                                      21
+                                           Scale                                       6                                       6
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                       0                                       0
+                                          Domain                                  DINERO                                         ***
+                                         Comment                                                                                
+Column MONTO_MAXIMO                                                             - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       6                                       6
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column EDAD_MAXIMA                                                              - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       3                                       3
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column NUMERO_MAX_BENEFICIARIO                                                  - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       2                                       2
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column NUMERO_MAX_DEPENDIENTES                                                  - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       2                                       2
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column UVR                                                                      - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       6                                       6
+                                           Scale                                       3                                       3
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column RESTRICCION                                                              - same -                                - same -
+                                        Datatype                                    CHAR                                    CHAR
+                                      Max Length                                       1                                       1
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                     'F'                                     'F'
+                                          Domain                                  LOGICO                                         ***
+                                         Comment                                                                                
+Column REQUIERE_AUDITORIA                                                                                    * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     240                                        
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                        
+                                   Default Value                                     'F'                                        
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+Index PRM_PRS_FK_I                                                              - same -                                - same -
+                                          Unique                                      No                                      No
+                                          Global                                      No                                      No
+                                       Bitmapped                                      No                                      No
+                              Compute Statistics                                      No                    * NOT DETERMINABLE *
+                                  Index Reversed                                      No                                      No
+                                          Nosort                                      No                    * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                                                               2
+                                Max Transactions                                                                             255
+                                    Percent Free                                                                              10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           24576
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                      TBINDICESP
+                                        Parallel                                      No                                      No
+
+                                Index Entry Type                            COLUMN BASED                            COLUMN BASED
+                                     Index Entry                              PRS_CODIGO                              PRS_CODIGO
+Primary Key PRMC_PK                                                             - same -                                - same -
+                                         Enabled                                     Yes                                     Yes
+                                        Deferred                                      No                                      No
+                                       Immediate                                      No                                      No
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Key Column                                  CODIGO                                  CODIGO
+
+Index PRMC_PK                                                                                                                   
+                                          Unique                                     Yes                                     Yes
+                                          Global                                      No                                      No
+                                       Bitmapped                                      No                                      No
+                              Compute Statistics                                      No                    * NOT DETERMINABLE *
+                                         Reverse                                      No                                      No
+                                          Nosort                                      No                    * NOT DETERMINABLE *
+
+
+
+                            Initial Transactions                                                                               2
+                                Max Transactions                                                                             255
+                                    Percent Free                                                                              10
+                                    Percent Used                                                                                
+                                 Initial Extents                                                                           24576
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                      TBINDICESP
+                                        Parallel                                      No                                      No
+
+Foreign Key PRM_PRS_FK                                                                                                          
+                                         Enabled                                     Yes                                     Yes
+                                        Deferred                                      No                                      No
+                                       Immediate                                      No                                      No
+                                  Cascade Delete                                RESTRICT                                RESTRICT
+                                  Cascade Update                                 CASCADE                                RESTRICT ***
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Join Table                                PERSONAL                                PERSONAL
+                                      Key Column                              PRS_CODIGO                              PRS_CODIGO
+
+                               Referenced Column                         PERSONAL.CODIGO                         PERSONAL.CODIGO
+
+Foreign Key PRM_PCN_FK                                                                                                          
+                                         Enabled                                     Yes                                     Yes
+                                        Deferred                                      No                                      No
+                                       Immediate                                      No                                      No
+                                  Cascade Delete                                RESTRICT                                RESTRICT
+                                  Cascade Update                                 CASCADE                                RESTRICT ***
+                                 Exception Table                                                            * NOT DETERMINABLE *
+                                      Join Table                               PACIENTES                               PACIENTES
+                                      Key Column                       PRM_PCN_NUMERO_HC                       PRM_PCN_NUMERO_HC
+
+                               Referenced Column                     PACIENTES.NUMERO_HC                     PACIENTES.NUMERO_HC
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                                  --------------------------------
+                                                  Table PROMOCIONES Differences: 9
+                                                  --------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+Table PROMOCIONES_JN                                                                                                            
+                                     Object Type                                                                                
+                                Data Persistence                               Permanent                               Permanent
+                                         Cluster                                                                                
+                                      Index Only                                      No                                      No
+
+                                          Cached                                                                        No Cache
+                            Initial Transactions                                                                               1
+                                Max Transactions                                                                             255
+                                    Percent Free                                      60                                      60
+                                    Percent Used                                       5                                        
+                                 Initial Extents                                                                           65536
+                                     Next Extent                                                                                
+                                     Min Extents                                                                               1
+                                     Max Extents                                                                              -1
+                                Percent Increase                                                                                
+                                       Freelists                                                                                
+                                 Freelist Groups                                                                                
+                                      Tablespace                                                                        TBDATOSG
+                                        Parallel                                      No                                      No
+                                         Comment Created by Oracle Designer Server Ge... Created by Oracle Designer Server Ge...
+Column JN_OPERATION                                                             - same -                                - same -
+                                        Datatype                                    CHAR                                    CHAR
+                                      Max Length                                       3                                       3
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_ORACLE_USER                                                           - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                      30                                      30
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_DATETIME                                                              - same -                                - same -
+                                        Datatype                                    DATE                                    DATE
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_NOTES                                                                 - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     240                                     240
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_APPLN                                                                 - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                      35                                      35
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column JN_SESSION                                                               - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                      38                                      38
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column PRM_PCN_NUMERO_HC                                                        - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       7                                       7
+                                           Scale                                       0                                        
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column CODIGO                                                                   - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                       2                                       2
+                                           Scale                                                                                
+                                       Mandatory                                     Yes                                     Yes
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column PRS_CODIGO                                                               - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                       4                                       4
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column DESCRIPCION                                                              - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                      40                                      40
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column FECHA                                                                    - same -                                - same -
+                                        Datatype                                    DATE                                    DATE
+                                      Max Length                                                                                
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column ESTADO_DE_DISPONIBILIDAD                                                 - same -                                - same -
+                                        Datatype                                    CHAR                                    CHAR
+                                      Max Length                                       1                                       1
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column OBSERVACION                                                              - same -                                - same -
+                                        Datatype                                VARCHAR2                                VARCHAR2
+                                      Max Length                                     240                                     240
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column INGRESO_MINIMO                                                           - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                      21                                      21
+                                           Scale                                       6                                       6
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column INGRESO_MAXIMO                                                           - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                      21                                      21
+                                           Scale                                       6                                       6
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column MONTO_MAXIMO                                                             - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       6                                       6
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column EDAD_MAXIMA                                                              - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       3                                       3
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column NUMERO_MAX_BENEFICIARIO                                                  - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       2                                       2
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column NUMERO_MAX_DEPENDIENTES                                                  - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       2                                       2
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column UVR                                                                      - same -                                - same -
+                                        Datatype                                  NUMBER                                  NUMBER
+                                      Max Length                                       6                                       6
+                                           Scale                                       3                                       3
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column RESTRICCION                                                              - same -                                - same -
+                                        Datatype                                    CHAR                                    CHAR
+                                      Max Length                                       1                                       1
+                                           Scale                                                                                
+                                       Mandatory                                      No                                      No
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+Column REQUIERE_AUDITORIA                                                                                    * NOT IN DATABASE * ***
+                                        Datatype                                VARCHAR2                                        
+                                      Max Length                                     240                                        
+                                           Scale                                                                                
+                                       Mandatory                                      No                                        
+                                   Default Value                                                                                
+                                          Domain                                                                                
+                                         Comment                                                                                
+
+
+
+                                    Snapshot Log                                      No                                      No
+
+
+
+                                                -----------------------------------
+                                                Table PROMOCIONES_JN Differences: 1
+                                                -----------------------------------
+
+
+====================================================================================================================================
+                                                       Total Differences: 10
+====================================================================================================================================

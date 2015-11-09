@@ -1,0 +1,36 @@
+DECLARE
+CURSOR cSeries IS
+SELECT TPORTNEMP_EMP_CODIGO           ,
+CMP_CLAVE                      ,
+CMP_FECHA                      ,
+TPOCMPEMP_TPOCMP_CODIGO        ,
+AUTORIZACION_SRI,SERIE_SRI,SECUENCIA_SRI
+FROM RETENCIONES
+WHERE (TPORTNEMP_EMP_CODIGO           ,
+CMP_CLAVE                      ,
+CMP_FECHA                      ,
+TPOCMPEMP_TPOCMP_CODIGO        ) IN
+(select TPORTNEMP_EMP_CODIGO           ,
+CMP_CLAVE                      ,
+CMP_FECHA                      ,
+TPOCMPEMP_TPOCMP_CODIGO
+ from retenciones
+where autorizacion_sri is null
+and estado='N')
+AND ESTADO='A'
+AND AUTORIZACION_SRI IS NOT NULL
+AND CMP_FECHA<'08/02/2007';
+BEGIN
+  FOR rSeries IN cSeries LOOP
+    DBMS_OUTPUT.PUT_LINE(rSeries.TPOCMPEMP_TPOCMP_CODIGO||'-'||rSeries.CMP_CLAVE||' SERIE '||rSeries.secuencia_sri);
+    UPDATE RETENCIONES
+    SET AUTORIZACION_SRI=rSeries.AUTORIZACION_SRI,
+        serie_sri=rSeries.serie_sri,
+        secuencia_sri=rSeries.secuencia_sri
+    WHERE TPORTNEMP_EMP_CODIGO=rSeries.TPORTNEMP_EMP_CODIGO and
+          CMP_CLAVE=rSeries.CMP_CLAVE AND
+          CMP_FECHA=rSeries.CMP_FECHA AND
+          TPOCMPEMP_TPOCMP_CODIGO=rSeries.TPOCMPEMP_TPOCMP_CODIGO
+          AND ESTADO='N' AND SERIE_SRI IS NULL;
+  END LOOP;
+END;

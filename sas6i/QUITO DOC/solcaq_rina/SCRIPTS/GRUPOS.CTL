@@ -1,0 +1,12 @@
+LOAD DATA
+INFILE 'F:\RINA\SOLCAQ\grupos.txt'
+BADFILE 'F:\RINA\SOLCAQ\grupos.bad'
+APPEND
+INTO TABLE GRUPOS_ACTIVOS_FIJOS
+FIELDS TERMINATED BY '	'
+(EMP_CODIGO  ,                   
+CODIGO       ,                  
+DESCRIPCION  ,                  
+ESTADO_DE_DISPONIBILIDAD       )
+
+

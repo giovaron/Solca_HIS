@@ -1,0 +1,147 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\VISTAS_CONTABILIZACION_ROL_PAGOS.lis
+
+Generated on Mon Aug 14  13:44:55 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View GASTOS_PAGOS_ESPECIALES                                                                                 * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition            SELECT CNTASC.EMP_CODIGO,...                                        
+
+                                         Comment                                                                                
+Column EMP_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column TERCERIZADORA                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+Column AGRUPADOR_TIPO                                                                                        * NOT IN DATABASE * ***
+                                                                                                                                
+Column MYR_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column CNT_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column SCNT_CODIGO                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column AXL_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL_CODIGO                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL2_CODIGO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL3_CODIGO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column CODIGO                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column NOMBRE                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column FECHA                                                                                                 * NOT IN DATABASE * ***
+                                                                                                                                
+Column NUMERO                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column VALOR                                                                                                 * NOT IN DATABASE * ***
+                                                                                                                                
+                                            -------------------------------------------
+                                            View GASTOS_PAGOS_ESPECIALES Differences: 1
+                                            -------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View GASTOS_ROLES_DE_PAGOS                                                                                   * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition            SELECT CNTASC.EMP_CODIGO,...                                        
+
+                                         Comment                                                                                
+Column EMP_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column TERCERIZADORA                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+Column AGRUPADOR_TIPO                                                                                        * NOT IN DATABASE * ***
+                                                                                                                                
+Column MYR_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column CNT_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column SCNT_CODIGO                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column AXL_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL_CODIGO                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL2_CODIGO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL3_CODIGO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column FECHA                                                                                                 * NOT IN DATABASE * ***
+                                                                                                                                
+Column NUMERO                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column VALOR                                                                                                 * NOT IN DATABASE * ***
+                                                                                                                                
+                                             -----------------------------------------
+                                             View GASTOS_ROLES_DE_PAGOS Differences: 1
+                                             -----------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View MOVIMIENTOS_TOTALES                                                   * DIFFERENT *                           * DIFFERENT *
+                                     Object Type                                                                                
+                               PL/SQL Definition                        SELECT 'ROL',...            SELECT EMPROL_EMP_CODIGO,... ***
+
+                                         Comment                                                                                
+                                              ---------------------------------------
+                                              View MOVIMIENTOS_TOTALES Differences: 1
+                                              ---------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View PASIVOS_ROLES_DE_PAGOS                                                                                  * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition            SELECT CNTASC.EMP_CODIGO,...                                        
+
+                                         Comment                                                                                
+Column EMP_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column TERCERIZADORA                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+Column MYR_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column CNT_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column SCNT_CODIGO                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column AXL_CODIGO                                                                                            * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL_CODIGO                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL2_CODIGO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column SAXL3_CODIGO                                                                                          * NOT IN DATABASE * ***
+                                                                                                                                
+Column PRMROL_CODIGO                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+Column PRMROL_TIPO                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column PRMROL_NOMBRE                                                                                         * NOT IN DATABASE * ***
+                                                                                                                                
+Column FECHA                                                                                                 * NOT IN DATABASE * ***
+                                                                                                                                
+Column NUMERO                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column VALOR                                                                                                 * NOT IN DATABASE * ***
+                                                                                                                                
+                                             ------------------------------------------
+                                             View PASIVOS_ROLES_DE_PAGOS Differences: 1
+                                             ------------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 4
+====================================================================================================================================

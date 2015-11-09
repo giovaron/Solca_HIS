@@ -1,0 +1,9 @@
+-- Y:\sas\guiones\cambios_solca_quito\empleados_roles.drp
+--
+-- Generated for Oracle 9i on Mon Aug 07  09:22:27 2006 by Server Generator 6.5.96.5.6
+
+
+
+ALTER TABLE EMPLEADOS_ROLES
+ DROP CONSTRAINT AVCON_866039_TIPO__000
+/

@@ -1,0 +1,13 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\subgrupos_tarifario.ind
+--
+-- Generated for Oracle 9i on Tue Jun 21  09:42:56 2011 by Server Generator 6.5.96.5.6
+  
+
+PROMPT Creating Index 'SBGTRF_GRPTRF_FK_I'
+CREATE INDEX SBGTRF_GRPTRF_FK_I ON SUBGRUPOS_TARIFARIO
+ (CONVENIO
+ ,TIPO
+ ,GRPTRF_CODIGO)
+/
+
+

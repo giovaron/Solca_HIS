@@ -1,0 +1,27 @@
+ INSERT INTO QMS_MDE_PARAMS@SOLCA
+ SELECT ID+10,
+ MDE_ID      ,
+ MPM_SUBTYPE  ,
+ NAME          ,
+ DATA_TYPE      ,
+ IND_MANDATORY   ,
+ IND_HIDE         ,
+ IND_UPPERCASE     ,
+ PROMPT             ,
+ DISPLAY_SEQNO       ,
+ PLENGTH              ,
+ DEFAULT_VALUE         ,
+ PFORMAT                ,
+ HINT_TEXT       ,
+ VALIDATION_CLAUSE,
+ ERROR_CODE       ,
+ LOV_QUERY        ,
+ LOV_WIDTH         ,
+ LOV_COL1_WIDTH     ,
+ LOV_COL2_WIDTH      ,
+ CREATED_BY           ,
+ CREATION_DATE         ,
+ LAST_UPDATED_BY ,
+ LAST_UPDATE_DATE
+ FROM QMS_MDE_PARAMS
+ WHERE MDE_ID > 148

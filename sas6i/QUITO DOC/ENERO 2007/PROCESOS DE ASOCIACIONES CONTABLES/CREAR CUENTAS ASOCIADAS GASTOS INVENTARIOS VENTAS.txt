@@ -1,0 +1,192 @@
+DECLARE
+-- INSUMOS QUIROFANO
+  CURSOR cCntAscINSQ IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U213047'AND 
+          TIPO_DE_CUENTA='INV' AND
+          TIPO_dE_ASOCIACION = 'GIN'; --=''U213047'   INSUMOS QRF -- SON.SUCCION # 18 (SON. PARA SUCCION # 18)
+-- MEDICAMENTOS quirofano
+  CURSOR cCntAscMedQ IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M320615' AND
+                    TIPO_DE_CUENTA='INV' AND
+          TIPO_dE_ASOCIACION = 'GIN'; --='M320615'   MEDICAMENTOS QRF -- EFEDRINA 6% 1ML AMPOLLA (EFEDRINA)
+-- MEDICAMENTOS no quirofano
+  CURSOR cCntAscMedNQ IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='I350836' AND
+                    TIPO_DE_CUENTA='INV' AND
+          TIPO_dE_ASOCIACION = 'GIN'; --='I350836'   MEDICAMENTOS NO QRF-- CLARITROMICINA 125MG / 50 ML SUSPENSION FRASCO 
+-- INSUMOS NO QUIROFANO
+  CURSOR cCntAscINSNQ IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='M330217'
+          AND TIPO_DE_CUENTA='INV' AND
+              TIPO_dE_ASOCIACION = 'GIN'; --=''M330217'   INSUMOS NO QRF -- LOCION HIDRATANTE 5% DE 125 ML (HIBRIBET LOCION)
+-- ITEMS INSUMOS QUIROFANO
+  CURSOR cItmCrgInsQ IS
+    select clave
+    from Items_QUIROFANO,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='INV' 
+    AND cntAsc.tipo_de_asociacion(+) = 'GIN'
+    and cntasc.clave_relacionada is null 
+    and substr(clave,1,1) <> 'M';
+--    and iva>0;  -- no se considera el iva por que puede haber insumos con iva 0
+-- MEDICAMENTOS QUIROFANO
+  CURSOR cItmCrgMedQ IS
+    select clave
+    from Items_QUIROFANO,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='INV' 
+    AND cntAsc.tipo_de_asociacion(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+--    and iva=0 
+    and substr(clave,1,1) = 'M';
+-- INSUMOS NO QUIROFANO
+  CURSOR cItmCrgInsNQ IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='INV' 
+    AND cntAsc.tipo_de_asociacion(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+    and substr(clave,1,1) <> 'M';
+--    and iva>0; -- no se considera el iva por que puede haber insumos con iva 0
+-- MEDICAMENTOS NO QUIROFANO
+  CURSOR cItmCrgMedNQ IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='INV' 
+    AND cntAsc.tipo_de_asociacion(+) = 'GIN'
+    and cntasc.clave_relacionada is null
+--    and iva=0 
+    and substr(clave,1,1) = 'M';
+i number:=0;
+j number:=0;
+BEGIN
+i:=0;
+j:=0;
+-- PRIMERO ASOCIAMOS LO DE QUIROFANO
+-- para que despues asocia no que no es quirofano
+  FOR rItmCrg IN cItmCrgINSQ LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscINSQ LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados Insumos Quirofano '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgMedQ LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMedQ LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados Medicamentos Quirofano'||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+
+-- AHORA ASOCIAMOS LO QUE NO ES DE QUIROFANO
+-- es decir de todo lo que no se asocio a quirofano se asocia como lo demas
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgINSNQ LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscInsNQ LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados Insumos No Quirofano '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgMedNQ LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscMedNQ LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados Medicamentos No Quirofano '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+END;            
+/

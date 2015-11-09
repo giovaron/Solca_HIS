@@ -1,0 +1,5 @@
+FRM-30443: Warning: Highest Value Allowed ignored for subordinate mirror item NTS.ANT_NUMERO.
+FRM-30444: Warning: Lowest Value Allowed ignored for subordinate mirror item NTS.ANT_NUMERO.
+FRM-30431: Warning: Duplicate column name ANT_NUMERO in block NTS.
+
+Created form file C:\sms\fnt\fct\frm\fctgnrfctNOVA.fmx

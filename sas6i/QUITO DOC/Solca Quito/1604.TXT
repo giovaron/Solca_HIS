@@ -1,0 +1,170 @@
+ 20/06/2006                                                           PAG.  1
+
+ SOLCA QUITO PRESUPUESTO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+    1  5.                   GASTOS CORRIENTES                                 
+    2  5.1.                  GASTOS EN PERSONAL                                
+    3  5.1.01.                Remuneraciones B sicas                            
+    4  5.1.01.01               Sueldos                                           
+    5  5.1.02.                Remuneraciones Complementarias                    
+    6  5.1.02.01               Bonificaci¢n por A¤os de Servicio                 
+    7  5.1.02.02               Bonificaci¢n por Responsabilidad                  
+    8  5.1.02.03               Decimotercer Sueldo                               
+    9  5.1.02.04               Decimocuarto Sueldo                               
+   10  5.1.02.09               Gastos de Representaci¢n                          
+   11  5.1.02.10               Sobresueldos y Bonificaciones Adici               
+   12  5.1.02.22               Bonificaci¢n M‚dica                               
+   13  5.1.02.30               Componentes Salariales Incorporado                
+   14  5.1.02.31               Componentes Salariales Unificados                 
+   15  5.1.02.32               Bonificaci¢n por Jefatura                         
+   16  5.1.02.33               Gratificaciones y Comple. en  Pa¡s                
+   17  5.1.03.                Remuneraciones Complementarias                    
+   18  5.1.03.01               Gastos de Residencia                              
+   19  5.1.03.06               Refrigerio                                        
+   20  5.1.03.07               Comisariato                                       
+   21  5.1.03.08               Compensaci¢n Pedag¢gica                           
+   22  5.1.04.                Subsidios                                         
+   23  5.1.04.02               De Educaci¢n                                      
+   24  5.1.04.05               Por Guarder¡a                                     
+   25  5.1.04.07               Estimulo Econ¢mico por A¤os de Serv               
+   26  5.1.05.                Remuneraciones Temporales                         
+   27  5.1.05.04               Encargos y Subrogaciones                          
+   28  5.1.05.05               Sustituciones de Personal                         
+   29  5.1.05.06               Licencia Remunerada                               
+   30  5.1.05.07               Honorarios                                        
+   31  5.1.05.09               Horas Extras y Suplementaria                      
+   32  5.1.05.10               Servicios Personales por Contrato                 
+   33  5.1.05.11               Remuneraci¢n Especial Jornada Nocturna            
+   34  5.1.05.12               Contrataci¢n por Horas                            
+   35  5.1.06.                Aportes Patronales a la Seguridad S               
+   36  5.1.06.01               Aporte Patronal                                   
+   37  5.1.06.02               Fondo de Reserva                                  
+   38  5.1.06.03               Fondo de Jubilaci¢n Patronal                      
+   39  5.1.06.05               Iece                                              
+   40  5.1.06.06               Secap                                             
+   41  5.1.07.                Indemnizaciones                                   
+   42  5.1.07.03               Despido Intempestivo                              
+   43  5.1.07.04               Compensaci¢n por Desahucio                        
+   44  5.3.                  BIENES Y SERVICIOS                                
+   45  5.3.01.                Servicios B sicos                                 
+   46  5.3.01.01               Agua Potable                                      
+   47  5.3.01.04               Energ¡a El‚ctrica                                 
+   48  5.3.01.05               Telecomunicaciones                                
+   49  5.3.01.06               Servicio de Correo                                
+   50  5.3.02.                Servicios Generales                               
+   51  5.3.02.01               Transporte de Personal                            
+   52  5.3.02.02               Fletes y Maniobras                                
+ 20/06/2006                                                           PAG.  2
+
+ SOLCA QUITO PRESUPUESTO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+   53  5.3.02.03               Almacenamiento Embalaje y Envase                  
+   54  5.3.02.04               Impresi¢n, Reproducci¢n y Publicaci               
+   55  5.3.02.06               Eventos P£blicos y Oficiales                      
+   56  5.3.02.07               Difusi¢n, Informaci¢n y Publicidad                
+   57  5.3.02.08               Servicio de Vigilancia                            
+   58  5.3.02.09               Servicio de Aseo                                  
+   59  5.3.02.10               Atenci¢n M‚dica Contratada                        
+   60  5.3.02.11               Alimentaci¢n a Pacientes                          
+   61  5.3.02.12               Refrigerio                                        
+   62  5.3.02.99               Otros Servicios Generales                         
+   63  5.3.03.                Tralados, Instalaciones, Vi ticos y               
+   64  5.3.03.01               Pasajes al Interior                               
+   65  5.3.03.02               Pasajes al Exterior                               
+   66  5.3.03.03               Vi ticos y Subsistencias en el Inte               
+   67  5.3.03.04               Vi ticos y Subsistencias en el Exte               
+   68  5.3.04.                Instalaci¢n, Mantenimiento y Repara               
+   69  5.3.04.02               Edificios, Locales y Residencias                  
+   70  5.3.04.03               Mobiliarios                                       
+   71  5.3.04.04               Maquinarias y Equipos                             
+   72  5.3.04.05               Veh¡culos                                         
+   73  5.3.05.                Arrendamiento de Bienes                           
+   74  5.3.05.04               Maquinarias y Equipos                             
+   75  5.3.05.05               Veh¡culos                                         
+   76  5.3.06.                Contrataciones de Estudios e Invest               
+   77  5.3.06.01               Consultor¡a, Asesor¡a e Investigaci               
+   78  5.3.06.03               Servicio de Capacitaci¢n                          
+   79  5.3.06.06               Congresos y Seminarios                            
+   80  5.3.07.                Gastos en Inform tica                             
+   81  5.3.07.01               Desarrollo de Sistemas Inform ticos               
+   82  5.3.07.04               Mantenimiento de Sistemas Inform ti               
+   83  5.3.08.                Bienes de Uso y Consumo Corriente                 
+   84  5.3.08.01               Alimentos y Bebidas                               
+   85  5.3.08.02               Vestuario, Lencer¡a y Prendas de Po               
+   86  5.3.08.03               Combustibles y Lubricantes                        
+   87  5.3.08.04               Materiales de Oficina                             
+   88  5.3.08.05               Materiales de Aseo                                
+   89  5.3.08.06               Herramientas                                      
+   90  5.3.08.07               Materiales de Impresi¢n, Fotograf¡a               
+   91  5.3.08.08               Instrumental M‚dico Menor                         
+   92  5.3.08.09               Medicinas y Productos Farmac‚uticos               
+   93  5.3.08.10               Materiales para Laboratorio y Uso M               
+   94  5.3.08.11               Materiales de Construcci¢n, El‚ctri               
+   95  5.3.08.13               Repuestos y Accesorios                            
+   96  5.3.08.16               Utensillos de Cocina y Comedor Meno               
+   97  5.3.08.99               Otros de Uso y Consumo                            
+   98  5.7.                  OTROS GASTOS                                      
+   99  5.7.02.                Seguros, Costos Financieros y Otros               
+  100  5.7.02.01               Seguros                                           
+  101  5.7.02.03               Comisiones Bancarias                              
+  102  5.7.02.06               Costas Judiciales                                 
+  103  5.8.                  TRANSFERENCIAS CORRIENTES                         
+  104  5.8.01.                Transferencias Corrientes                         
+ 20/06/2006                                                           PAG.  3
+
+ SOLCA QUITO PRESUPUESTO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+  105  5.8.01.01               Unidad Oncol¢gica Ibarra                          
+  106  5.8.01.02               Unidad Oncol¢gica Riobamba                        
+  107  5.8.01.03               Unidad Oncol¢gica Ambato                          
+  108  5.8.01.04               Unidad Oncol¢gica Riobamba (P2)                   
+  109  5.8.01.05               Unidad Oncol¢gica Ambato (P2)                     
+  110  5.8.01.06               Unidad Oncol¢gica Ibarra (P2)                     
+  111  5.8.01.09               Tungurahua (terreno)                              
+  112  5.8.01.10               Construc. y Adecuacio. para Activid               
+  113  5.8.01.11               Subvenciones Econ¢micas                           
+  114  5.8.01.12               Subvenciones Economicas (Gastos Rep               
+  115  5.8.01.13               Subvenciones por Asistencia M‚dica                
+  116  5.8.01.14               Pensiones Civiles Vitalicias                      
+  117  7.                   GASTOS DE INVERSION                               
+  118  7.8.                  TRANSFERENCIAS PARA INVERSION                     
+  119  7.8.02.                Transferencias de Inversi¢n                       
+  120  7.8.02.06               Becas                                             
+  121  8.                   GASTOS DE CAPITAL                                 
+  122  8.4.                  ACTIVOS DE LARGA DURACION                         
+  123  8.4.01.                Bienes Muebles                                    
+  124  8.4.01.03               Mobiliario                                        
+  125  8.4.01.04               Maquinarias y Equipo                              
+  126  8.4.01.05               Vehiculos                                         
+  127  8.4.01.06               Herramientas                                      
+  128  8.4.01.07               Equipos, Sistemas y Paquetes Inform               
+  129  8.4.01.09               Libros y Colecciones                              
+  130  8.4.01.12               Equipos para Oficina y Administraci               
+  131  8.4.01.99               Otros Bienes Muebles                              
+  132  8.4.02.                Bienes Inmuebles y Semovientes                    
+  133  8.4.02.02               Edificios, Locales y Residencias                  
+  134  9.                   IVA                                               
+  135  9.1.                  IVA                                               
+  136  9.1.01.                IVA                                               
+  137  9.1.01.02               IVA por recaudar                                  
+  138  99.                  CONTRAPAR. DE EGRESO                              
+  139  99.1                  Contrapar. de Egreso                              
+  140  99.2                  Impuesto a la Renta                               
+  141  99.3                  IVA por pagar                                     
+
+ 20/06/2006 12:16:06 SUPERVISOR                                  SAFI V6.5

@@ -1,0 +1,11 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\ICSC\TARIFARIO_INDICES_EXTRAS.ind
+--
+-- Generated for Oracle 9i on Thu Aug 11  16:57:35 2011 by Server Generator 6.5.96.5.6
+  
+
+PROMPT Creating Index 'CNTS_OBSERVACION_I'
+CREATE INDEX CNTS_OBSERVACION_I ON CUENTAS
+ (OBSERVACION)
+/
+
+

@@ -1,0 +1,665 @@
+------------- ESTO EN GNRL
+
+
+ /* Devuelve la ultima promocion a la que pertenece el paciente */
+FUNCTION  DEVOLVER_ULTIMA_PROMOCION_ID
+  (NHC  IN  PACIENTES.NUMERO_HC%TYPE
+  ,DFECHA  IN  DATE  :=  NULL
+  )
+  RETURN  NUMBER;
+ PRAGMA  RESTRICT_REFERENCES  (DEVOLVER_ULTIMA_PROMOCION_ID,  WNDS);
+
+
+--------------
+
+//* Devuelve la ultima promocion a la que pertenece el paciente */
+FUNCTION  DEVOLVER_ULTIMA_PROMOCION_ID
+  (NHC  IN  PACIENTES.NUMERO_HC%TYPE
+  ,DFECHA  IN  DATE  :=  NULL
+  )
+  RETURN  NUMBER
+  IS
+-- Program Data
+DFECHATMP DATE;
+VDESC PROMOCIONES_PACIENTES.PRMPCN_ID%TYPE;
+
+-- PL/SQL Block
+ BEGIN
+-- Devolvemos la ultima promocion del paciente
+IF dFecha IS NULL THEN
+  dFechaTmp:=TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY')||'23:59:59','DD/MM/YYYY HH24:MI:SS');
+ELSE
+  dFechaTmp:=dFecha;
+END IF;
+SELECT PRMPCN.PRMPCN_ID
+  INTO vDesc
+  FROM PROMOCIONES_PACIENTES PRMPCN,PROMOCIONES PRM
+  WHERE PCN_NUMERO_HC=nHC
+  AND PRMPCN.FECHA=(
+    SELECT MAX(FECHA)
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=nHC
+    and fecha<=dFechaTmp)
+  AND PRM.CODIGO=PRMPCN.PRM_CODIGO;
+RETURN vDesc;
+END DEVOLVER_ULTIMA_PROMOCION_ID;
+
+
+------------------------------
+
+CREATE OR REPLACE PACKAGE IESS IS
+
+
+/* Obtiene las cuentas pendientes del IESS sin planilla */
+PROCEDURE CUENTAS_SIN_PLANILLA
+ (VHC IN VARCHAR2
+ ,DFECHA_DESDE IN DATE
+ ,DFECHA_HASTA IN DATE
+ );
+
+
+CREATE OR REPLACE PACKAGE BODY IESS IS
+
+
+/* Obtiene las cuentas pendientes del IESS sin planilla */
+PROCEDURE CUENTAS_SIN_PLANILLA
+ (VHC IN VARCHAR2
+ ,DFECHA_DESDE IN DATE
+ ,DFECHA_HASTA IN DATE
+ )
+ IS
+CURSOR C1 IS
+    SELECT C.PCN_NUMERO_HC HC,P.APELLIDO_PATERNO||' '||P.APELLIDO_MATERNO||' '||P.PRIMER_NOMBRE||' '||P.SEGUNDO_NOMBRE NOMBRE,C.FECHA FEC,C.DOCUMENTO DOC,C.NUMERO NRO,C.DETALLE DTL,C.CRG_CODIGO COD,CRG.DESCRIPCION DES
+    FROM CUENTAS C, PACIENTES P, CARGOS CRG, PARAMETROS_EMPRESAS PE
+    WHERE C.PCN_NUMERO_HC LIKE '%'||Vhc||'%'
+    AND C.FECHA BETWEEN DFECHA_DESDE AND DFECHA_HASTA
+    AND PE.PRMAPL_NOMBRE='CODIGO_PROMOCION_IESS'
+    AND C.ESTADO='PND'
+    AND C.PRM_CODIGO=PE.VALOR
+    AND C.PLA_NUMERO_PLANILLA IS NULL
+    AND C.VALOR > 0
+    AND P.NUMERO_HC=C.PCN_NUMERO_HC
+    AND CRG.TIPO=C.CRG_TIPO
+    AND CRG.CODIGO=C.CRG_CODIGO
+    UNION
+    SELECT C.PCN_NUMERO_HC,P.APELLIDO_PATERNO||' '||P.APELLIDO_MATERNO||' '||P.PRIMER_NOMBRE||' '||P.SEGUNDO_NOMBRE NOMBRE,C.FECHA,C.DOCUMENTO,C.NUMERO,C.DETALLE,C.CRG_CODIGO,ITM.DESCRIPCION
+    FROM CUENTAS C, PACIENTES P, ITEMS ITM, PARAMETROS_EMPRESAS PE
+    WHERE C.PCN_NUMERO_HC LIKE '%'||Vhc||'%'
+    AND C.FECHA BETWEEN DFECHA_DESDE AND DFECHA_HASTA
+    AND PE.PRMAPL_NOMBRE='CODIGO_PROMOCION_IESS'
+    AND C.ESTADO='PND'
+    AND C.PRM_CODIGO=PE.VALOR
+    AND C.PLA_NUMERO_PLANILLA IS NULL
+    AND C.VALOR > 0
+    AND C.CRG_TIPO NOT IN ('P','S')
+    AND P.NUMERO_HC=C.PCN_NUMERO_HC
+    AND itm.tipo=c.crg_tipo
+    AND itm.sbs_scc_codigo=substr(c.crg_codigo,1,2)
+    AND itm.sbs_codigo=substr(c.crg_codigo,3,2)
+    AND itm.codigo=substr(c.crg_codigo,5);
+BEGIN
+    DELETE FROM CUENTAS_TEMPORAL_ARCPLNIESS;
+    COMMIT;
+    FOR REG_C1 IN C1 LOOP
+        INSERT INTO CUENTAS_TEMPORAL_ARCPLNIESS VALUES
+        (REG_C1.HC,REG_C1.NOMBRE,REG_C1.FEC,REG_C1.DOC,REG_C1.NRO,REG_C1.DTL,REG_C1.COD,REG_C1.DES);
+        COMMIT;
+    END LOOP;
+EXCEPTION WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION('IESS.CUENTAS_SIN_PLANILLA');
+END;
+END IESS;
+
+
+----------------
+CREATE OR REPLACE PACKAGE "PRMRCTPLN" IS
+-- Sub-Program Unit Declarations
+------------------------------ FUNCIONES AÑADIDAS POR RINA PARA RECATEGORIZAR CUENTAS  ---------------
+FUNCTION DEVUELVE_PORCENTAJE_PRM_MSP
+-- Recupera el porcentaje promoción de acuerdo a la recategorización
+-- se revisa la información en convenios equivalencias
+ (VTIPOCRG IN VARCHAR2
+ ,VCODCRG IN VARCHAR2
+ ,VPCN_NUMERO_HC IN NUMBER
+ ,vPrmPcn VARCHAR2
+ ,FECHA IN DATE
+ ,VPRECIO_CUENTA IN NUMBER
+ )
+ RETURN NUMBER;
+
+PROCEDURE RECATEGORIZAR_CUENTA_MSP
+-- Recategoriza la cuenta de un paciente teniendo como parámetro un periodo de recategorzación.
+-- en base a convenios equivalencias más no al valor fijado para generar el archivo plano
+(VPCN_NUMERO_HC IN NUMBER,FECHA_INICIAL IN DATE, FECHA_FINAL IN DATE,PROMO IN VARCHAR);
+
+PROCEDURE RECATEGORIZAR_PCN_MSP
+(FECHA_INICIAL IN DATE,FECHA_FINAL IN DATE,VPCN_NUMERO_HC IN NUMBER);
+
+
+------------------------------ FUNCIONES AÑADIDAS POR RINA PARA RECATEGORIZAR CUENTAS  ---------------
+FUNCTION DEVUELVE_CONVENIO
+ (NNUMEROHC NUMBER
+ ,DFECHA DATE
+  ,PRM_CODIGO IN OUT VARCHAR
+ )
+ RETURN VARCHAR2;
+END PRMRCTPLN;
+
+
+
+CREATE OR REPLACE PACKAGE BODY "PRMRCTPLN" IS
+FUNCTION DEVUELVE_PORCENTAJE_PRM_MSP
+-- Recupera el porcentaje promoción de acuerdo a la recategorización
+-- se revisa la información en convenios equivalencias
+ (VTIPOCRG IN VARCHAR2
+ ,VCODCRG IN VARCHAR2
+ ,VPCN_NUMERO_HC IN NUMBER
+ ,vPrmPcn VARCHAR2
+ ,FECHA IN DATE
+ ,VPRECIO_CUENTA IN NUMBER
+ )
+ RETURN NUMBER IS
+  CURSOR cCrg IS
+    SELECT DPR_ARA_CODIGO,DPR_CODIGO,COSTO,NVL(ANESTESIA_IESS,'F') ANESTESIA_IESS
+    FROM CARGOS
+    WHERE TIPO=vTipoCrg AND CODIGO=vCodCrg;
+  nValor NUMBER:=0;
+  vpromocion VARCHAR2(20):= NULL;
+  VENTIDAD VARCHAR2(20):= NULL;
+  vAnestesia VARCHAR2(1);
+  nPorcentaje_promocion NUMBER;
+  nPorcentaje_excepcion NUMBER;
+  nValor_fijo NUMBER;
+  nPrecio_de_venta NUMBER;
+  vArea CARGOS.DPR_ARA_CODIGO%TYPE;
+  vDept CARGOS.DPR_CODIGO%TYPE;
+  vcodigo_iess CARGOS.Codigo_Iess%TYPE;
+  vtrf_iess VARCHAR2(20):= NULL;
+  VPRM_IESS VARCHAR2(20):= NULL;
+  vuvr number := null;
+  vprecio number := null;
+-- cursor que devuelve la ultima promoción de un paciente
+-- cursor que devuelve el porcentaje promoción del departamento según la promoción
+  CURSOR cDetPrm (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM DETALLES_PROMOCIONES
+    WHERE prm_codigo=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept;
+-- cursor que devuelve el porcentaje promoción del cargo según la promoción
+  CURSOR cPrmExc (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE,
+                  vCargo CARGOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM PROMOCIONES_EXCEPCIONES
+    WHERE PRM_CODIGO=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept
+    AND CRG_TIPO=vTipoCrg
+    AND CRG_CODIGO=vCargo;
+BEGIN
+  QMS$ERRORS.SHOW_DEBUG_INFO('Devuelve_Promocion');
+  QMS$ERRORS.SHOW_DEBUG_INFO('Codigo del cargo '||vTipoCrg||vCodCrg);
+  QMS$ERRORS.SHOW_DEBUG_INFO('Codigo Promocion '||vPrmPcn);
+  nValor:=1;
+  DBMS_OUTPUT.put_line('Entra al proceso de recuperar promoción');
+  BEGIN
+     SELECT CG.RV_LOW_VALUE INTO VENTIDAD
+     FROM CG_REF_CODES CG
+     WHERE CG.RV_HIGH_VALUE = vPrmPcn and
+           cg.rv_domain = 'ENTIDAD_PLANILLA'; 
+  EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+      VENTIDAD:= NULL;
+  END;
+  BEGIN
+   vtrf_iess:= DEVUELVE_CONVENIO(VPCN_NUMERO_HC,FECHA,vpromocion);
+  EXCEPTION
+  WHEN OTHERS THEN
+    qms$errors.show_message('ADM-00011','No se encontrado un tarifario para la hc. '||to_char(VPCN_NUMERO_HC));
+    DBMS_OUTPUT.put_line('No hay Tarifario del iess');
+  END;
+  VPRM_IESS := vPrmPcn;
+  DBMS_OUTPUT.put_line('Tarifario '||VTRF_IESS||' Promción Iess '||VPRM_IESS);
+  IF  VPCN_NUMERO_HC IS NULL THEN
+    RETURN 0;
+  END IF;
+  IF vTipoCrg IS NOT NULL THEN
+  QMS$ERRORS.SHOW_DEBUG_INFO('va a revisar la promocion');
+    nValor:=1;
+    nPORCENTAJE_PROMOCION := 1;
+    nPORCENTAJE_excepcion := 1;
+    IF vTipoCrg IN ('P','S') THEN
+-- si son procedimientos o servicios vemos de que area son
+      OPEN cCrg;
+      FETCH cCrg INTO vArea,vDept,nPrecio_de_venta,vAnestesia;
+      IF cCRg%NOTFOUND THEN
+-- aqui nunca deberia entrar
+        CLOSE cCrg;
+        qms$errors.show_message('ADM-00011','Cargo no existe');
+      END IF;
+      CLOSE cCrg;
+    ELSE
+-- si son medicamentos o insumos siempre es farmacia
+      vArea:='A';
+      vDept:='F';
+    END IF;
+-- En primer lugar obtenemos el porcentaje promoción de acuerdo
+-- al tarifario correspondiente para lo cual verificamos el código
+-- de la entidad y el convenio.
+-- Si el cargo está en convenios equivalencias, devuelve el porcentaje promcción
+-- de acuerdo al valor resultante del UVR * PRECIO.
+   BEGIN
+      IF VENTIDAD IS NOT NULL THEN  -- Vemos si la entidad es on o  IESS
+      --  Si es entidad IESS  recategoriza con el tarifario del IESS
+         IF VENTIDAD = 'ISS' THEN
+            vtrf_iess := 'TRFIESS';
+         IF vPrmPcn = VPRM_IESS then
+            IF NVL(vAnestesia,'F')= 'F' THEN
+               vuvr:= null;
+               vprecio := null;
+            BEGIN
+              SELECT  T.UVR,T.PRC INTO vuvr,vprecio
+              FROM CONVENIOS_EQUIVALENCIAS C,TARIFARIOS T
+              WHERE T.TIPO = C.TIPO AND
+                    T.CONVENIO = C.CNVTRF_CONVENIO AND
+                    T.CODIGO_ITEM = C.CNVTRF_CODIGO AND
+                    C.CRG_TIPO = VTIPOCRG AND
+                    C.CRG_CODIGO = VCODCRG AND
+                    T.CONVENIO = vtrf_iess AND
+                    C.PRIORIDAD_CARGO = 'F';
+              if (NVL(vuvr,0)*NVL(vprecio,0)) > 0 then
+                 nValor_fijo := (NVL(vuvr,0)*NVL(vprecio,0));
+              elsif vuvr is null or vprecio is null then
+                 qms$errors.show_message('ADM-00011','No se puede recategorizar, el cargo '||VCODCRG||' no tiene un valor en Convenios Equivalencias');
+              elsif  (NVL(vuvr,0)*NVL(vprecio,0))  = 0 then
+                 nValor_fijo :=  -1;
+              end if;
+            EXCEPTION
+            WHEN NO_DATA_FOUND  THEN
+               nValor_fijo :=  -1;
+            END;
+            ELSIF NVL(vAnestesia,'F')= 'V' THEN
+            BEGIN
+              SELECT  T.ANES,PRC_ANES INTO vuvr,vprecio
+              FROM CONVENIOS_EQUIVALENCIAS C,TARIFARIOS T
+              WHERE T.TIPO = C.TIPO AND
+                   T.CONVENIO = C.CNVTRF_CONVENIO AND
+                   T.CODIGO_ITEM = C.CNVTRF_CODIGO AND
+                   C.CRG_TIPO = VTIPOCRG AND
+                   C.CRG_CODIGO = VCODCRG AND
+                   C.PRIORIDAD_CARGO = 'F' AND
+                   T.CONVENIO = vtrf_iess;
+              if (NVL(vuvr,0)*NVL(vprecio,0)) > 0 then
+                 nValor_fijo := (NVL(vuvr,0)*NVL(vprecio,0));
+              elsif vuvr is null or vprecio is null then
+                 qms$errors.show_message('ADM-00011','No se puede recategorizar, el cargo '||VCODCRG||' no tiene un valor en Convenios Equivalencias');
+              elsif  (NVL(vuvr,0)*NVL(vprecio,0))  = 0 then
+                 nValor_fijo := -1;
+              end if;
+            EXCEPTION
+              WHEN NO_DATA_FOUND  THEN
+                 nValor_fijo := -1;
+            END;
+            END IF;
+            END IF;
+         ELSE
+      -- Si no es entidad IESS recategoriza con el tarifario correspondiente
+            IF vPrmPcn = VPRM_IESS then
+               vuvr:= null;
+               vprecio := null;
+            BEGIN
+               SELECT  T.UVR,T.PRC INTO vuvr,vprecio
+               FROM CONVENIOS_EQUIVALENCIAS C,CONVENIOS_TARIFARIOS T
+               WHERE T.TIPO = C.TIPO AND
+                     T.CONVENIO = C.CNVTRF_CONVENIO AND
+                     T.CODIGO = C.CNVTRF_CODIGO AND
+                     C.CRG_TIPO = VTIPOCRG AND
+                     C.CRG_CODIGO = VCODCRG AND
+                     T.CONVENIO = vtrf_iess AND
+                     C.PRIORIDAD_CARGO = 'F';
+               if (NVL(vuvr,0)*NVL(vprecio,0)) > 0 then
+                  nValor_fijo := (NVL(vuvr,0)*NVL(vprecio,0));
+               elsif vuvr is null or vprecio is null then
+                  qms$errors.show_message('ADM-00011','No se puede recategorizar, el cargo '||VCODCRG||' no tiene un valor en Convenios Equivalencias');
+               elsif (NVL(vuvr,0)*NVL(vprecio,0))  = 0 then
+                  nValor_fijo :=  -1;
+               end if;
+            EXCEPTION
+            WHEN NO_DATA_FOUND  THEN
+               nValor_fijo := -1;
+            END;
+           END IF;
+         END IF;
+      END IF;
+   END;
+   BEGIN
+      OPEN CDetPrm (vPrmPcn,vArea,vDept);
+      FETCH CDetPrm INTO nPORCENTAJE_PROMOCION;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+        NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+    END;
+       IF nValor_Fijo is not null and  nValor_Fijo > 0 THEN
+           nPorcentaje_Promocion := nvl(nPorcentaje_Promocion,1)*(nValor_Fijo/VPRECIO_CUENTA);
+       END IF;
+       BEGIN
+           -- Si el area y departamento tienen una promocion, vemos si es una excepcion
+         OPEN CPrmExc (vPrmPcn,vArea,vDept,vCodCrg);
+         FETCH CPrmExc INTO nPorcentaje_excepcion;
+       EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+          NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+       END;
+    QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion '||nPORCENTAJE_PROMOCION );
+    nValor:=nvl(nPORCENTAJE_PROMOCION,1)*nvl(nPorcentaje_excepcion,1);
+  ELSE
+    nValor:=1;
+  END IF;
+  QMS$ERRORS.SHOW_DEBUG_INFO('Valor de la promocion es '||nValor);
+--  DBMS_OUTPUT.put_line('EL Porcentaje promocion para el item '||VCODCRG||' es '||nValor);
+  RETURN NVL(nValor,1);
+EXCEPTION
+WHEN OTHERS THEN
+   DBMS_OUTPUT.put_line('Se generó un error '||sqlerrm);
+   RETURN 1;
+END DEVUELVE_PORCENTAJE_PRM_MSP;
+
+PROCEDURE RECATEGORIZAR_CUENTA_MSP
+-- Recategoriza la cuenta de un paciente teniendo como parámetro un periodo de recategorzación.
+-- en base a convenios equivalencias más no al valor fijado para planillar cuentas con el tarifario MSP
+(VPCN_NUMERO_HC IN NUMBER,FECHA_INICIAL IN DATE, FECHA_FINAL IN DATE,PROMO IN VARCHAR) IS
+nULTRGS NUMBER;
+nANT NUMBER;
+nCONT NUMBER;
+nprcprm NUMBER;
+i NUMBER;
+bSeguir BOOLEAN;
+PORCENTAJE NUMBER:= NULL;
+descuento number;
+CURSOR CNTS (PACIENTE NUMBER,FECHA_INICIAL DATE, FECHA_FINAL DATE) IS
+SELECT * FROM CUENTAS CNT
+where CNT.PLA_NUMERO_PLANILLA IS NULL AND
+      CNT.PCN_NUMERO_HC = PACIENTE AND ((((CNT.ESTADO='PND') OR
+                                            (CNT.ESTADO='PRE')) AND
+                                            (CNT.CANTIDAD>0))) AND
+       CNT.FECHA BETWEEN FECHA_INICIAL AND FECHA_FINAL ;
+BEGIN
+QMS$ERRORS.SHOW_DEBUG_INFO('Iniciando Recategorizar_Pacientes_por fecha ');
+--   DBMS_OUTPUT.put_line('Entra al proceso de recategorización');
+   FOR RCNTS IN CNTS(VPCN_NUMERO_HC,FECHA_INICIAL,FECHA_FINAL) LOOP
+   BEGIN
+--      DBMS_OUTPUT.put_line('Va a recuperar el porcentaje promocion');
+      PORCENTAJE:= Devuelve_porcentaje_prm_MSP(RCNTS.CRG_TIPO,RCNTS.CRG_CODIGO,VPCN_NUMERO_HC,promo,RCNTS.FECHA,RCNTS.VALOR);
+--      DBMS_OUTPUT.put_line('EL Porcentaje promocion para el item '||RCNTS.CRG_CODIGO||' es '||PORCENTAJE);
+      IF porcentaje > 1 THEN
+         descuento := 0;
+      ELSE
+         descuento := (RCNTS.CANTIDAD * RCNTS.VALOR)-(RCNTS.CANTIDAD * RCNTS.VALOR * PORCENTAJE);
+      END IF;
+QMS$ERRORS.SHOW_DEBUG_INFO('Cargo recategorizado '||RCNTS.DOCUMENTO||TO_CHAR(RCNTS.NUMERO)||TO_CHAR(RCNTS.DETALLE));
+QMS$ERRORS.SHOW_DEBUG_INFO('Porcentaje Promocion '||TO_CHAR(PORCENTAJE));
+QMS$ERRORS.SHOW_DEBUG_INFO('Promocion '||TO_CHAR(promo));
+      UPDATE CUENTAS C
+      SET C.PORCENTAJE_PROMOCION = PORCENTAJE,
+          C.DESCUENTO_OTORGADO = DESCUENTO,
+          C.PRM_CODIGO = PROMO,
+          C.RECATEGORIZADA = 'V'
+      WHERE
+       C.PCN_NUMERO_HC= VPCN_NUMERO_HC AND
+       C.DOCUMENTO = RCNTS.DOCUMENTO AND
+       C.NUMERO = RCNTS.NUMERO AND
+       C.DETALLE = RCNTS.DETALLE AND
+       C.CRG_TIPO =   RCNTS.CRG_TIPO AND
+       C.CRG_CODIGO = RCNTS.CRG_CODIGO AND
+       C.CANTIDAD = RCNTS.CANTIDAD AND
+       C.ESTADO = RCNTS.ESTADO;
+QMS$ERRORS.SHOW_DEBUG_INFO('Descuento '||TO_CHAR(descuento));
+          i := i +1;
+    EXCEPTION
+    WHEN OTHERS THEN
+       dbms_output.put_line('No se recuperó el porcentaje promocion '||sqlerrm);
+       qms$errors.show_message('FCT-00100','No se recuperó el porcentaje promocion '||sqlerrm);
+    END;
+    END LOOP ;
+QMS$ERRORS.SHOW_DEBUG_INFO('NO SE PROCESAN LOS MEDICAMENTOS, NO ES NECESARIO');
+   IF i = 0 THEN
+    qms$errors.show_message('FCT-00100','No se Recategorizar_Pacientes a ningún item.  Esta seguro de haber chequeado como seleccionados las cuentas?','Revise que esten seleccionadas las cuentas.');
+   END IF;
+END RECATEGORIZAR_CUENTA_MSP;
+
+PROCEDURE RECATEGORIZAR_PCN_MSP (FECHA_INICIAL IN DATE,FECHA_FINAL IN DATE,VPCN_NUMERO_HC IN NUMBER) IS
+-- Procedimiento para recategorizar la cuenta del paciente IESSen base a las excepciones
+-- y a convenios equivalencias dentro del periodo indicado en los parámetros fecha_ini y fecha_fin.
+I NUMBER :=0;
+J NUMBER:=0;
+FECHA_DESDE DATE;
+FECHA_HASTA DATE;
+FECHA_INICIAL_COMPLETA DATE;
+FECHA_FINAL_COMPLETA DATE;
+--NCNTPRM NUMBER:=0;
+vPromocion varchar2(2):= NULL;
+
+CURSOR PRMPCN(HC_PACIENTE NUMBER, FECHA_INI DATE, FECHA_FIN DATE) IS
+SELECT P.FECHA,P.PCN_NUMERO_HC,P.PRM_CODIGO
+FROM PROMOCIONES_PACIENTES P
+WHERE P.PCN_NUMERO_HC = HC_PACIENTE AND
+      P.FECHA BETWEEN FECHA_INI AND FECHA_FIN
+ORDER BY P.FECHA;
+
+TYPE PRMPCNTABTYP IS TABLE OF PRMPCN%ROWTYPE INDEX BY BINARY_INTEGER;
+PRMPCN_TAB PRMPCNTABTYP;
+BEGIN
+   FECHA_INICIAL_COMPLETA:= TO_DATE(TO_CHAR(FECHA_INICIAL,'DD/MM/YYYY')||' 00:00:00','DD/MM/YYYY HH24:MI:SS');
+   FECHA_FINAL_COMPLETA:= TO_DATE(TO_CHAR(FECHA_FINAL,'DD/MM/YYYY')||' 23:59:59','DD/MM/YYYY HH24:MI:SS');
+--   DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_INICIAL_COMPLETA,'DD/MM/YYYY HH24:MI:SS'));
+--   DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_FINAL_COMPLETA,'DD/MM/YYYY HH24:MI:SS'));
+   I:= 0;
+   J:=0;
+   OPEN PRMPCN(VPCN_NUMERO_HC,FECHA_INICIAL_COMPLETA,FECHA_FINAL_COMPLETA);
+   LOOP
+      I:= I + 1;
+      FETCH PRMPCN INTO PRMPCN_TAB(I);
+         EXIT WHEN PRMPCN%NOTFOUND;
+   END LOOP;
+   CLOSE PRMPCN;
+   i:= i-1;
+   IF I >= 1 THEN
+   BEGIN  --Una vez obtenidas las promociones del paciente, se procede a recategorizar.
+      BEGIN
+         SELECT PRM.PRM_CODIGO  INTO vPromocion
+         FROM PROMOCIONES_PACIENTES PRM
+         WHERE PRM.PCN_NUMERO_HC=VPCN_NUMERO_HC AND
+               PRM.FECHA=(SELECT MAX(FECHA)
+                             FROM PROMOCIONES_PACIENTES P
+                             WHERE P.PCN_NUMERO_HC=VPCN_NUMERO_HC AND
+                                   P.fecha<PRMPCN_TAB(1).FECHA) ;
+      EXCEPTION
+      WHEN OTHERS THEN
+         vPromocion:= PRMPCN_TAB(1).PRM_CODIGO;
+      END;
+      DBMS_OUTPUT.put_line('Primera categorización');
+      QMS$ERRORS.SHOW_DEBUG_INFO('Primera categorización');
+      FECHA_DESDE := FECHA_INICIAL_COMPLETA;
+      FECHA_HASTA := PRMPCN_TAB(1).FECHA;
+      RECATEGORIZAR_CUENTA_MSP(VPCN_NUMERO_HC,FECHA_DESDE,FECHA_HASTA,vPromocion);
+      DBMS_OUTPUT.put_line('Primera promoción '||vPromocion);
+      DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+      DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));
+      IF I> 1 THEN
+         QMS$ERRORS.Show_debug_info('Tiene más de una promoción ');
+      FOR J IN 1..I-1 LOOP
+         FECHA_DESDE := PRMPCN_TAB(J).FECHA;
+         FECHA_HASTA := PRMPCN_TAB(J+1).FECHA;
+         RECATEGORIZAR_CUENTA_MSP(VPCN_NUMERO_HC,FECHA_DESDE,FECHA_HASTA,PRMPCN_TAB(J).PRM_CODIGO);
+--         DBMS_OUTPUT.put_line('Promoción '||to_Char(j)||' '||PRMPCN_TAB(J).PRM_CODIGO);
+--         DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+--         DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));
+      END LOOP;
+      END IF;
+      FECHA_DESDE := FECHA_HASTA;
+      FECHA_HASTA := FECHA_FINAL_COMPLETA;
+      RECATEGORIZAR_CUENTA_MSP(VPCN_NUMERO_HC,FECHA_DESDE,FECHA_HASTA,PRMPCN_TAB(I).PRM_CODIGO);
+--      DBMS_OUTPUT.put_line('Ultima promoción '||PRMPCN_TAB(I).PRM_CODIGO);
+--      DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+--      DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));
+   END;
+   ELSE
+   BEGIN
+      SELECT PRM.PRM_CODIGO  INTO vPromocion
+      FROM PROMOCIONES_PACIENTES PRM
+      WHERE PRM.PCN_NUMERO_HC=VPCN_NUMERO_HC AND
+            PRM.FECHA=(SELECT MAX(FECHA)
+                       FROM PROMOCIONES_PACIENTES P
+                       WHERE P.PCN_NUMERO_HC=VPCN_NUMERO_HC AND
+                             P.FECHA <= FECHA_INICIAL_COMPLETA);
+      DBMS_OUTPUT.put_line('Categorización Unica menor');
+      RECATEGORIZAR_CUENTA_MSP(VPCN_NUMERO_HC,FECHA_INICIAL_COMPLETA, FECHA_FINAL_COMPLETA,vPromocion);
+--      DBMS_OUTPUT.put_line('Unica Promocion '||vPromocion);
+--      DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+--     DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));
+   EXCEPTION
+   WHEN OTHERS THEN
+      BEGIN
+         SELECT PRM.PRM_CODIGO  INTO vPromocion
+         FROM PROMOCIONES_PACIENTES PRM
+         WHERE PRM.PCN_NUMERO_HC=VPCN_NUMERO_HC AND
+               PRM.FECHA=(SELECT MIN(FECHA)
+                       FROM PROMOCIONES_PACIENTES P
+                       WHERE P.PCN_NUMERO_HC=VPCN_NUMERO_HC AND
+                             P.FECHA > FECHA_FINAL_COMPLETA);
+         DBMS_OUTPUT.put_line('Categorización Unica mayor');
+         RECATEGORIZAR_CUENTA_MSP(VPCN_NUMERO_HC,FECHA_INICIAL_COMPLETA, FECHA_FINAL_COMPLETA,vPromocion);
+ --        DBMS_OUTPUT.put_line('Unica Promocion '||vPromocion);
+ --        DBMS_OUTPUT.put_line('La fecha inicial es: ' ||to_char(FECHA_DESDE,'DD/MM/YYYY HH24:MI:SS'));
+ --        DBMS_OUTPUT.put_line('La fecha final es: ' ||to_char(FECHA_HASTA,'DD/MM/YYYY HH24:MI:SS'));
+      EXCEPTION
+      WHEN OTHERS THEN
+         RAISE_APPLICATION_ERROR(-20210,'El paciente '||VPCN_NUMERO_HC||' no tiene promoción asociada '||SQLERRM);
+      END;
+   END;
+   END IF;
+END RECATEGORIZAR_PCN_MSP;
+
+------------------------------ FUNCIONES AÑADIDAS POR RINA PARA RECATEGORIZAR CUENTAS  ---------------
+FUNCTION DEVUELVE_CONVENIO
+ (NNUMEROHC IN NUMBER
+ ,DFECHA IN DATE
+ ,PRM_CODIGO IN OUT VARCHAR
+ )
+ RETURN VARCHAR2
+ IS
+ CURSOR PRMPCN(HC_PACIENTE NUMBER,FECHA_INICIAL DATE, FECHA_FINAL DATE)IS
+ SELECT P.FECHA,P.PCN_NUMERO_HC,P.PRM_CODIGO
+ FROM PROMOCIONES_PACIENTES P
+ WHERE P.PCN_NUMERO_HC = HC_PACIENTE AND
+       P.FECHA BETWEEN FECHA_INICIAL AND FECHA_FINAL
+ ORDER BY P.FECHA;
+
+ CURSOR CNVPRM(PROMOCION VARCHAR2) IS
+ SELECT CP.CNV_CONVENIO,CP.FECHA_INICIO,CP.FECHA_FIN
+ FROM CONVENIOS_PROMOCIONES CP
+ WHERE CP.PRM_CODIGO like PROMOCION AND
+       CP.ESTADO_DE_DISPONIBILIDAD = 'D'
+ ORDER BY CP.FECHA_INICIO;
+
+ TYPE PRMPCNTABTYP IS TABLE OF PRMPCN%ROWTYPE INDEX BY BINARY_INTEGER;
+ TYPE CNVPRMTABTYP IS TABLE OF CNVPRM%ROWTYPE INDEX BY BINARY_INTEGER;
+ PRMPCN_TAB PRMPCNTABTYP;
+ CNVPRM_TAB CNVPRMTABTYP;
+ FECHA_INICIAL_COMPLETA DATE;
+ FECHA_FINAL_COMPLETA DATE;
+ I NUMBER:=0;
+ J NUMBER :=1;
+ K NUMBER := 0;
+ L NUMBER := 0;
+ VPROMOCION PROMOCIONES.CODIGO%TYPE:= NULL;
+ VCONVENIO CONVENIOS.CONVENIO%TYPE:= NULL;
+ FECHA_PROMOCION DATE;
+ BEGIN
+   FECHA_INICIAL_COMPLETA:= TO_DATE('01/01/0001 00:00:00','DD/MM/YYYY HH24:MI:SS');
+   FECHA_FINAL_COMPLETA:= TO_DATE('31/12/3000 00:00:00','DD/MM/YYYY HH24:MI:SS');
+-- En primer lugar subo a la tabla todas las promociones del paciente
+   I:= 0;
+   OPEN PRMPCN(NNUMEROHC,FECHA_INICIAL_COMPLETA,FECHA_FINAL_COMPLETA);
+   LOOP
+      I:= I + 1;
+      FETCH PRMPCN INTO PRMPCN_TAB(I);
+         EXIT WHEN PRMPCN%NOTFOUND;
+   END LOOP;
+   CLOSE PRMPCN;
+   i:= i-1;
+   IF I >= 1 THEN
+   --Una vez obtenidas las promociones del paciente
+   -- se procede a verificar la promocion de acuerdo
+   -- a la fecha de procedimiento.
+   BEGIN
+      DBMS_OUTPUT.put_line('La fecha es  '||to_char(dfecha,'dd/mm/yyyy HH24:MI:SS'));
+      DBMS_OUTPUT.put_line('La primera fecha es  '||to_char(PRMPCN_TAB(1).FECHA,'dd/mm/yyyy HH24:MI:SS'));
+      DBMS_OUTPUT.put_line('El valor de i es  '||to_char(i));
+      IF DFECHA < PRMPCN_TAB(1).FECHA THEN
+         DBMS_OUTPUT.put_line('La fecha menor a la primera fecha');
+         VPROMOCION := PRMPCN_TAB(1).PRM_CODIGO;
+         FECHA_PROMOCION := PRMPCN_TAB(1).FECHA;
+      ELSE
+      IF I > 1 THEN
+      FOR J IN 1..I-1 LOOP
+         IF DFECHA>= PRMPCN_TAB(J).FECHA AND DFECHA<PRMPCN_TAB(J+1).FECHA THEN
+            VPROMOCION := PRMPCN_TAB(J).PRM_CODIGO;
+            FECHA_PROMOCION := PRMPCN_TAB(J).FECHA;
+            EXIT;
+         ELSIF DFECHA = PRMPCN_TAB(J+1).FECHA THEN
+            VPROMOCION := PRMPCN_TAB(J+1).PRM_CODIGO;
+            FECHA_PROMOCION := PRMPCN_TAB(J+1).FECHA;
+            EXIT;
+         END IF;
+      END LOOP;
+      END IF;
+      DBMS_OUTPUT.put_line('La fecha de la última promoción es: '||to_char(PRMPCN_TAB(I).FECHA,'dd/mm/yyyy HH24:MI'));
+      IF DFECHA > PRMPCN_TAB(I).FECHA THEN
+         VPROMOCION := PRMPCN_TAB(I).PRM_CODIGO;
+         FECHA_PROMOCION := PRMPCN_TAB(I).FECHA;
+      END IF;
+      END IF;
+   END;
+   ELSE
+      VPROMOCION := PRMPCN_TAB(I).PRM_CODIGO;
+      FECHA_PROMOCION := PRMPCN_TAB(I).FECHA;
+   END IF;
+   DBMS_OUTPUT.put_line('El valor de j es '||to_char(j));
+   DBMS_OUTPUT.put_line('La promocion es '||VPROMOCION ||' Buscamos el convenio de esta promocion');
+ -- Una vez obtenida la promocion en VPROMOCION procedo a ver el convenio o tarifario
+    K:=0;
+   OPEN CNVPRM(VPROMOCION);
+   LOOP
+      K:= K + 1;
+      FETCH CNVPRM INTO CNVPRM_TAB(K);
+      EXIT WHEN CNVPRM%NOTFOUND;
+   END LOOP;
+   CLOSE CNVPRM;
+   K:= K-1;
+   FOR L IN 1..K LOOP
+      IF FECHA_PROMOCION BETWEEN TO_DATE(TO_CHAR(CNVPRM_TAB(L).FECHA_INICIO,'DD/MM/YYYY')||' 00:00:00','DD/MM/YYYY HH24:MI:SS') AND TO_DATE(TO_CHAR(NVL(CNVPRM_TAB(L).FECHA_FIN,SYSDATE),'DD/MM/YYYY')||' 23:59:59','DD/MM/YYYY HH24:MI:SS') THEN
+          VCONVENIO := CNVPRM_TAB(L).CNV_CONVENIO;
+         EXIT;
+      END IF;
+   END LOOP;
+   IF VCONVENIO IS NULL THEN
+      VCONVENIO := 'SIN CONVENIO';
+   END IF;
+   DBMS_OUTPUT.put_line('El valor de I  y la promocion es '||to_char(I)||' '||VPROMOCION||' El convenio es '||VCONVENIO);
+   PRM_CODIGO := VPROMOCION;
+   RETURN VCONVENIO;
+ END;
+END PRMRCTPLN;
+
+
+CREATE PUBLIC SYNONYM PRMRCTPLN FOR SMS.PRMRCTPLN
+GRANT EXECUTE ON PRMRCTPLN TO GENERAL
+
+
+CREATE PUBLIC SYNONYM IESS FOR SMS.IESS
+GRANT EXECUTE ON IESS TO GENERAL

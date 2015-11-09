@@ -1,0 +1,27 @@
+declare
+CURSOR cCtas IS
+  SELECT *
+  FROM CUENTAS_EMPLEADOS;
+i NUMBER;
+BEGIN
+  i:=0;
+  FOR rCtas IN cCtas LOOP
+    UPDATE EMPLEADOS_ROLES
+    SET TIPO_CUENTA_BANCARIA=rCtas.TIPO,
+        CUENTA_BANCARIA=rCtas.CTA_PERSONAL,
+        CUENTA_PAGO=rCtas.CTA_BANCO,
+        TERCERIZADORA=decode(rCtas.BANCO,'PACIFICO','SNC','PICHINCHA','CSI','PRODUBANCO','PRO','XXX')
+    WHERE CEDULA=rctas.cedula;
+    IF SQL%ROWCOUNT=1 THEN
+      i:=i+1;
+    END IF;
+  END LOOP;
+  dbms_output.put_line('se actulizaron '||i);
+END;
+/
+
+-- ver que existan los empleados en los roles
+select c.*
+from cuentas_empleados c,empleados_roles e
+where c.cedula=e.cedula (+)
+and e.cedula is null

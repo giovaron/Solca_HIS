@@ -1,0 +1,180 @@
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.1)(PORT=1521))(CONNECT_DATA=(SID=HICC)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 14:56:16
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.10)(PORT=1521))(CONNECT_DATA=(SID=DESI)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 14:56:17
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.1)(PORT=1521))(CONNECT_DATA=(SID=HICC)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 14:56:26
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.10)(PORT=1521))(CONNECT_DATA=(SID=DESI)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 14:56:26
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.1)(PORT=1521))(CONNECT_DATA=(SID=HICC)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 14:56:29
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.1)(PORT=1521))(CONNECT_DATA=(SID=HICC)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 14:59:54
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.10)(PORT=1521))(CONNECT_DATA=(SID=DESI)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 14:59:55
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.1)(PORT=1521))(CONNECT_DATA=(SID=HICC)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 15:01:34
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12222, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.1.1.10)(PORT=1521))(CONNECT_DATA=(SID=DESI)(CID=(PROGRAM=C:\IDS6i\BIN6i\ifrun60.EXE)(HOST=COMPUTO_RO)(USER=Administrador))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.6.3.0 - Production
+  Time: 24-MAR-2009 15:01:34
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12222
+    TNS-12222: TNS:no such protocol adapter
+    ns main err code: 12538
+    TNS-12538: TNS:no such protocol adapter
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: No such protocol adapter
+    nt secondary err code: 0
+    nt OS err code: 0

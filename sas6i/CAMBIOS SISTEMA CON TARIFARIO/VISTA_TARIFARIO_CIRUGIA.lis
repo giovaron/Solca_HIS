@@ -1,0 +1,46 @@
+
+Reconcile Report: \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\VISTA_TARIFARIO_CIRUGIA.lis
+
+Generated on Tue Jun 14  14:01:27 2011 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View TARIFARIO_CIRUGIA                                                                                       * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition            SELECT CONVENIO CONVENIO,...                                        
+
+                                         Comment                                                                                
+Column CONVENIO                                                                                              * NOT IN DATABASE * ***
+                                                                                                                                
+Column CODIGO_ITEM                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column DESCRIPCION                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column DESCRIPCION_COMPLETA                                                                                  * NOT IN DATABASE * ***
+                                                                                                                                
+Column OBSERVACION                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+Column UVR                                                                                                   * NOT IN DATABASE * ***
+                                                                                                                                
+Column UVR_ANES                                                                                              * NOT IN DATABASE * ***
+                                                                                                                                
+Column PRC                                                                                                   * NOT IN DATABASE * ***
+                                                                                                                                
+Column ID                                                                                                    * NOT IN DATABASE * ***
+                                                                                                                                
+                                               -------------------------------------
+                                               View TARIFARIO_CIRUGIA Differences: 1
+                                               -------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

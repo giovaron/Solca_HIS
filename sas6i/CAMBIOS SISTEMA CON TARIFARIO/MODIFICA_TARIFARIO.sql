@@ -1,0 +1,11 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\MODIFICA_TARIFARIO.sql
+--
+-- Generated for Oracle 9i on Tue Jul 05  12:13:14 2011 by Server Generator 6.5.96.5.6
+
+
+SPOOL MODIFICA_TARIFARIO.lst
+
+@@MODIFICA_TARIFARIO.tab
+@@MODIFICA_TARIFARIO.con
+
+SPOOL OFF

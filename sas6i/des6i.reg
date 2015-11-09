@@ -1,0 +1,21 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE]
+
+"FORMS60_PATH"="C:\\sas6i\\libfnt;d:\\sas6i\\tpl;d:\\sas6i\\bin\\INV\\frm;d:\\sas6i\\bin\\fct\\frm;d:\\sas6i\\bin\\cnt\\frm;d:\\sas6i\\bin\\crg\\frm;d:\\sas6i\\bin\\adm\\frm;d:\\sas6i\\bin\\lbr\\frm;d:\\sas6i\\bin\\ts\\frm;d:\\sas6i\\bin\\hsp\\frm;d:\\sas6i\\bin\\lbr\\frm;d:\\sas6i\\bin\\cpc\\frm;d:\\sas6i\\bin\\PRM\\frm"
+"REPORTS60_PATH"="C:\\sas6i\\libfnt;d:\\sas6i\\tpl;d:\\sas6i\\bin\\acf\\rpt;d:\\sas6i\\libfnt;d:\\sas6i\\bin\\CNT\\rpt;d:\\sas6i\\bin\\CEX\\rpt;d:\\sas6i\\bin\\SRI\\rpt;d:\\sas6i\\bin\\cpc\\rpt;C:\\IDS6i\\HSD21\\hst\\admin;d:\\sas6i\\bin\\Inv\\rpt;d:\\sas6i\\bin\\CNG\\rpt;C:\\IDS6i\\HSD21\\hst\\admin"
+"REPORTS60_TMP"="c:\\IDS6i\\REPORT60\\TMP"
+"GRAPHICS60_PATH"="C:\\IDS6i\\CGEN72"
+"UI_ICON"="C:\\IDS6i\\CGENF61\\ADMIN\\ICONS\\PC;C:\\IDS6i\\HSD21\\hsu\\ico;C:\\IDS6i\\HSD21\\hst\\ico"
+"NLS_DATE_FORMAT"="DD/MM/YYYY"
+"NLS_DATE_LANGUAGE"="SPANISH"
+"SIS_AREA"="C"
+"SIS_CAJA"="CJB"
+"SIS_DEPARTAMENTO"="2"
+"SIS_EMPRESA"="CSI"
+"SIS_LINEAS_POR_FACTURA"="20"
+"SIS_DUENOBD"="SMS"
+"SIS_CREAR_TURNOS"="V"
+"PERMITIR_TURNOS"="SI"
+"SIS_FARMACIA_DEPT"="1"
+"SIS_FARMACIA_AREA"="Q"

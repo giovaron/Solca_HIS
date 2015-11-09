@@ -1,0 +1,9 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\ICSC\CUENTAS.sqs
+--
+-- Generated for Oracle 9i on Mon Oct 31  12:14:25 2011 by Server Generator 6.5.96.5.6
+ 
+PROMPT Altering Sequence 'CNTS_SEQ'
+ALTER SEQUENCE CNTS_SEQ
+ CACHE 20
+/
+

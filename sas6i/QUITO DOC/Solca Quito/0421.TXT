@@ -1,0 +1,452 @@
+ 20/06/2006                                                           PAG.  1
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+    1  1.                   ACTIVOS                                           
+    2  1.1.                  OPERACIONALES                                     
+    3  1.1.1.                 DISPONIBILIDADES                                  
+    4  1.1.1.01.               CAJAS CHICAS                                      
+    5  1.1.1.01.01              Caja Chica No. 1 Gastos Diarios                   
+    6  1.1.1.01.02              Caja Chica No. 2 Ayuda a Pacientes                
+    7  1.1.1.01.03              Caja Chica No. 3 Gastos Construccio               
+    8  1.1.1.01.04              Caja Chica No. 4 Tipificaci¢n T.S.                
+    9  1.1.1.01.05              Caja Chica No. 5 Congresos y Semina               
+   10  1.1.1.03.               BANCOS COMERCIALES MONEDA NACIONAL                
+   11  1.1.1.03.01              Banco Produbanco # 0100503371-1                   
+   12  1.1.1.03.02              Banco Produbanco # 0100501644-2                   
+   13  1.1.1.03.03              Banco Produbanco # 0200500375-6                   
+   14  1.1.1.03.04              Banco del Pichincha # 30390368-04                 
+   15  1.1.1.03.05              Banco Nacional Fomento # 0010001411               
+   16  1.1.1.03.06              Dep¢sitos en Tr nsito                             
+   17  1.1.1.03.07              Banco del Pichincha # 3277911704                  
+   18  1.1.1.03.08              Banco del Pichincha # 3277913104                  
+   19  1.1.2.                 ANTICIPOS DE FONDOS                               
+   20  1.1.2.01.               ANTICIPOS A EMPLEADOS Y FUNCIONARIO               
+   21  1.1.2.01.01              Anticipo a Empleados y Funcionarios               
+   22  1.1.2.03.               ANTICIPOS A CONTRATISTAS                          
+   23  1.1.2.03.01              Anticipos a Contratistas                          
+   24  1.1.2.11.               GARANTIAS ENTREGADAS                              
+   25  1.1.2.11.01              Data Fast                                         
+   26  1.1.2.11.02              Jorge Sandoval                                    
+   27  1.1.3.                 CUENTAS POR COBRAR                                
+   28  1.1.3.12.               CUENTAS POR COBRAR SEGURIDAD SOCIAL               
+   29  1.1.3.12.01              Cuentas por Cobrar IESS                           
+   30  1.1.3.14.               CUENTAS POR COBRAR VENTA DE BIENES                
+   31  1.1.3.14.01              Pacientes                                         
+   32  1.1.3.14.02              Innfa                                             
+   33  1.1.3.14.03              Unidad Oncol¢gica Ambato                          
+   34  1.1.3.14.04              Cheques Posfechados                               
+   35  1.1.3.14.05              Tarjetas de Cr‚dito                               
+   36  1.1.3.14.06              Cuentas por Cobrar Particulares                   
+   37  1.1.3.14.07              Cuentas por Cobrar Funcionarios y E               
+   38  1.1.3.14.08              Elsa J come                                       
+   39  1.1.3.14.09              Wilma Rundo                                       
+   40  1.1.3.14.11              Mary Quirola                                      
+   41  1.1.3.14.12              Solca Portoviejo                                  
+   42  1.1.3.14.13              Unidad Oncol¢gica Riobamba                        
+   43  1.1.3.14.14              Elisa Rubio                                       
+   44  1.1.3.14.15              Bellsouth                                         
+   45  1.1.3.14.16              Unidad Oncol¢gica Ibarra                          
+   46  1.1.3.14.19              Ver¢nica Quispe                                   
+   47  1.1.3.14.20              Anita Dom¡nguez                                   
+   48  1.1.3.14.22              Ministerio de Finanzas                            
+   49  1.1.3.14.23              Hospital St. Judes de Menphis                     
+   50  1.1.3.14.25              Adela Garrido                                     
+   51  1.1.3.14.26              Elsa Quintana                                     
+   52  1.1.3.14.27              BMI                                                20/06/2006                                                           PAG.  2
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+   53  1.1.3.14.28              Grupo Oncol¢gico                                  
+   54  1.1.3.14.29              Instituto Geogr fico Militar                      
+   55  1.1.3.14.30              Issfa                                             
+   56  1.1.3.14.31              Panamericana Life                                 
+   57  1.1.3.14.32              Petroproducci¢n                                   
+   58  1.1.3.14.33              Polic¡a Nacional                                  
+   59  1.1.3.14.34              Tecniseguros                                      
+   60  1.1.3.14.35              Seguro Salud                                      
+   61  1.1.3.14.36              Panamericana del Ecuador                          
+   62  1.1.3.14.37              Seguros Bol¡var                                   
+   63  1.1.3.14.38              Cale - Cocom                                      
+   64  1.1.3.14.39              Metromedical                                      
+   65  1.1.3.14.40              Salud Coop                                        
+   66  1.1.3.14.41              Patronato Quinind‚                                
+   67  1.1.3.81.               CUENTAS POR COBRAR IMPUESTO AL VALO               
+   68  1.1.3.81.01              IVA por Cobrar                                    
+   69  1.1.3.81.02              Iva por Cobrar Bienes                             
+   70  1.1.3.81.03              Iva por Cobrar Servicios                          
+   71  1.1.3.81.04              Iva por Cobrar Activos Fijos                      
+   72  1.1.3.81.05              Ministerio de Finanzas (IVA)                      
+   73  1.1.3.81.06              Mastercard                                        
+   74  1.1.3.81.07              ABP Banca Privada                                 
+   75  1.1.3.81.08              Pacificard                                        
+   76  1.1.3.81.09              M&M Jaramillo Arteaga                             
+   77  1.1.3.81.10              Servicio de Rentas Internas SRI                   
+   78  1.2.                  INVERSIONES FINANCIERAS                           
+   79  1.2.1.                 INVERSIONES TEMPORALES                            
+   80  1.2.1.01.               DEPOSITOS A PLAZO                                 
+   81  1.2.1.01.01              Inversiones Adicionales                           
+   82  1.2.1.01.02              Inversiones Venta Departamentos Amb               
+   83  1.2.5.                 CARGOS DIFERIDOS                                  
+   84  1.2.5.01.               PREPAGADOS POR INSTALACION, MANTENI               
+   85  1.2.5.01.01              Metro Comunicaciones                              
+   86  1.2.5.01.02              Diario Hoy                                        
+   87  1.2.5.01.03              Suscripci¢n Libros y Revistas                     
+   88  1.2.5.01.04              Inec                                              
+   89  1.2.5.01.05              Registro Oficial                                  
+   90  1.2.5.01.06              El Comercio                                       
+   91  1.2.5.01.07              Correos                                           
+   92  1.2.5.01.08              M s Copias                                        
+   93  1.2.5.01.09              PC-Word                                           
+   94  1.2.5.01.10              Gesti¢n                                           
+   95  1.2.5.01.11              Lexis                                             
+   96  1.2.5.01.12              Corpomel                                          
+   97  1.2.5.01.13              Revista Se¤ales                                   
+   98  1.2.5.31.               PREPAGADOS DE SEGUROS, COMISIONES F               
+   99  1.2.5.31.01              Panamericana del Ecuador                          
+  100  1.2.5.31.02              Tecniseguros                                      
+  101  1.2.5.47.               INTANGIBLES                                       
+  102  1.2.5.47.01              Intangibles                                       
+  103  1.2.6.                 INVERSIONES NO RECUPERABLES                       
+  104  1.2.6.99.               PROVISION PARA INCOBRABLES                         20/06/2006                                                           PAG.  3
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+  105  1.2.6.99.01              Provisi¢n Cuentas por Cobrar Pacientes            
+  106  1.3.                  INVERSIONES EN EXISTENCIAS                        
+  107  1.3.1.                 EXISTENCIAS PARA CONSUMO                          
+  108  1.3.1.01.               EXISTENCIAS DE BIENES DE USO Y CONS               
+  109  1.3.1.01.01              Existencia de Medicinas y Productos               
+  110  1.3.1.01.02              Existencia de Reactivos                           
+  111  1.3.1.01.03              Existencia de Suministros y Materia               
+  112  1.4.                  INVERSIONES EN BIENES DE LARGA DURA               
+  113  1.4.1.                 BIENES DE ADMINISTRACION                          
+  114  1.4.1.01.               BIENES MUEBLES                                    
+  115  1.4.1.01.03              Mobiliarios                                       
+  116  1.4.1.01.04              Maquinarias y Equipos                             
+  117  1.4.1.01.05              Veh¡culos                                         
+  118  1.4.1.01.06              Herramientas                                      
+  119  1.4.1.01.09              Libros y Colecciones                              
+  120  1.4.1.01.10              Vajilla y Menaje                                  
+  121  1.4.1.03.               BIENES INMUEBLES                                  
+  122  1.4.1.03.01              Terrenos                                          
+  123  1.4.1.03.02              Edificios, Locales y Residencias                  
+  124  1.4.1.06.               ACTIVOS FIJOS EN TRANSITO                         
+  125  1.4.1.06.01              Activos Fijos en Tr nsito                         
+  126  1.4.1.99.               DEPRECIACION ACUMULADA                            
+  127  1.4.1.99.01              Depreciaci¢n Acumulada Mobiliarios                
+  128  1.4.1.99.02              Depreciaci¢n Acumulada Maquinarias                
+  129  1.4.1.99.03              Depreciaci¢n Acumulada Veh¡culos                  
+  130  1.4.1.99.04              Depreciaci¢n Acumulada Herramientas               
+  131  1.4.1.99.05              Depreciaci¢n Acumulada Edificios, L               
+  132  1.4.1.99.06              Depreciaci¢n Acumulada Vajilla y Me               
+  133  1.6.                  OTROS ACTIVOS                                     
+  134  1.6.1.                 OTROS ACTIVOS                                     
+  135  1.6.1.01.               OTROS ACTIVOS                                     
+  136  1.6.1.01.01              Otros Activos                                     
+  137  1.6.1.01.02              Fondo de Jubilaci¢n Patronal                      
+  138  2.                   PASIVOS                                           
+  139  2.1.                  DEUDA FLOTANTE                                    
+  140  2.1.2.                 DEPOSITOS DE TERCEROS                             
+  141  2.1.2.01.               DEPOSITOS DE INTERMEDIACI0N                       
+  142  2.1.2.01.01              Asociaci¢n de Empleados                           
+  143  2.1.2.01.02              Colegio M‚dico de Pichincha                       
+  144  2.1.2.01.03              Asociaci¢n de M‚dicos                             
+  145  2.1.2.01.04              Becas IECE                                        
+  146  2.1.2.01.05              Retenciones Judiciales                            
+  147  2.1.2.01.06              Cice 0,1%                                         
+  148  2.1.2.01.07              Cooperativa                                       
+  149  2.1.2.01.08              Produbanco                                        
+  150  2.1.2.01.09              Colegio de Enfermeras de Pichincha                
+  151  2.1.2.01.10              Colegio de Tecn¢logos M‚dicos                     
+  152  2.1.2.07.               OBLIGACIONES DE OTROS ENTES PUBLICO               
+  153  2.1.2.07.01              Aporte Individual                                 
+  154  2.1.2.07.02              Pr‚stamos IESS                                    
+  155  2.1.2.07.03              Contralor¡a General del Estado                    
+  156  2.1.2.07.04              Procuradur¡a                                       20/06/2006                                                           PAG.  4
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+  157  2.1.2.07.05              Senacyt                                           
+  158  2.1.2.07.06              Inec                                              
+  159  2.1.2.07.07              Banco Ecuatoriano de la Vivienda                  
+  160  2.1.2.07.08              Ministerio P£blico                                
+  161  2.1.2.07.09              Cebca                                             
+  162  2.1.2.07.10              Cae                                               
+  163  2.1.2.53.               CREDITOS POR DEVOLUCION DE IMPUESTO               
+  164  2.1.2.53.01              Impuesto a la Renta Sueldos                       
+  165  2.1.2.53.02              Impuesto a la Renta 1% Combustibles               
+  166  2.1.2.53.03              Impuesto a la Renta 1% Act. Fijos                 
+  167  2.1.2.53.04              Impuesto a la Renta 1% Servicios                  
+  168  2.1.2.53.05              Impuesto a la Renta 1% Corrientes                 
+  169  2.1.2.53.06              Impuesto a la Renta 1% Seguros                    
+  170  2.1.2.53.07              Impuesto a la Renta 5% Arriendos                  
+  171  2.1.2.53.08              Impuesto a la Renta 5% Honorarios                 
+  172  2.1.2.53.09              Impuesto a la Renta 8% Servicios                  
+  173  2.1.2.53.10              Impuesto a la Renta 8% Honorarios                 
+  174  2.1.2.53.11              Impuesto a la Renta 8% Arriendos                  
+  175  2.1.2.53.12              Impuesto a la Renta 5% Servicios                  
+  176  2.1.2.53.13              Impuesto a la Renta 25%                           
+  177  2.1.2.53.14              Impuesto a la Renta 1% Suministros                
+  178  2.1.2.53.15              Impuesto a la Renta 1% Repuestos-Herramientas     
+  179  2.1.2.53.16              Impuesto a la Renta 1% Transporte                 
+  180  2.1.2.53.17              Impuesto a la Renta 8% Notarios                   
+  181  2.1.2.53.18              Impuesto a la Renta 1% Publicidad                 
+  182  2.1.3.                 CUENTAS POR PAGAR                                 
+  183  2.1.3.52.               CUENTAS POR PAGAR PRESTACIONES DE L               
+  184  2.1.3.52.01              Aporte Patronal                                   
+  185  2.1.3.52.02              Iece 0,5%                                         
+  186  2.1.3.52.03              Secap 0,5%                                        
+  187  2.1.3.53.               CUENTAS POR PAGAR BIENES Y SERVICIO               
+  188  2.1.3.53.01              Provedores                                        
+  189  2.1.3.53.02              Elsa Quintana                                     
+  190  2.1.3.53.03              Ana Dom¡nguez                                     
+  191  2.1.3.53.04              Mary Quirola                                      
+  192  2.1.3.53.05              Elisa Rubio                                       
+  193  2.1.3.53.06              Wilma Rundo                                       
+  194  2.1.3.53.07              Letty Moyano                                      
+  195  2.1.3.53.08              Ver¢nica Quispe                                   
+  196  2.1.3.53.09              Elsa J come                                       
+  197  2.1.3.53.10              Lorena Pinto                                      
+  198  2.1.3.53.11              Comit‚ Amigos Solca Chimborazo                    
+  199  2.1.3.53.12              Adela Garrido                                     
+  200  2.1.3.53.13              Bontravel                                         
+  201  2.1.3.53.14              Provedores Varios                                 
+  202  2.1.3.53.15              Cuentas por Pagar Funcionarios y Empleados        
+  203  2.1.3.57.               CUENTAS POR PAGAR OTROS GASTOS                    
+  204  2.1.3.57.01              Panamericana del Ecuador                          
+  205  2.1.3.57.02              Cuentas por Pagar Bancos                          
+  206  2.1.3.81.               CUENTAS POR PAGAR AL VALOR AGREGADO               
+  207  2.1.3.81.01              IVA por Pagar 12%                                 
+  208  2.1.3.81.02              IVA por Pagar 30% del 12%                          20/06/2006                                                           PAG.  5
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+  209  2.1.3.81.03              IVA por Pagar 70% del 12%                         
+  210  2.1.3.81.04              Iva en Ventas                                     
+  211  2.2.                  DEUDA PUBLICA                                     
+  212  2.2.5.                 CREDITOS DIFERIDOS                                
+  213  2.2.5.91.               RESERVAS                                          
+  214  2.2.5.91.98              Reserva Matem tica 1                              
+  215  2.2.5.91.99              Reserva Matem tica 2                              
+  216  6.                   PATRIMONIO                                        
+  217  6.1.                  PATRIMONIO ACUMULADO                              
+  218  6.1.1.                 PATRIMONIO                                        
+  219  6.1.1.01.               PATRIMONIO PRIVADO                                
+  220  6.1.1.01.01              Patrimonio                                        
+  221  6.1.8.                 RESULTADOS DE EJERCICIOS                          
+  222  6.1.8.01.               RESULTADOS DE EJERCICIOS ANTERIORES               
+  223  6.1.8.01.01              Resultados de Ejercicios Anteriores               
+  224  6.1.8.03.               RESULTADO DEL EJERCICIO VIGENTE                   
+  225  6.1.8.03.01              Resultado del Ejercicio Vigente                   
+  226  6.2.                  INGRESOS DE GESTION                               
+  227  6.2.1.                 IMPUESTOS                                         
+  228  6.2.1.07.               IMPUESTOS DIVERSOS                                
+  229  6.2.1.07.01              Operaciones de Cr‚dito                            
+  230  6.2.3.                 TASAS Y CONTRIBUCIONES                            
+  231  6.2.3.01.               TASAS GENERALES                                   
+  232  6.2.3.01.02              Acceso a Lugares de la Instituci¢n                
+  233  6.2.3.01.07              Venta de Bases                                    
+  234  6.2.3.01.08              Prestaci¢n de Servicios                           
+  235  6.2.3.01.11              Inscripciones, Registros y Matr¡cul               
+  236  6.2.3.01.99              Descuento en Servicios e Insumos                  
+  237  6.2.4.                 VENTA DE BIENES Y SERVICIOS                       
+  238  6.2.4.02.               VENTA DE PRODUCTOS Y MATERIALES                   
+  239  6.2.4.02.05              Ventas de Insumos M‚dicos                         
+  240  6.2.4.21.               VENTA DE BIENES MUEBLES DE ADMINIST               
+  241  6.2.4.21.03              Venta de Mobiliarios                              
+  242  6.2.4.21.04              Venta de Maquinarias y Equipos                    
+  243  6.2.4.21.05              Venta de Veh¡culos                                
+  244  6.2.4.21.06              Venta de Herramientas                             
+  245  6.2.4.23.               VENTA DE INMUEBLES DE ADMINISTRACIO               
+  246  6.2.4.23.01              Venta de Terrenos                                 
+  247  6.2.4.23.02              Venta de Edificios, Locales y Resid               
+  248  6.2.5.                 RENTAS DE INVERSIONES Y OTROS                     
+  249  6.2.5.01.               RENTAS DE INVERSIONES                             
+  250  6.2.5.01.01              Intereses por Dep¢sitos a Plazo                   
+  251  6.2.5.01.02              Intereses Dep¢sito a Plazos Adicion               
+  252  6.2.5.01.03              Intereses Venta Departamentos Ambat               
+  253  6.2.5.01.04              Intereses por Jubilaci¢n Patronal                 
+  254  6.2.5.02.               RENTA DE ARRENDAMIENTOS DE BIENES                 
+  255  6.2.5.02.02              Renta de Edificios, Locales y Resid               
+  256  6.2.5.04.               MULTAS                                            
+  257  6.2.5.04.04              Incumplimiento de Contratos                       
+  258  6.2.5.21.               GARANTIAS Y FIANZAS                               
+  259  6.2.5.21.01              Ejecuci¢n de Garant¡as                            
+  260  6.2.5.24.               OTROS INGRESOS NO CLASIFICADOS                     20/06/2006                                                           PAG.  6
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+  261  6.2.5.24.99              Otros no Especificados                            
+  262  6.2.6.                 TRANSFERENCIAS RECIBIDAS                          
+  263  6.2.6.22.               DONACIONES DE CAPITAL DEL SECTOR PR               
+  264  6.2.6.22.03              Donaciones del Sector Privado Finan               
+  265  6.2.6.22.04              Donaciones del Sector Privado no Fi               
+  266  6.3.                  GASTOS DE GESTION                                 
+  267  6.3.3.                 REMUNERACIONES                                    
+  268  6.3.3.01.               REMUNERACIONES BASICAS                            
+  269  6.3.3.01.01              Sueldos                                           
+  270  6.3.3.02.               REMUNERACIONES COMPLEMENTARIAS                    
+  271  6.3.3.02.01              Subsidio por A¤os de Servicio                     
+  272  6.3.3.02.02              Bonificaci¢n por Responsabilidad                  
+  273  6.3.3.02.03              D‚cimotercer Sueldo                               
+  274  6.3.3.02.04              D‚cimocuarto Sueldo                               
+  275  6.3.3.02.09              Gastos de Representaci¢n                          
+  276  6.3.3.02.10              Sobresueldos y Bonificaciones Adici               
+  277  6.3.3.02.22              Bonificaci¢n M‚dica                               
+  278  6.3.3.02.30              Componentes Salariales Incorporados               
+  279  6.3.3.02.31              Componentes Salariales Unificados                 
+  280  6.3.3.02.32              Bonificaci¢n por Jefatura                         
+  281  6.3.3.02.33              Gratificaciones y Complementos en e               
+  282  6.3.3.03.               REMUNERACIONES COMPENSATORIAS                     
+  283  6.3.3.03.01              Gastos de Residencia                              
+  284  6.3.3.03.06              Refrigerio                                        
+  285  6.3.3.03.07              Comisariato                                       
+  286  6.3.3.03.08              Compensaci¢n Pedag¢gica                           
+  287  6.3.3.04.               SUBSIDIOS                                         
+  288  6.3.3.04.02              Educaci¢n                                         
+  289  6.3.3.04.05              Guarder¡a                                         
+  290  6.3.3.04.07              Est¡mulo Econ¢mico por A¤os de Serv               
+  291  6.3.3.05.               REMUNERACIONES TEMPORALES                         
+  292  6.3.3.05.04              Encargos y Subrogaciones                          
+  293  6.3.3.05.05              Sustituciones de Personal                         
+  294  6.3.3.05.06              Licencia Remunerada                               
+  295  6.3.3.05.07              Honorarios                                        
+  296  6.3.3.05.09              Horas Extraordinarias y Suplementar               
+  297  6.3.3.05.10              Servicios Personales por Contrato                 
+  298  6.3.3.05.11              Remuneraciones Especiales Secci¢n Nocturna        
+  299  6.3.3.05.12              Contrataci¢n por Horas                            
+  300  6.3.3.06.               APORTES PATRONALES A LA SEGURIDAD S               
+  301  6.3.3.06.01              Aporte Patronal                                   
+  302  6.3.3.06.02              Fondo de Reserva                                  
+  303  6.3.3.06.03              Fondo de Jubilaci¢n Patronal                      
+  304  6.3.3.06.05              Iece 0,5%                                         
+  305  6.3.3.06.06              Secap 0,5%                                        
+  306  6.3.3.06.98              Reserva Matem tica 1                              
+  307  6.3.3.07.               INDEMNIZACIONES                                   
+  308  6.3.3.07.03              Despido Intempestivo                              
+  309  6.3.3.07.98              Reserva Matem tica 2                              
+  310  6.3.4.                 BIENES Y SERVICIOS DE CONSUMO                     
+  311  6.3.4.01.               SERVICIOS BASICOS                                 
+  312  6.3.4.01.01              Agua Potable                                       20/06/2006                                                           PAG.  7
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+  313  6.3.4.01.04              Energ¡a El‚ctrica                                 
+  314  6.3.4.01.05              Telecomunicaciones                                
+  315  6.3.4.01.06              Servicio de Correo                                
+  316  6.3.4.02.               SERVICIOS GENERALES                               
+  317  6.3.4.02.01              Transporte de Personal                            
+  318  6.3.4.02.02              Fletes y Maniobras                                
+  319  6.3.4.02.03              Almacenamiento, Embalaje y Envase                 
+  320  6.3.4.02.04              Impresi¢n, Reproducci¢n y Publicida               
+  321  6.3.4.02.07              Difusi¢n, Informaci¢n y Publicidad                
+  322  6.3.4.02.08              Servicio de Vigilancia                            
+  323  6.3.4.02.09              Servicio de Aseo                                  
+  324  6.3.4.02.11              Atenci¢n M‚dica Contratada                        
+  325  6.3.4.02.12              Alimentaci¢n a Pacientes                          
+  326  6.3.4.02.13              Refrigerio                                        
+  327  6.3.4.02.99              Otros Servicios Generales                         
+  328  6.3.4.03.               TRASLADOS, INSTALACIONES, VIATICOS                
+  329  6.3.4.03.01              Pasajes al Interior                               
+  330  6.3.4.03.02              Pasajes al Exterior                               
+  331  6.3.4.03.03              Vi ticos y Subsistencias en el Inte               
+  332  6.3.4.03.04              Vi ticos y Subsistencias en el Exte               
+  333  6.3.4.04.               INSTALACION, MANTENIMIENTO Y REPARA               
+  334  6.3.4.04.02              Gastos en Edificios, Locales y Resi               
+  335  6.3.4.04.03              Gastos en Mobiliarios                             
+  336  6.3.4.04.04              Gastos en Maquinarias y Equipos                   
+  337  6.3.4.04.05              Gastos en Veh¡culos                               
+  338  6.3.4.05.               ARRENDAMIENTOS DE BIENES                          
+  339  6.3.4.05.04              Arrendamientos de Maquinarias y Equ               
+  340  6.3.4.05.05              Arrendamientos de Veh¡culos                       
+  341  6.3.4.06.               CONTRATACIONES DE ESTUDIOS E INVEST               
+  342  6.3.4.06.01              Consultor¡a, Asesor¡a e Investigaci               
+  343  6.3.4.06.03              Servicio de Capacitaci¢n                          
+  344  6.3.4.06.06              Congresos y Seminarios                            
+  345  6.3.4.07.               GASTOS EN INFORMATICA                             
+  346  6.3.4.07.01              Desarrollo de Sistemas Inform ticos               
+  347  6.3.4.07.04              Mantenimiento de Sistemas Inform ti               
+  348  6.3.4.08.               BIENES DE USO Y CONSUMO CORRIENTE                 
+  349  6.3.4.08.01              Alimentos y Bebidas                               
+  350  6.3.4.08.02              Vestuario, Lencer¡a y Prendas de Pr               
+  351  6.3.4.08.03              Combustibles y Lubricantes                        
+  352  6.3.4.08.04              Materiales de Oficina                             
+  353  6.3.4.08.05              Materiales de Aseo                                
+  354  6.3.4.08.06              Herramientas                                      
+  355  6.3.4.08.07              Materiales de Impresi¢n, Fotograf¡a               
+  356  6.3.4.08.08              Instrumental M‚dico Menor                         
+  357  6.3.4.08.09              Medicinas y Productos Farmace£ticos               
+  358  6.3.4.08.10              Materiales para Laboratorio y Uso M               
+  359  6.3.4.08.11              Materiales de Construcci¢n, El‚ctri               
+  360  6.3.4.08.13              Repuestos y Accesorios                            
+  361  6.3.4.08.15              Utensillos de Cocina y Comedor Meno               
+  362  6.3.4.08.99              Otros Bienes de Uso y Consumo                     
+  363  6.3.5.                 GASTOS FINANCIEROS Y OTROS                        
+  364  6.3.5.04.               SEGUROS, COMISIONES FINANCIEROS Y O                20/06/2006                                                           PAG.  8
+
+ SOLCA NUCLEO DE QUITO 2006
+
+ PLAN DE CUENTAS
+
+ ============================================================================
+ ORD.  CODIGO  CONTABLE        NOMBRE CUENTA
+ ============================================================================
+  365  6.3.5.04.01              Seguros                                           
+  366  6.3.5.04.03              Comisiones Bancarias                              
+  367  6.3.5.04.06              Costas Judiciales                                 
+  368  6.3.5.04.99              Otros Gastos Administrativos                      
+  369  6.3.6.                 TRANSFERENCIAS ENTREGADAS                         
+  370  6.3.6.01.               TRANSFERENCIAS CORRIENTES AL SECTOR               
+  371  6.3.6.01.02              Unidad Oncol¢gica Ambato                          
+  372  6.3.6.01.03              Unidad Oncol¢gica Riobamba                        
+  373  6.3.6.01.04              Unidad Oncol¢gica Ibarra                          
+  374  6.3.6.02.               TRANSFERENCIAS CORRIENTES AL SECTOR               
+  375  6.3.6.02.04              Transferencias al Sector Privado no               
+  376  6.3.6.11.               TRANSFERENCIAS PARA INVERSION AL SE               
+  377  6.3.6.11.06              Becas                                             
+  378  6.3.8.                 COSTO DE VENTAS Y DIFERIDOS                       
+  379  6.3.8.51.               DEPRECIACION BIENES                               
+  380  6.3.8.51.01              Gasto Depreciaciones                              
+  381  9.                   CUENTAS DE ORDEN                                  
+  382  9.1.                  DEUDORAS                                          
+  383  9.1.01                 Garant¡as en Valores, Bienes y Docu               
+  384  9.2.                  ACREEDORAS                                        
+  385  9.2.01                 Responsabilidad por Garant¡as                     
+
+ 20/06/2006 12:04:24 SUPERVISOR                                  SAFI V6.5

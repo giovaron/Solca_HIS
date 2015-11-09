@@ -1,0 +1,1623 @@
+-- Create table
+create table PROMOCIONES_CONVENIOS
+(
+  PRMPCN_PRMPCN_ID     NUMBER(10) not null,
+  NUMERO_CONVENIO      NUMBER(9) not null,
+  OFICIO               VARCHAR2(20) not null,
+  FECHA_CONVENIO       DATE not null,
+  FECHA_INICIO         DATE not null,
+  OBJETO               VARCHAR2(500) not null,
+  FECHA_FIN            DATE,
+  PRS_CODIGO           VARCHAR2(4),
+  PCN_NUMERO_HC        NUMBER(6) not null,
+  TIPO_SEGURO          VARCHAR2(10),
+  ID_BENEFICIARIO      VARCHAR2(15),
+  TIPO_ID_BENEFICIARIO VARCHAR2(5),
+  PARENTESCO           VARCHAR2(5),
+  ID_AFILIADO          VARCHAR2(15),
+  CONT_CUBIERTA        NUMBER(2),
+  CODIGO_DERIVACION    VARCHAR2(5),
+  NOMBRE_AFILIADO      VARCHAR2(100),
+  DX_INGRESO           NUMBER(10)
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the columns 
+comment on column PROMOCIONES_CONVENIOS.NUMERO_CONVENIO
+  is 'Número de Convenio';
+comment on column PROMOCIONES_CONVENIOS.FECHA_CONVENIO
+  is 'Fecha del convenio';
+comment on column PROMOCIONES_CONVENIOS.FECHA_INICIO
+  is 'Fecha de inicio';
+comment on column PROMOCIONES_CONVENIOS.OBJETO
+  is 'Objeto de convenio';
+comment on column PROMOCIONES_CONVENIOS.FECHA_FIN
+  is 'Fecha final del convenio';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table PROMOCIONES_CONVENIOS
+  add constraint PRMCNV_PK primary key (NUMERO_CONVENIO)
+  using index 
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table PROMOCIONES_CONVENIOS
+  add constraint PRMCNV_DGNPCN_FK foreign key (DX_INGRESO)
+  references DIAGNOSTICOS_PACIENTE (DGNPCN_ID);
+alter table PROMOCIONES_CONVENIOS
+  add constraint PRMCNV_PCN_FK foreign key (PCN_NUMERO_HC)
+  references PACIENTES (NUMERO_HC);
+alter table PROMOCIONES_CONVENIOS
+  add constraint PRMCNV_PRMPCN_FK foreign key (PRMPCN_PRMPCN_ID)
+  references PROMOCIONES_PACIENTES (PRMPCN_ID);
+alter table PROMOCIONES_CONVENIOS
+  add constraint PRMCNV_PRS_FK foreign key (PRS_CODIGO)
+  references PERSONAL (CODIGO);
+-- Create/Recreate indexes 
+create index PRMCNV_PRMPCN_FK_I on PROMOCIONES_CONVENIOS (PRMPCN_PRMPCN_ID)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index PRMCNV_PRS_FK_I on PROMOCIONES_CONVENIOS (PRS_CODIGO)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE OR REPLACE TRIGGER POBLAR_QUIEN
+ BEFORE UPDATE OF FECHA_FIN
+ ON PROMOCIONES_CONVENIOS
+ FOR EACH ROW
+ 
+when ((OLD.FECHA_FIN IS NULL))
+BEGIN
+  DECLARE
+    QUIEN VARCHAR2(4);
+-- COLOCA EL ID DE USUARIO QUE PUSO FIN AL CONVENIO.
+  BEGIN
+    SELECT CODIGO INTO QUIEN FROM PERSONAL WHERE  USUARIO = USER;
+           IF :OLD.FECHA_FIN IS NULL AND :OLD.PRS_CODIGO IS NULL THEN
+                :NEW.PRS_CODIGO:=QUIEN;
+           END IF;
+    END;
+END;
+
+create or replace trigger PRMCNVLLNJN
+  after DELETE OR UPDATE  
+  ON promociones_convenios 
+  for each row
+declare
+  VOPR VARCHAR2(240);
+begin
+  IF Updating THEN
+    vOpr:='UPD';
+  ELSE
+    vOpr:='DEL';
+  END IF;
+  INSERT INTO  promociones_convenios_jn
+  (JN_OPERATION,JN_ORACLE_USER,JN_DATETIME,JN_NOTES,JN_APPLN,JN_SESSION,
+   PRMPCN_PRMPCN_ID,NUMERO_CONVENIO,OFICIO,FECHA_CONVENIO,FECHA_INICIO,
+   OBJETO,FECHA_FIN,PRS_CODIGO,PCN_NUMERO_HC,TIPO_SEGURO,ID_BENEFICIARIO,
+   TIPO_ID_BENEFICIARIO,PARENTESCO,ID_AFILIADO,CONT_CUBIERTA,CODIGO_DERIVACION,
+   NOMBRE_AFILIADO)
+  VALUES
+  (vOpr,USER,SYSDATE,NULL,NULL,NULL,
+   :OLD.PRMPCN_PRMPCN_ID,:OLD.NUMERO_CONVENIO,:OLD.OFICIO,:OLD.FECHA_CONVENIO,:OLD.FECHA_INICIO,
+   :OLD.OBJETO,:OLD.FECHA_FIN,:OLD.PRS_CODIGO,:OLD.PCN_NUMERO_HC,:OLD.TIPO_SEGURO,:OLD.ID_BENEFICIARIO,
+   :OLD.TIPO_ID_BENEFICIARIO,:OLD.PARENTESCO,:OLD.ID_AFILIADO,:OLD.CONT_CUBIERTA,:OLD.CODIGO_DERIVACION,
+   :OLD.NOMBRE_AFILIADO);
+end PRMCNVLLNJN;
+
+
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on PROMOCIONES_CONVENIOS to ADMINISTRADOR_PROMOCIONES;
+grant select on PROMOCIONES_CONVENIOS to GENERAL;
+grant select, update on PROMOCIONES_CONVENIOS to MEDICOS;
+grant select, insert, update, delete on PROMOCIONES_CONVENIOS to TRABAJO_SOCIAL;
+
+CREATE PUBLIC SYNONYM PROMOCIONES_CONVENIOS FOR SIS.PROMOCIONES_CONVENIOS;
+
+-- Create table
+create table PROMOCIONES_CONVENIOS_JN
+(
+  JN_OPERATION         CHAR(3) not null,
+  JN_ORACLE_USER       VARCHAR2(30) not null,
+  JN_DATETIME          DATE not null,
+  JN_NOTES             VARCHAR2(240),
+  JN_APPLN             VARCHAR2(35),
+  JN_SESSION           NUMBER(38),
+  PCN_NUMERO_HC        NUMBER(7),
+  PRMPCN_PRMPCN_ID     NUMBER(10),
+  NUMERO_CONVENIO      NUMBER(9) not null,
+  OFICIO               VARCHAR2(20),
+  FECHA_CONVENIO       DATE,
+  FECHA_INICIO         DATE,
+  OBJETO               VARCHAR2(500),
+  FECHA_FIN            DATE,
+  PRS_CODIGO           VARCHAR2(4),
+  TIPO_SEGURO          VARCHAR2(10),
+  ID_BENEFICIARIO      VARCHAR2(15),
+  TIPO_ID_BENEFICIARIO VARCHAR2(5),
+  PARENTESCO           VARCHAR2(5),
+  ID_AFILIADO          VARCHAR2(15),
+  CONT_CUBIERTA        NUMBER(2),
+  CODIGO_DERIVACION    VARCHAR2(5),
+  NOMBRE_AFILIADO      VARCHAR2(100),
+  DX_INGRESO           NUMBER(10)
+)
+tablespace TBDATOSG
+  pctfree 60
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table PROMOCIONES_CONVENIOS_JN
+  is 'Created by Oracle Designer Server Generator';
+
+
+-- Create table
+create table GRUPOS_TARIFARIO
+(
+  CONVENIO    VARCHAR2(25) not null,
+  TIPO        VARCHAR2(250) not null,
+  CODIGO      VARCHAR2(255) not null,
+  DESCRIPCION VARCHAR2(255) not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GRUPOS_TARIFARIO
+  add constraint GRPTRF_PK primary key (TIPO, CONVENIO, CODIGO)
+  using index 
+  tablespace TBINDICESP
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE PUBLIC SYNONYM GRUPOS_TARIFARIO FOR SIS.GRUPOS_TARIFARIO;
+
+
+-- Create table
+create table TIPOS_EXAMENES_IESS
+(
+  CONVENIO    VARCHAR2(25) not null,
+  TIPO        VARCHAR2(250) not null,
+  GRUPO       VARCHAR2(255) not null,
+  SUBGRUPO    VARCHAR2(255) not null,
+  TIPO_EXAMEN VARCHAR2(15) not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table TIPOS_EXAMENES_IESS
+  add constraint TPOEXM_IESS_PK primary key (CONVENIO, TIPO, GRUPO, SUBGRUPO)
+  using index 
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table TIPOS_EXAMENES_IESS
+  add constraint TPOEXM_IESS_GRPTRF_FK foreign key (TIPO, CONVENIO, GRUPO)
+  references GRUPOS_TARIFARIO (TIPO, CONVENIO, CODIGO);
+
+CREATE PUBLIC SYNONYM TIPOS_EXAMENES_IESS FOR SIS.TIPOS_EXAMENES_IESS;
+
+grant select on TIPOS_EXAMENES_IESS to ADMINISTRADOR_MAESTROS;
+grant select on TIPOS_EXAMENES_IESS to AUDITORIA;
+grant select on TIPOS_EXAMENES_IESS to AUDITOR_MEDICO;
+grant select on TIPOS_EXAMENES_IESS to SIS_ADMIN;
+
+
+-- Create table
+create table REGISTRO_ARCHIVOS_IESS
+(
+  ID               NUMBER(20) not null,
+  USUARIO          VARCHAR2(4) not null,
+  NOMBRE_ARCHIVO   VARCHAR2(255) not null,
+  FECHA_GENERACION DATE not null,
+  REGISTROS        NUMBER(10) not null,
+  VALOR            NUMBER(20,4) not null,
+  FECHA_DESDE      DATE not null,
+  FECHA_HASTA      DATE not null,
+  TIPO             VARCHAR2(1) not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table REGISTRO_ARCHIVOS_IESS
+  add constraint RAS_PK primary key (ID)
+  using index 
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table REGISTRO_ARCHIVOS_IESS
+  add constraint RAS_PRS_FK foreign key (USUARIO)
+  references PERSONAL (CODIGO);
+-- Grant/Revoke object privileges 
+grant insert, update, delete on REGISTRO_ARCHIVOS_IESS to ADMINISTRADOR_MAESTROS;
+grant insert, update, delete on REGISTRO_ARCHIVOS_IESS to AUDITORIA;
+grant insert, update, delete on REGISTRO_ARCHIVOS_IESS to AUDITOR_MEDICO;
+grant insert, update, delete on REGISTRO_ARCHIVOS_IESS to SIS_ADMIN;
+
+
+-- Create table
+create table REGISTRO_ARCHIVOS_DTL_IESS
+(
+  REG_ID             NUMBER(20) not null,
+  CNT_DOC            VARCHAR2(1),
+  CNT_NUMERO         NUMBER(10),
+  CNT_DTL            NUMBER(4),
+  PCN_NUMERO_HC      NUMBER(10),
+  DEPENDENCIA        VARCHAR2(50),
+  PLA_NUMERO_RECLAMO NUMBER(10),
+  FEC_ATENCION       DATE,
+  TIPO_SEGURO        VARCHAR2(10),
+  ID_BNF             VARCHAR2(50),
+  NOMBRE_BNF         VARCHAR2(250),
+  SEXO               VARCHAR2(1),
+  FEC_NAC            DATE,
+  EDAD               VARCHAR2(5),
+  TIPO_EXAMEN        VARCHAR2(50),
+  COD_PROC           VARCHAR2(250),
+  NOM_PROC           VARCHAR2(4000),
+  DX_PRINCIPAL       VARCHAR2(50),
+  DX_S1              VARCHAR2(50),
+  DX_S2              VARCHAR2(50),
+  CANTIDAD           NUMBER(20,10),
+  VALOR              NUMBER(20,10),
+  DURACION_CONS      VARCHAR2(10),
+  PARENTESCO         VARCHAR2(5),
+  ID_AFL             VARCHAR2(50),
+  NOM_AFL            VARCHAR2(250),
+  COD_DRV            VARCHAR2(5),
+  SECUENCIAL         NUMBER(10),
+  CONTINGENCIA       NUMBER(2),
+  TIPO_DX            VARCHAR2(1),
+  TMP_ANES           VARCHAR2(10),
+  DX_S3              VARCHAR2(50),
+  DX_S4              VARCHAR2(50),
+  DX_S5              VARCHAR2(50),
+  IVA_PRC            NUMBER(10),
+  IVA_VALOR          NUMBER(20,10)
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table REGISTRO_ARCHIVOS_DTL_IESS
+  add constraint RAL_RAS_FK foreign key (REG_ID)
+  references REGISTRO_ARCHIVOS_IESS (ID);
+-- Grant/Revoke object privileges 
+grant insert, update, delete on REGISTRO_ARCHIVOS_DTL_IESS to ADMINISTRADOR_MAESTROS;
+grant insert, update, delete on REGISTRO_ARCHIVOS_DTL_IESS to AUDITORIA;
+grant insert, update, delete on REGISTRO_ARCHIVOS_DTL_IESS to AUDITOR_MEDICO;
+grant insert, update, delete on REGISTRO_ARCHIVOS_DTL_IESS to SIS_ADMIN;
+
+
+-- Create table
+create table CUENTAS_TEMPORAL_ARCPLNIESS
+(
+  PCN_NUMERO_HC NUMBER(6),
+  NOMBRE        VARCHAR2(250),
+  FECHA         DATE,
+  DOCUMENTO     VARCHAR2(1),
+  NUMERO        NUMBER(10),
+  DETALLE       NUMBER(4),
+  CRG_CODIGO    VARCHAR2(7),
+  DESCRIPCION   VARCHAR2(4000)
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE PUBLIC SYNONYM CUENTAS_TEMPORAL_ARCPLNIESS FOR SIS.CUENTAS_TEMPORAL_ARCPLNIESS;
+
+grant insert, update, delete on CUENTAS_TEMPORAL_ARCPLNIESS to ADMINISTRADOR_MAESTROS;
+grant insert, update, delete on CUENTAS_TEMPORAL_ARCPLNIESS to AUDITORIA;
+grant insert, update, delete on CUENTAS_TEMPORAL_ARCPLNIESS to AUDITOR_MEDICO;
+grant insert, update, delete on CUENTAS_TEMPORAL_ARCPLNIESS to SIS_ADMIN;
+
+
+ALTER TABLE CARGOS ADD (  GOBIERNO VARCHAR2(1),
+  ANESTESIA_IESS VARCHAR2(1),
+  IESS VARCHAR2(1))
+/
+
+ALTER TABLE CUENTAS ADD (PLA_NUMERO_PLANILLA NUMBER(9),
+  PCN_NUMERO_HC_MIGRADO          NUMBER(9),
+  ID_CARGO_IESS                  NUMBER(6),
+  UVR                            NUMBER,
+  PRC                            NUMBER,
+  PLA_PLANILLA_ANTERIOR          NUMBER(9),
+  RECATEGORIZADA                 CHAR(1))
+/
+
+ALTER TABLE CUENTAS_JN ADD (  PLA_NUMERO_PLANILLA NUMBER(9),
+  PCN_NUMERO_HC_MIGRADO          NUMBER(9),
+  ID_CARGO_IESS                  NUMBER(10),
+  UVR                            NUMBER,
+  PRC                            NUMBER,
+  PLA_PLANILLA_ANTERIOR          NUMBER(9),
+  RECATEGORIZADA                 CHAR(1))
+/
+
+
+-- Create table
+create table PLANILLA
+(
+  NUMERO_PLANILLA NUMBER(9) not null,
+  PCN_NUMERO_HC   NUMBER(7) not null,
+  FECHA           DATE default SYSDATE not null,
+  OBSERVACION     VARCHAR2(240),
+  ENTIDAD         VARCHAR2(3) default 'IEE' not null,
+  PRS_CODIGO      VARCHAR2(4),
+  EMERGENCIA      CHAR(1) default 'F' not null,
+  BLOQUEADA       CHAR(1) default 'F' not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table PLANILLA
+  add constraint PLA_PK primary key (NUMERO_PLANILLA)
+  using index 
+  tablespace TBINDICESP
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table PLANILLA
+  add constraint PLA_PCN_FK foreign key (PCN_NUMERO_HC)
+  references PACIENTES (NUMERO_HC);
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on PLANILLA to TRABAJO_SOCIAL;
+
+CREATE PUBLIC SYNONYM PLANILLA FOR SIS.PLANILLA;
+
+-- Create table
+create table DETALLES_PLANILLA_PREFACT
+(
+  CNTS_DOCUMENTO      VARCHAR2(1) not null,
+  CNTS_DETALLE        NUMBER(4) not null,
+  CNTS_NUMERO         NUMBER(10) not null,
+  PCN_NUMERO_HC       NUMBER(7) not null,
+  PLA_NUMERO_PLANILLA NUMBER(9) not null,
+  PLA_PROMOCION       VARCHAR2(2)
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_PK primary key (CNTS_DOCUMENTO, CNTS_DETALLE, CNTS_NUMERO, PLA_NUMERO_PLANILLA)
+  using index 
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_CNTS_FK foreign key (CNTS_DOCUMENTO, CNTS_NUMERO, CNTS_DETALLE)
+  references CUENTAS (DOCUMENTO, NUMERO, DETALLE);
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_PCN_FK foreign key (PCN_NUMERO_HC)
+  references PACIENTES (NUMERO_HC);
+alter table DETALLES_PLANILLA_PREFACT
+  add constraint DPT_PLA_FK foreign key (PLA_NUMERO_PLANILLA)
+  references PLANILLA (NUMERO_PLANILLA);
+-- Create/Recreate indexes 
+create unique index CNT_PLN on DETALLES_PLANILLA_PREFACT (CNTS_DOCUMENTO, CNTS_DETALLE, CNTS_NUMERO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index DTL_PNL on DETALLES_PLANILLA_PREFACT (PLA_NUMERO_PLANILLA)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+create table DETALLES_PLANILLA_PREFACT_JN
+(
+  JN_OPERATION        CHAR(3) not null,
+  JN_ORACLE_USER      VARCHAR2(30) not null,
+  JN_DATETIME         DATE not null,
+  JN_NOTES            VARCHAR2(240),
+  JN_APPLN            VARCHAR2(35),
+  JN_SESSION          NUMBER(38),
+  CNTS_DOCUMENTO      VARCHAR2(1) not null,
+  CNTS_DETALLE        NUMBER(4) not null,
+  CNTS_NUMERO         NUMBER(10) not null,
+  PCN_NUMERO_HC       NUMBER(7),
+  PLA_NUMERO_PLANILLA NUMBER(9) not null,
+  PLA_PROMOCION       VARCHAR2(2)
+)
+tablespace TBDATOSG
+  pctfree 60
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE OR REPLACE TRIGGER DTLPLNPRFLLNJN
+ AFTER DELETE
+ ON DETALLES_PLANILLA_PREFACT
+ FOR EACH ROW
+DECLARE
+
+VOPR VARCHAR2(3);
+BEGIN
+  INSERT INTO DETALLES_PLANILLA_PREFACT_JN
+    (JN_OPERATION,JN_ORACLE_USER,JN_DATETIME,JN_NOTES,JN_APPLN,JN_SESSION,
+     CNTS_DOCUMENTO, CNTS_DETALLE, CNTS_NUMERO, PCN_NUMERO_HC,PLA_NUMERO_PLANILLA,PLA_PROMOCION)
+     VALUES('DEL',USER,SYSDATE,NULL,NULL,NULL,
+     :OLD.CNTS_DOCUMENTO, :OLD.CNTS_DETALLE, :OLD.CNTS_NUMERO, :OLD.PCN_NUMERO_HC
+     , :OLD.PLA_NUMERO_PLANILLA, :OLD.PLA_PROMOCION);
+END;
+
+CREATE OR REPLACE TRIGGER PLABRRCNT
+ BEFORE DELETE
+ ON DETALLES_PLANILLA_PREFACT
+ FOR EACH ROW
+-- trigger que anula una cuenta en el paciente cuando se crea el detalle de planilla, y a su vez inserta
+-- una copia de esta cuenta en el paciente asociado a la promocion que tiene la planilla y el paciente
+begin
+declare
+    codigo_PRM_iess varchar2(10):= null;   -- Código de la promoción utilizada para el IESS
+    longitud number := 1;
+    EXISTE_FACTURADO NUMBER:=0;
+    VPACIENTE NUMBER := -1;
+/*BEGIN
+   SELECT PRMEMP.VALOR INTO CODIGO_PRM_IESS
+   FROM PARAMETROS_EMPRESAS PRMEMP
+   WHERE (PRMEMP.PRMAPL_NOMBRE LIKE '%CODIGO_PROMOCION_IESS%') and
+         (PRMEMP.EMP_CODIGO='CSI');
+EXCEPTION
+WHEN OTHERS THEN
+   CODIGO_PRM_IESS := 'NULL';
+END;*/
+BEGIN
+    SELECT COUNT(*) INTO EXISTE_FACTURADO 
+    FROM CUENTAS WHERE
+    :OLD.CNTS_DOCUMENTO = DOCUMENTO AND
+    :OLD.CNTS_NUMERO = NUMERO AND
+    :OLD.CNTS_DETALLE = DETALLE AND
+    NVL(PCN_NUMERO_HC_MIGRADO,PCN_NUMERO_HC) = :OLD.PCN_NUMERO_HC AND
+    PLA_NUMERO_PLANILLA = :OLD.PLA_NUMERO_PLANILLA  and
+    ESTADO = 'FCT';
+IF EXISTE_FACTURADO > 0 THEN
+	 QMS$ERRORS.SHOW_MESSAGE('No se puede eliminar el detalle de una planilla con cuenta ya facturada');
+ELSE   
+BEGIN
+   SELECT P.PRM_PCN_NUMERO_HC INTO VPACIENTE
+   FROM PROMOCIONES P
+   WHERE P.CODIGO = :OLD.PLA_PROMOCION;
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+   VPACIENTE := -1;                
+WHEN OTHERS THEN 
+   VPACIENTE := -1;                
+END;
+QMS$ERRORS.Show_debug_info('El código de la promoción que se elimina es  '||:OLD.PLA_PROMOCION);
+longitud:= LENGTH('Eliminación cuenta planilla: '||TO_CHAR(:OLD.PLA_NUMERO_PLANILLA)) ;
+QMS$ERRORS.Show_debug_info('La hc. recuperada es:   '||VPACIENTE);
+IF nvl(VPACIENTE,-1) >0 THEN
+update cuentas
+set  pcn_numero_hc = PCN_NUMERO_HC_MIGRADO,     
+     OBSERVACION = NVL(substr(OBSERVACION,longitud+1,500-(longitud+1)),' ') || 'Eliminación cuenta planilla: '||TO_CHAR(PLA_NUMERO_PLANILLA),
+     PLA_PLANILLA_ANTERIOR = :OLD.PLA_NUMERO_PLANILLA,
+     PLA_NUMERO_PLANILLA = NULL,     
+     PCN_NUMERO_HC_MIGRADO = NULL
+WHERE
+    :OLD.CNTS_DOCUMENTO = DOCUMENTO AND
+    :OLD.CNTS_NUMERO = NUMERO AND
+    :OLD.CNTS_DETALLE = DETALLE AND
+    :OLD.PCN_NUMERO_HC = PCN_NUMERO_HC_MIGRADO AND
+    :OLD.PLA_NUMERO_PLANILLA = PLA_NUMERO_PLANILLA and
+    pcn_numero_hc = VPACIENTE;
+ IF SQL%ROWCOUNT <> 1 THEN
+	 QMS$ERRORS.SHOW_MESSAGE('Error: al actualizar CH. original . Comuníquese inmediatamente con Softcase');
+ END IF;
+ELSIF nvl(VPACIENTE,-1) = -1 THEN
+   update cuentas 
+   set    PLA_PLANILLA_ANTERIOR = :OLD.PLA_NUMERO_PLANILLA,
+          OBSERVACION = NVL(substr(OBSERVACION,longitud+1,500-(longitud+1)),' ') ||'Eliminación cuenta planilla: '||TO_CHAR(:OLD.PLA_NUMERO_PLANILLA),
+          PLA_NUMERO_PLANILLA = NULL
+   WHERE :OLD.CNTS_DOCUMENTO = DOCUMENTO AND
+         :OLD.CNTS_NUMERO = NUMERO AND
+         :OLD.CNTS_DETALLE = DETALLE AND
+         :OLD.PCN_NUMERO_HC = PCN_NUMERO_HC AND
+         :OLD.PLA_NUMERO_PLANILLA = PLA_NUMERO_PLANILLA;
+         QMS$ERRORS.SHOW_DEBUG_INFO('Se actualizo la cuenta '||TO_CHAR(SQL%ROWCOUNT)||'Eliminación cuenta planilla: '||TO_CHAR(:OLD.PLA_NUMERO_PLANILLA));
+ IF SQL%ROWCOUNT <> 1 THEN
+	 QMS$ERRORS.SHOW_MESSAGE('Error al actualizar Historia original . Comunique inmediatamente con Softcase');
+ END IF;
+ELSE 
+	 QMS$ERRORS.SHOW_MESSAGE(' No se puede eliminar el detalle  de la planilla Comunique inmediatamente con Softcase');
+END IF;
+END IF;
+EXCEPTION
+   WHEN OTHERS THEN
+      QMS$ERRORS.UNHANDLED_EXCEPTION ('PLABRRCNT');
+END;
+END;
+
+
+CREATE OR REPLACE TRIGGER PLACPRCTNS
+ AFTER INSERT
+ ON DETALLES_PLANILLA_PREFACT
+ FOR EACH ROW
+begin
+declare
+    historia_promocion number := null; -- hc. de la entidad a la que se va a planillar
+    --que_entidad varchar2(2);
+    --entidad_de_planilla varchar2(3);
+--    codigo_PRM_iess varchar2(10):= null;   -- Código de la promoción utilizada para el IESS
+    planilla varchar2(100):= null;
+begin
+--   select entidad into entidad_de_planilla from planilla where numero_planilla = :new.pla_numero_planilla;
+--   select rv_high_value into que_entidad from cg_ref_codes where
+--   rv_domain = 'ENTIDAD_PLANILLA' and rv_low_value = entidad_de_planilla;
+/*
+   que_promocion :=GNRL.DEVOLVER_ULTIMA_PROMOCION(:new.pcn_numero_hc);
+
+
+   if (que_promocion <> que_entidad) then
+      	RAISE_APPLICATION_ERROR(-20100,'La promoción actual del paciente es diferente a la Entidad de la Planilla');
+   end if;
+
+BEGIN
+   SELECT PRMEMP.VALOR INTO CODIGO_PRM_IESS
+   FROM PARAMETROS_EMPRESAS PRMEMP
+   WHERE (PRMEMP.PRMAPL_NOMBRE LIKE '%CODIGO_PROMOCION_IESS%') and
+         (PRMEMP.EMP_CODIGO='CSI');
+EXCEPTION
+WHEN OTHERS THEN
+   CODIGO_PRM_IESS := 'NULL';
+END;
+QMS$ERRORS.Show_debug_info('El código de la promoción en variable global '||CODIGO_PRM_IESS);
+QMS$ERRORS.Show_debug_info('El código de la promoción que se inserta es  '||:NEW.PLA_PROMOCION);
+IF CODIGO_PRM_IESS =  :NEW.PLA_PROMOCION THEN*/
+BEGIN
+   BEGIN
+      select prm_pcn_numero_hc into historia_promocion
+      from promociones
+      where codigo = :NEW.PLA_PROMOCION;
+   EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      historia_promocion:= NULL;
+   END;
+   QMS$ERRORS.Show_debug_info('El historia de la promcion es   '||historia_promocion);
+   if historia_promocion is not null then
+   QMS$ERRORS.Show_debug_info('Va a actualizar la cuenta ');
+   /*begin
+    select c.documento||' '||c.numero||' '||c.detalle||' '||c.pla_numero_planilla into planilla
+    from cuentas c
+    WHERE :NEW.CNTS_DOCUMENTO = DOCUMENTO AND
+            :NEW.CNTS_NUMERO = NUMERO AND
+            :NEW.CNTS_DETALLE = DETALLE AND
+            :NEW.PCN_NUMERO_HC = PCN_NUMERO_HC AND
+            :NEW.PLA_NUMERO_PLANILLA = PLA_NUMERO_PLANILLA;
+   QMS$ERRORS.Show_debug_info('La planilla es '||planilla);                       
+   exception
+   when no_data_found then
+       QMS$ERRORS.Show_debug_info('La cuenta aún no ha sido actualizada con la planilla ');               
+   end;*/   
+   begin
+      update cuentas
+      set PCN_NUMERO_HC_MIGRADO = pcn_numero_hc,
+          pcn_numero_hc = historia_promocion ,
+          OBSERVACION = NVL(substr(OBSERVACION,(LENGTH(' MIGRADA POR PLANILLA : '||TO_CHAR(PLA_NUMERO_PLANILLA))+1),500-(LENGTH('  MIGRADA POR PLANILLA : '||TO_CHAR(PLA_NUMERO_PLANILLA))+1)),' ') || ' MIGRADA POR PLANILLA : '||TO_CHAR(PLA_NUMERO_PLANILLA)
+      WHERE :NEW.CNTS_DOCUMENTO = DOCUMENTO AND
+            :NEW.CNTS_NUMERO = NUMERO AND
+            :NEW.CNTS_DETALLE = DETALLE AND
+            :NEW.PCN_NUMERO_HC = PCN_NUMERO_HC AND
+            :NEW.PLA_NUMERO_PLANILLA = PLA_NUMERO_PLANILLA;
+      QMS$ERRORS.Show_debug_info('Se actualizó la cuenta ');      
+   exception
+   when others then
+      QMS$ERRORS.SHOW_MESSAGE('Error al actualizar Historia para cuenta migrada. Comuniquese con Softcase inmediatamente');
+   END;
+   IF SQL%ROWCOUNT <> 1 THEN
+     QMS$ERRORS.SHOW_MESSAGE('No se pudo actualizar la cuenta ');
+   END IF;
+   END IF;
+EXCEPTION
+ WHEN OTHERS THEN
+     QMS$ERRORS.SHOW_MESSAGE('No se pudo pasar la planilla a la entidad correspondiente');
+END;
+EXCEPTION
+WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('PLACPRCTNS');
+end;
+END;
+
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on DETALLES_PLANILLA_PREFACT to TRABAJO_SOCIAL;
+
+CREATE PUBLIC SYNONYM DETALLES_PLANILLA_PREFACT FOR SIS.DETALLES_PLANILLA_PREFACT;
+
+create table CONVENIOS
+(
+  CONVENIO    VARCHAR2(25) not null,
+  DESCRIPCION VARCHAR2(250) not null,
+  constraint CNV_PK primary key (CONVENIO)
+)
+organization index;
+
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on CONVENIOS to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on CONVENIOS to ADMINISTRADOR_PROMOCIONES;
+grant select on CONVENIOS to GENERAL;
+grant select, insert, update, delete on CONVENIOS to SIS_ADMIN;
+
+CREATE PUBLIC SYNONYM CONVENIOS FOR SIS.CONVENIOS;
+
+-- Create table
+create table SUBGRUPOS_TARIFARIO
+(
+  CONVENIO      VARCHAR2(25) not null,
+  TIPO          VARCHAR2(250) not null,
+  GRPTRF_CODIGO VARCHAR2(255) not null,
+  CODIGO        VARCHAR2(255) not null,
+  DESCRIPCION   VARCHAR2(255) not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    minextents 1
+    maxextents unlimited
+  );
+
+-- Create table
+create table GRUPOS_TARIFARIO
+(
+  CONVENIO    VARCHAR2(25) not null,
+  TIPO        VARCHAR2(250) not null,
+  CODIGO      VARCHAR2(255) not null,
+  DESCRIPCION VARCHAR2(255) not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table GRUPOS_TARIFARIO
+  add constraint GRPTRF_PK primary key (TIPO, CONVENIO, CODIGO)
+  using index 
+  tablespace TBINDICESP
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE PUBLIC SYNONYM SUBGRUPOS_TARIFARIO FOR SIS.GRUPOS_TARIFARIO;
+grant select, insert, update, delete on GRUPOS_TARIFARIO to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on GRUPOS_TARIFARIO to ADMINISTRADOR_PROMOCIONES;
+grant select on GRUPOS_TARIFARIO to GENERAL;
+grant select, insert, update, delete on GRUPOS_TARIFARIO to SIS_ADMIN;
+
+
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table SUBGRUPOS_TARIFARIO
+  add constraint SBGTRF_PK primary key (CONVENIO, TIPO, GRPTRF_CODIGO, CODIGO)
+  using index 
+  tablespace TBINDICESP
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 504K
+    minextents 1
+    maxextents unlimited
+  );
+alter table SUBGRUPOS_TARIFARIO
+  add constraint SBGTRF_GRPTRF_FK foreign key (TIPO, CONVENIO, GRPTRF_CODIGO)
+  references GRUPOS_TARIFARIO (TIPO, CONVENIO, CODIGO);
+-- Create/Recreate indexes 
+create index SBGTRF_GRPTRF_FK_I on SUBGRUPOS_TARIFARIO (CONVENIO, TIPO, GRPTRF_CODIGO)
+  tablespace TBINDICESP
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 504K
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE PUBLIC SYNONYM SUBGRUPOS_TARIFARIO FOR SIS.SUBGRUPOS_TARIFARIO;
+grant select, insert, update, delete on SUBGRUPOS_TARIFARIO to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on SUBGRUPOS_TARIFARIO to ADMINISTRADOR_PROMOCIONES;
+grant select on SUBGRUPOS_TARIFARIO to GENERAL;
+grant select, insert, update, delete on SUBGRUPOS_TARIFARIO to SIS_ADMIN;
+
+
+
+
+-- Create table
+create table SUBGRUPOS_1_TARIFARIO
+(
+  CONVENIO             VARCHAR2(25) not null,
+  TIPO                 VARCHAR2(250) not null,
+  SBGTRF_GRPTRF_CODIGO VARCHAR2(255) not null,
+  SBGTRF_CODIGO        VARCHAR2(255) not null,
+  CODIGO               VARCHAR2(255) not null,
+  DESCRIPCION          VARCHAR2(255) not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table SUBGRUPOS_1_TARIFARIO
+  add constraint SBG1TRF_PK primary key (CONVENIO, TIPO, SBGTRF_GRPTRF_CODIGO, SBGTRF_CODIGO, CODIGO)
+  using index 
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table SUBGRUPOS_1_TARIFARIO
+  add constraint SBG1TRF_SBGTRF_FK foreign key (CONVENIO, TIPO, SBGTRF_GRPTRF_CODIGO, SBGTRF_CODIGO)
+  references SUBGRUPOS_TARIFARIO (CONVENIO, TIPO, GRPTRF_CODIGO, CODIGO);
+-- Create/Recreate indexes 
+create index SBG1TRF_SBGTRF_FK on SUBGRUPOS_1_TARIFARIO (CONVENIO, TIPO, SBGTRF_GRPTRF_CODIGO, SBGTRF_CODIGO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+grant select, insert, update, delete on SUBGRUPOS_1_TARIFARIO to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on SUBGRUPOS_1_TARIFARIO to ADMINISTRADOR_PROMOCIONES;
+grant select on SUBGRUPOS_1_TARIFARIO to GENERAL;
+grant select, insert, update, delete on SUBGRUPOS_1_TARIFARIO to SIS_ADMIN;
+
+
+CREATE PUBLIC SYNONYM SUBGRUPOS_1_TARIFARIO FOR SIS.SUBGRUPOS_1_TARIFARIO;
+
+
+-- Create table
+create table SUBGRUPOS_2_TARIFARIO
+(
+  CONVENIO              VARCHAR2(25) not null,
+  TIPO                  VARCHAR2(250) not null,
+  SBG1TRF_GRPTRF_CODIGO VARCHAR2(255) not null,
+  SBG1TRF_SBGTRF_CODIGO VARCHAR2(255) not null,
+  SBG1TRF_CODIGO        VARCHAR2(255) not null,
+  CODIGO                VARCHAR2(255) not null,
+  DESCRIPCION           VARCHAR2(255) not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table SUBGRUPOS_2_TARIFARIO
+  add constraint SBG2TRF_PK primary key (CONVENIO, TIPO, SBG1TRF_GRPTRF_CODIGO, SBG1TRF_SBGTRF_CODIGO, SBG1TRF_CODIGO, CODIGO)
+  using index 
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table SUBGRUPOS_2_TARIFARIO
+  add constraint SBG2TRF_SBG1TRF_FK foreign key (CONVENIO, TIPO, SBG1TRF_GRPTRF_CODIGO, SBG1TRF_SBGTRF_CODIGO, SBG1TRF_CODIGO)
+  references SUBGRUPOS_1_TARIFARIO (CONVENIO, TIPO, SBGTRF_GRPTRF_CODIGO, SBGTRF_CODIGO, CODIGO);
+-- Create/Recreate indexes 
+create index SBG2TRF_SBG1TRF_FK_I on SUBGRUPOS_2_TARIFARIO (CONVENIO, TIPO, SBG1TRF_GRPTRF_CODIGO, SBG1TRF_SBGTRF_CODIGO, SBG1TRF_CODIGO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 2000K
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE PUBLIC SYNONYM SUBGRUPOS_2_TARIFARIO FOR SIS.SUBGRUPOS_2_TARIFARIO;
+grant select, insert, update, delete on SUBGRUPOS_2_TARIFARIO to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on SUBGRUPOS_2_TARIFARIO to ADMINISTRADOR_PROMOCIONES;
+grant select on SUBGRUPOS_2_TARIFARIO to GENERAL;
+grant select, insert, update, delete on SUBGRUPOS_2_TARIFARIO to SIS_ADMIN;
+
+
+
+
+-- Create table
+create table TARIFARIOS
+(
+  CONVENIO                  VARCHAR2(25) not null,
+  TIPO                      VARCHAR2(250) not null,
+  CODIGO_GRUPO              VARCHAR2(250) not null,
+  CODIGO_SUBGRUPO           VARCHAR2(250),
+  CODIGO_SUBGRUPO_1         VARCHAR2(250),
+  CODIGO_SUBGRUPO_2         VARCHAR2(250),
+  DESCRIPCION_ESPECIFICA    VARCHAR2(250),
+  CODIGO_ITEM               VARCHAR2(10) not null,
+  DESCRIPCION_ITEM          VARCHAR2(1000) not null,
+  UVR_H_MED                 NUMBER,
+  ANES                      NUMBER,
+  UNIDADES                  NUMBER,
+  UVR                       NUMBER,
+  UVR1                      NUMBER,
+  UVR2                      NUMBER,
+  UVR3                      NUMBER,
+  PRC                       NUMBER,
+  PRC1                      NUMBER,
+  PRC2                      NUMBER,
+  PRC3                      NUMBER,
+  NIVEL                     NUMBER,
+  TOTAL_TARIFA_INTEGRAL     NUMBER,
+  TOTAL_TARIFA_INTEGRAL_III NUMBER,
+  OBSERVACIONES             VARCHAR2(255),
+  NO_APLICA_TIEMPO          CHAR(1) default 'F' not null,
+  TIEMPO_DESDE              NUMBER,
+  TIEMPO_HASTA              NUMBER,
+  PRC_ANES                  NUMBER
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 10M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table TARIFARIOS
+  add constraint TRF_PK primary key (CONVENIO, TIPO, CODIGO_ITEM)
+  using index 
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 2000K
+    minextents 1
+    maxextents unlimited
+  );
+alter table TARIFARIOS
+  add constraint TRF_GRPTRF_FK foreign key (TIPO, CONVENIO, CODIGO_GRUPO)
+  references GRUPOS_TARIFARIO (TIPO, CONVENIO, CODIGO);
+-- Create/Recreate indexes 
+create index TRF_CNV_FK_I on TARIFARIOS (CONVENIO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 2000K
+    minextents 1
+    maxextents unlimited
+  );
+create index TRF_CODIGO_I on TARIFARIOS (CODIGO_ITEM)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index TRF_DESCRIPCION_I on TARIFARIOS (DESCRIPCION_ITEM)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index TRF_GRPTRF_FK_I on TARIFARIOS (CONVENIO, TIPO, CODIGO_GRUPO)
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 2000K
+    minextents 1
+    maxextents unlimited
+  );
+
+grant select, insert, update, delete on TARIFARIOS to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on TARIFARIOS to ADMINISTRADOR_PROMOCIONES;
+grant select on TARIFARIOS to GENERAL;
+grant select, insert, update, delete on TARIFARIOS to SIS_ADMIN;
+
+
+CREATE PUBLIC SYNONYM TARIFARIOS FOR SIS.TARIFARIOS;
+
+
+-- Create table
+create table CONVENIOS_EQUIVALENCIAS
+(
+  CRG_CODIGO      VARCHAR2(7) not null,
+  CRG_TIPO        CHAR(1) not null,
+  CNVTRF_CONVENIO VARCHAR2(25) not null,
+  CNVTRF_CODIGO   VARCHAR2(10) not null,
+  TIPO            VARCHAR2(250) not null,
+  PRIORIDAD_CARGO CHAR(1) default 'F' not null
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 10M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CONVENIOS_EQUIVALENCIAS
+  add constraint CNVEQV_PK primary key (CNVTRF_CONVENIO, CNVTRF_CODIGO, TIPO, CRG_CODIGO, CRG_TIPO)
+  using index 
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table CONVENIOS_EQUIVALENCIAS
+  add constraint CNVEQV_CRG_FK foreign key (CRG_TIPO, CRG_CODIGO)
+  references CARGOS (TIPO, CODIGO);
+alter table CONVENIOS_EQUIVALENCIAS
+  add constraint CNVEQV_TRF_FK foreign key (CNVTRF_CONVENIO, TIPO, CNVTRF_CODIGO)
+  references TARIFARIOS (CONVENIO, TIPO, CODIGO_ITEM);
+-- Create/Recreate indexes 
+create index CNVEQV_CNVTRF_FK_I on CONVENIOS_EQUIVALENCIAS (CNVTRF_CONVENIO, TIPO, CNVTRF_CODIGO)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index CNVEQV_CRG_FK_I on CONVENIOS_EQUIVALENCIAS (CRG_TIPO, CRG_CODIGO)
+  tablespace TBDATOSG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+CREATE OR REPLACE TRIGGER CNVEQVLLNJN
+ AFTER DELETE
+ ON CONVENIOS_EQUIVALENCIAS
+ FOR EACH ROW
+DECLARE
+
+VOPR VARCHAR2(240);
+BEGIN
+  IF Deleting THEN
+    vOpr:='DEL';
+  END IF;
+  INSERT INTO CONVENIOS_EQUIVALENCIAS_JN
+  (JN_OPERATION,JN_ORACLE_USER,JN_DATETIME,JN_NOTES,JN_APPLN,JN_SESSION,
+   CRG_CODIGO, CRG_TIPO, CNVTRF_CONVENIO,CNVTRF_CODIGO)
+   VALUES(vOpr,USER,SYSDATE,NULL,NULL,NULL
+     ,:OLD.CRG_CODIGO, :OLD.CRG_TIPO, :OLD.CNVTRF_CONVENIO, :OLD.CNVTRF_CODIGO);
+END;
+
+
+CREATE PUBLIC SYNONYM CONVENIOS_EQUIVALENCIAS FOR SIS.CONVENIOS_EQUIVALENCIAS;
+
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on CONVENIOS_EQUIVALENCIAS to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on CONVENIOS_EQUIVALENCIAS to ADMINISTRADOR_PROMOCIONES;
+grant select on CONVENIOS_EQUIVALENCIAS to GENERAL;
+grant select on CONVENIOS_EQUIVALENCIAS to MEDICO;
+grant select, insert, update, delete on CONVENIOS_EQUIVALENCIAS to SIS_ADMIN;
+
+-- Create table
+create table CONVENIOS_EQUIVALENCIAS_JN
+(
+  JN_OPERATION    CHAR(3) not null,
+  JN_ORACLE_USER  VARCHAR2(30) not null,
+  JN_DATETIME     DATE not null,
+  JN_NOTES        VARCHAR2(240),
+  JN_APPLN        VARCHAR2(30),
+  JN_SESSION      NUMBER(38),
+  CRG_CODIGO      VARCHAR2(7) not null,
+  CRG_TIPO        CHAR(1) not null,
+  CNVTRF_CONVENIO VARCHAR2(11) not null,
+  CNVTRF_CODIGO   NUMBER not null,
+  TIPO            VARCHAR2(250),
+  PRIORIDAD_CARGO CHAR(1)
+)
+tablespace TBDATOSP
+  pctfree 60
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 72K
+    minextents 1
+    maxextents unlimited
+  );
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on CONVENIOS_EQUIVALENCIAS_JN to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on CONVENIOS_EQUIVALENCIAS_JN to ADMINISTRADOR_PROMOCIONES;
+
+
+-- Create table
+create table CONVENIOS_PROMOCIONES
+(
+  CNV_CONVENIO             VARCHAR2(10) not null,
+  PRM_CODIGO               VARCHAR2(2) not null,
+  DESCRIPCION              VARCHAR2(250) not null,
+  FECHA_INICIO             DATE not null,
+  FECHA_FIN                DATE,
+  ESTADO_DE_DISPONIBILIDAD CHAR(1) default 'D'
+)
+tablespace TBDATOSG
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 3M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CONVENIOS_PROMOCIONES
+  add constraint CNVPRM_PK primary key (CNV_CONVENIO, PRM_CODIGO)
+  using index 
+  tablespace TBINDICESG
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on CONVENIOS_PROMOCIONES to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on CONVENIOS_PROMOCIONES to ADMINISTRADOR_PROMOCIONES;
+grant select on CONVENIOS_PROMOCIONES to EXP_FULL_DATABASE;
+grant select, insert, update, delete on CONVENIOS_PROMOCIONES to SIS_ADMIN;
+
+
+
+ALTER TABLE PROMOCIONES ADD (  PRM_PCN_NUMERO_HC  NUMBER(7),
+  UVR                      NUMBER(6,3),
+  RESTRICCION              CHAR(1) default 'F' not null,
+  REQUIERE_AUDITORIA       VARCHAR2(1) default 'F' not null,
+  COLOR                    VARCHAR2(40) default 'N')
+/
+
+-- Create table
+create table PROMOCIONES_JN
+(
+  JN_OPERATION             CHAR(3) not null,
+  JN_ORACLE_USER           VARCHAR2(30) not null,
+  JN_DATETIME              DATE not null,
+  JN_NOTES                 VARCHAR2(240),
+  JN_APPLN                 VARCHAR2(35),
+  JN_SESSION               NUMBER(38),
+  CODIGO                   VARCHAR2(2) not null,
+  PRS_CODIGO               VARCHAR2(4),
+  DESCRIPCION              VARCHAR2(40),
+  FECHA                    DATE,
+  ESTADO_DE_DISPONIBILIDAD CHAR(1),
+  OBSERVACION              VARCHAR2(240),
+  INGRESO_MINIMO           NUMBER(21,6),
+  INGRESO_MAXIMO           NUMBER(21,6),
+  MONTO_MAXIMO             NUMBER(6),
+  EDAD_MAXIMA              NUMBER(3),
+  NUMERO_MAX_BENEFICIARIO  NUMBER(2),
+  NUMERO_MAX_DEPENDIENTES  NUMBER(2),
+  PRM_PCN_NUMERO_HC        NUMBER(7),
+  UVR                      NUMBER(6,3),
+  RESTRICCION              CHAR(1)
+)
+tablespace TBDATOSG
+  pctfree 60
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table PROMOCIONES_JN
+  is 'Created by Oracle Designer Server Generator';
+
+CREATE PUBLIC SYNONYM PROMOCIONES_JN FOR SIS.PROMOCIONES_JN;
+
+-- Grant/Revoke object privileges 
+grant select, insert, update, delete on PROMOCIONES_JN to ADMINISTRADOR_MAESTROS;
+grant select, insert, update, delete on PROMOCIONES_JN to ADMINISTRADOR_PROMOCIONES;
+grant select on PROMOCIONES_JN to GENERAL;
+grant select, insert, update, delete on PROMOCIONES_JN to SIS_ADMIN;
+
+CREATE OR REPLACE VIEW CONVENIOS_TARIFARIOS
+(convenio, discriminador_hoja, codigo, descripcion, descripcion_completa, observacion, uvr, uvr_anes, prc, prc_anes, tipo, no_aplica_tiempo)
+AS
+SELECT SH.CONVENIO CONVENIO,
+          C.RV_MEANING  DISCRIMINADOR_HOJA,
+          SH.CODIGO_ITEM,
+          UPPER(SH.DESCRIPCION_ITEM) DESCRIPCION,
+          SH.CODIGO_GRUPO||' '||GT.DESCRIPCION||
+          CHR (13) || CHR (10) || CHR (9) ||
+          DECODE(NVL(SH.CODIGO_SUBGRUPO,'NULO'),
+                'NULO','',
+                SH.CODIGO_SUBGRUPO||' '||ST.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9) )||
+          DECODE (NVL(SH.CODIGO_SUBGRUPO_1,'NULO'),
+                 'NULO','',
+                 SH.CODIGO_SUBGRUPO_1|| ' '||S1T.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9)||CHR (9)) ||
+         SH.CODIGO_ITEM|| ' ' ||SH.DESCRIPCION_ITEM
+                          ,
+          SH.OBSERVACIONES,
+          NVL(SH.UVR3,SH.UVR) UVR,  --uvr para nivel 3
+          NULL UVR_ANES,
+          NVL(SH.PRC3,SH.PRC),      --precio para nivel3
+          NULL PRC_ANES,
+          SH.TIPO,
+          SH.NO_APLICA_TIEMPO
+     FROM TARIFARIOS SH,CG_REF_CODES C,GRUPOS_TARIFARIO GT,SUBGRUPOS_TARIFARIO ST,SUBGRUPOS_1_TARIFARIO S1T
+     WHERE --SH.NIVEL LIKE '%3%' AND   --para nivel 3
+           C.RV_DOMAIN =  'TIPO_TARIFARIO' AND
+           C.RV_LOW_VALUE = SH.TIPO AND
+           SH.CONVENIO = GT.CONVENIO(+) AND
+           SH.TIPO = GT.TIPO(+) AND
+           GT.CODIGO(+) = SH.CODIGO_GRUPO AND
+           SH.CONVENIO = ST.CONVENIO(+) AND
+           SH.TIPO = ST.TIPO(+) AND
+           ST.CODIGO(+) = SH.CODIGO_SUBGRUPO AND
+           SH.CONVENIO = S1T.CONVENIO (+)AND
+           SH.TIPO= S1T.TIPO(+) AND
+           S1T.CODIGO (+)= SH.CODIGO_SUBGRUPO_1 AND
+           SH.TIPO = 'H'
+ UNION ALL
+ SELECT A.CONVENIO CONVENIO,
+          C.RV_MEANING  DISCRIMINADOR_HOJA,
+          A.CODIGO_ITEM,
+          UPPER(A.DESCRIPCION_ITEM) DESCRIPCION,
+          A.CODIGO_GRUPO||' '||GT.DESCRIPCION||
+          CHR (13) || CHR (10) || CHR (9) ||
+          DECODE(NVL(A.CODIGO_SUBGRUPO,'NULO'),
+                'NULO','',
+                A.CODIGO_SUBGRUPO||' '||ST.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9) )||
+          DECODE (NVL(A.CODIGO_SUBGRUPO_1,'NULO'),
+                 'NULO','',
+                 A.CODIGO_SUBGRUPO_1|| ' '||S1T.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9)||CHR (9)) ||
+         A.CODIGO_ITEM|| ' ' ||A.DESCRIPCION_ITEM
+                          ,
+          A.OBSERVACIONES,
+          NVL(A.UVR,A.UNIDADES),
+          A.ANES UVR_ANES,
+          A.PRC,
+          A.PRC_ANES,
+          A.TIPO,
+          A.NO_APLICA_TIEMPO
+     FROM TARIFARIOS A,CG_REF_CODES C,GRUPOS_TARIFARIO GT,SUBGRUPOS_TARIFARIO ST,SUBGRUPOS_1_TARIFARIO S1T
+     WHERE C.RV_DOMAIN =  'TIPO_TARIFARIO' AND
+           C.RV_LOW_VALUE = A.TIPO AND
+           A.CONVENIO = GT.CONVENIO AND
+           A.TIPO = GT.TIPO AND
+           GT.CODIGO = A.CODIGO_GRUPO AND
+           A.CONVENIO = ST.CONVENIO AND
+           A.TIPO = ST.TIPO AND
+           ST.CODIGO = A.CODIGO_SUBGRUPO AND
+           A.CONVENIO = S1T.CONVENIO AND
+           A.TIPO= S1T.TIPO AND
+           S1T.CODIGO = A.CODIGO_SUBGRUPO_1 AND
+           A.TIPO = 'A'
+ UNION ALL
+   SELECT PI.CONVENIO CONVENIO,
+          C.RV_MEANING  DISCRIMINADOR_HOJA,
+          PI.CODIGO_ITEM,
+          UPPER(PI.DESCRIPCION_ITEM) DESCRIPCION,
+          PI.CODIGO_GRUPO||' '||GT.DESCRIPCION||
+          CHR (13) || CHR (10) || CHR (9) ||
+          DECODE(NVL(PI.CODIGO_SUBGRUPO,'NULO'),
+                'NULO','',
+                PI.CODIGO_SUBGRUPO||' '||ST.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9) )||
+          DECODE (NVL(PI.CODIGO_SUBGRUPO_1,'NULO'),
+                 'NULO','',
+                 PI.CODIGO_SUBGRUPO_1|| ' '||S1T.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9)||CHR (9)) ||
+         PI.CODIGO_ITEM|| ' ' ||PI.DESCRIPCION_ITEM,
+          PI.OBSERVACIONES,
+          NVL(PI.UVR3,PI.UVR) UVR,
+          PI.ANES UVR_ANES,
+          NVL(PI.PRC3,PI.PRC) PRC,
+          PRC_ANES,
+          PI.TIPO,
+          PI.NO_APLICA_TIEMPO
+     FROM TARIFARIOS PI,CG_REF_CODES C,GRUPOS_TARIFARIO GT,SUBGRUPOS_TARIFARIO ST,SUBGRUPOS_1_TARIFARIO S1T
+     WHERE C.RV_DOMAIN =  'TIPO_TARIFARIO' AND
+           C.RV_LOW_VALUE = PI.TIPO AND
+           PI.CONVENIO = GT.CONVENIO AND
+           PI.TIPO = GT.TIPO AND
+           GT.CODIGO = PI.CODIGO_GRUPO AND
+           PI.CONVENIO = ST.CONVENIO AND
+           PI.TIPO = ST.TIPO AND
+           ST.CODIGO = PI.CODIGO_SUBGRUPO AND
+           PI.CONVENIO = S1T.CONVENIO(+) AND
+           PI.TIPO= S1T.TIPO(+) AND
+           S1T.CODIGO(+) = PI.CODIGO_SUBGRUPO_1 AND
+           PI.TIPO = 'P'  --AND
+--           PI.UVR3 IS NOT NULL
+ UNION ALL
+   SELECT T.CONVENIO CONVENIO,
+          C.RV_MEANING  DISCRIMINADOR_HOJA,
+          T.CODIGO_ITEM,
+          UPPER(T.DESCRIPCION_ITEM) DESCRIPCION,
+          T.CODIGO_GRUPO||' '||GT.DESCRIPCION||
+          CHR (13) || CHR (10) || CHR (9) ||
+          DECODE(NVL(T.CODIGO_SUBGRUPO,'NULO'),
+                'NULO','',
+                T.CODIGO_SUBGRUPO||' '||ST.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9) )||
+          DECODE (NVL(T.CODIGO_SUBGRUPO_1,'NULO'),
+                 'NULO','',
+                 T.CODIGO_SUBGRUPO_1||' '||S1T.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9) )||
+          DECODE (NVL(T.CODIGO_SUBGRUPO_2,'NULO'),
+                 'NULO','',
+                 T.CODIGO_SUBGRUPO_2|| ' '||S2T.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9)||CHR (9)) ||
+         T.CODIGO_ITEM|| ' ' ||T.DESCRIPCION_ITEM,
+          T.OBSERVACIONES,
+          NVL(T.UVR3,NVL(T.UVR_H_MED,T.UVR)) UVR,
+          T.ANES UVR_ANES,
+          T.PRC,
+          T.PRC_ANES,
+          T.TIPO,
+          T.NO_APLICA_TIEMPO
+     FROM TARIFARIOS T,CG_REF_CODES C,GRUPOS_TARIFARIO GT,SUBGRUPOS_TARIFARIO ST,
+          SUBGRUPOS_1_TARIFARIO S1T,SUBGRUPOS_2_TARIFARIO S2T
+     WHERE C.RV_DOMAIN =  'TIPO_TARIFARIO' AND
+           C.RV_LOW_VALUE = T.TIPO AND
+           T.CONVENIO = GT.CONVENIO AND
+           T.TIPO = GT.TIPO AND
+           GT.CODIGO = T.CODIGO_GRUPO AND
+           T.CONVENIO = ST.CONVENIO (+)AND
+           T.TIPO = ST.TIPO(+) AND
+           ST.CODIGO(+) = T.CODIGO_SUBGRUPO AND
+           T.CONVENIO = S1T.CONVENIO(+) AND
+           T.TIPO= S1T.TIPO(+) AND
+           S1T.CODIGO(+) = T.CODIGO_SUBGRUPO_1 AND
+           T.CONVENIO = S2T.CONVENIO(+) AND
+           T.TIPO= S2T.TIPO(+) AND
+           S2T.CODIGO(+) = T.CODIGO_SUBGRUPO_2 AND
+           T.TIPO <> 'P'  AND
+      	   T.TIPO <> 'H' AND
+       	   T.TIPO <> 'C' AND
+           T.TIPO <> 'S' AND
+           T.TIPO <> 'A' AND
+           T.TIPO <> 'X'
+UNION ALL
+   SELECT DISTINCT T.CONVENIO CONVENIO,
+          C.RV_MEANING  DISCRIMINADOR_HOJA,
+          T.CODIGO_ITEM,
+          UPPER(T.DESCRIPCION_ITEM) DESCRIPCION,
+          T.CODIGO_GRUPO||' '||GT.DESCRIPCION||
+          CHR (13) || CHR (10) || CHR (9) ||
+          DECODE(NVL(T.CODIGO_SUBGRUPO,'NULO'),
+                'NULO','',
+                T.CODIGO_SUBGRUPO||' '||ST.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9) )||
+          DECODE (NVL(T.CODIGO_SUBGRUPO_1,'NULO'),
+                 'NULO','',
+                 T.CODIGO_SUBGRUPO_1||' '||S1T.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9) )||
+          DECODE (NVL(T.CODIGO_SUBGRUPO_2,'NULO'),
+                 'NULO','',
+                 T.CODIGO_SUBGRUPO_2|| ' '||S2T.DESCRIPCION||CHR (13) || CHR (10) || CHR (9) ||CHR (9)||CHR (9)) ||
+         T.CODIGO_ITEM|| ' ' ||T.DESCRIPCION_ITEM,
+          T.OBSERVACIONES,
+          NVL(T.UVR3,NVL(T.UVR_H_MED,T.UVR)) UVR,
+          T.ANES UVR_ANES,
+          NVL(T.PRC3,T.PRC) PRC,
+          T.PRC_ANES,
+          T.TIPO,
+          T.NO_APLICA_TIEMPO
+     FROM TARIFARIOS T,CG_REF_CODES C,GRUPOS_TARIFARIO GT,SUBGRUPOS_TARIFARIO ST,
+          SUBGRUPOS_1_TARIFARIO S1T,SUBGRUPOS_2_TARIFARIO S2T
+     WHERE C.RV_DOMAIN =  'TIPO_TARIFARIO' AND
+           C.RV_LOW_VALUE = T.TIPO AND
+           T.CONVENIO = GT.CONVENIO AND
+           T.TIPO = GT.TIPO AND
+           GT.CODIGO = T.CODIGO_GRUPO AND
+           T.CONVENIO = ST.CONVENIO AND
+           T.TIPO = ST.TIPO AND
+           ST.CODIGO = T.CODIGO_SUBGRUPO AND
+           T.CONVENIO = S1T.CONVENIO(+) AND
+           T.TIPO= S1T.TIPO(+) AND
+           S1T.CODIGO(+) = T.CODIGO_SUBGRUPO_1 AND
+           T.CONVENIO = S2T.CONVENIO(+) AND
+           T.TIPO= S2T.TIPO(+) AND
+           S2T.CODIGO(+) = T.CODIGO_SUBGRUPO_2 AND
+           (T.TIPO =  'C' OR T.TIPO =  'S' OR T.TIPO =  'X')
+
+
+CREATE PUBLIC SYNONYM CONVENIOS_TARIFARIOS FOR SmS.CONVENIOS_TARIFARIOS;
+
+GRANT SELECT ON CONVENIOS_TARIFARIOS TO GENERAL;
+
+GRANT SELECT ON CONVENIOS_TARIFARIOS TO ADMINISTRADOR_PROMOCIONES;
+
+CREATE OR REPLACE VIEW TARIFARIOS_EMPRESA
+(convenio, codigo, descripcion, uvr, uvr_anes, prc, prc_anes, tipo)
+AS
+SELECT SH.CONVENIO CONVENIO,
+          SH.CODIGO_ITEM,
+          UPPER(SH.DESCRIPCION_ITEM) DESCRIPCION,
+          NVL(SH.UVR3,SH.UVR) UVR,  --uvr para nivel 3
+          NULL UVR_ANES,
+          NVL(SH.PRC3,SH.PRC),      --precio para nivel3
+          NULL PRC_ANES,
+          SH.TIPO
+     FROM TARIFARIOS SH
+     WHERE --SH.NIVEL LIKE '%3%' AND   --para nivel 3
+           SH.TIPO = 'H'
+ UNION ALL
+ SELECT A.CONVENIO CONVENIO,
+          A.CODIGO_ITEM,
+          UPPER(A.DESCRIPCION_ITEM) DESCRIPCION,
+          NVL(A.UNIDADES,A.UVR),
+          A.ANES UVR_ANES,
+          NVL(A.PRC_ANES,A.PRC),
+          A.PRC_ANES,
+          A.TIPO
+     FROM TARIFARIOS A
+     WHERE A.TIPO = 'A'
+ UNION ALL
+   SELECT PI.CONVENIO CONVENIO,
+          PI.CODIGO_ITEM,
+          UPPER(PI.DESCRIPCION_ITEM) DESCRIPCION,
+          NVL(PI.UVR3,PI.UVR) UVR,
+          PI.ANES UVR_ANES,
+          NVL(PI.PRC3,PI.PRC) PRC,
+          PRC_ANES,
+          PI.TIPO
+     FROM TARIFARIOS PI
+     WHERE PI.TIPO = 'P'  --AND
+--           PI.UVR3 IS NOT NULL
+ UNION ALL
+   SELECT T.CONVENIO CONVENIO,
+          T.CODIGO_ITEM,
+          UPPER(T.DESCRIPCION_ITEM) DESCRIPCION,
+          NVL(T.UVR3,NVL(T.UVR_H_MED,T.UVR)) UVR,
+          T.ANES UVR_ANES,
+          T.PRC,
+          T.PRC_ANES,
+          T.TIPO
+     FROM TARIFARIOS T
+     WHERE T.TIPO <> 'P' AND
+      	   T.TIPO <> 'H' AND
+       	   T.TIPO <> 'C' AND
+           T.TIPO <> 'S' AND
+           T.TIPO <> 'A' AND
+           T.TIPO <> 'X'
+UNION ALL
+   SELECT DISTINCT T.CONVENIO CONVENIO,
+          T.CODIGO_ITEM,
+          UPPER(T.DESCRIPCION_ITEM) DESCRIPCION,
+          NVL(T.UVR3,NVL(T.UVR_H_MED,T.UVR)) UVR,
+          T.ANES UVR_ANES,
+          NVL(T.PRC3,T.PRC) PRC,
+          T.PRC_ANES,
+          T.TIPO
+     FROM TARIFARIOS T
+     WHERE (T.TIPO =  'C' OR T.TIPO =  'S' OR T.TIPO =  'X')
+
+
+CREATE PUBLIC SYNONYM TARIFARIOS_EMPRESA FOR SIS.TARIFARIOS_EMPRESA;
+
+GRANT SELECT ON TARIFARIOS_EMPRESA TO GENERAL;
+
+GRANT SELECT ON TARIFARIOS_EMPRESA TO ADMINISTRADOR_PROMOCIONES;
+
+
+-- Create sequence 
+create sequence REGARCIESS_SEQ
+minvalue 0
+maxvalue 999999999999999999999999999
+start with 1
+increment by 1
+cache 20;
+
+CREATE PUBLIC SYNONYM REGARCIESS_SEQ FOR SIS.REGARCIESS_SEQ;
+CREATE PUBLIC SYNONYM promociones_convenio FOR SIS.promociones_convenio;
+
+

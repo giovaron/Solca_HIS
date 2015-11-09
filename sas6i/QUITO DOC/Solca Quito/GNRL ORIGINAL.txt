@@ -1,0 +1,1410 @@
+CREATE OR REPLACE  PACKAGE "SMS"."GNRL" IS
+-- Sub-Program Unit Declarations
+/* Devuelve la cama en la que se encuentra internado el paciente */
+FUNCTION DEVUELVE_CAMA 
+ (NHC IN PACIENTES.NUMERO_HC%TYPE
+ ,DFECHA DATE := SYSDATE
+ )
+ RETURN VARCHAR2;
+PRAGMA RESTRICT_REFERENCES (DEVUELVE_CAMA, WNDS);
+/* Busca el ultimo diagnostico oncológico */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ )
+ RETURN VARCHAR2;
+PRAGMA RESTRICT_REFERENCES (ULTIMO_DIAGNOSTICO, WNDS);
+/* Busca el último diagnóstico (función sobrecargada) */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ ,VENFCOD IN OUT VARCHAR2
+ )
+ RETURN VARCHAR2;
+/* Busca el ultimo Diagnostico (función sobrecargada) */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ ,NDGNID IN OUT NUMBER
+ )
+ RETURN VARCHAR2;
+/* La supervivencia del paciente sin sintomas de la enfermedad */
+FUNCTION SLE
+ (NNUMERO_HC NUMBER
+ ,DFECHAFINAL DATE := NULL
+ )
+ RETURN NUMBER;
+PRAGMA RESTRICT_REFERENCES (SLE, WNPS, WNDS);
+/* Ver el tiempo en meses que el paciente sobrevive a un cancer */
+FUNCTION SG
+ (NNUMERO_HC NUMBER
+ ,DFECHAFINAL DATE := NULL
+ )
+ RETURN NUMBER;
+PRAGMA RESTRICT_REFERENCES (SG, WNPS, WNDS);
+/* Ver si el paciente indicado esta en la base de datos */
+FUNCTION EXISTE_PACIENTE
+ (NNUMERO_HC NUMBER
+ )
+ RETURN BOOLEAN;
+PRAGMA RESTRICT_REFERENCES (EXISTE_PACIENTE, WNPS, WNDS);
+/* Devuelve el codigo del plan social actual */
+FUNCTION DEVUELVE_PLAN_SOCIAL
+ (NHC IN NUMBER
+ )
+ RETURN VARCHAR2;
+/* Devuelve las dosis administradas para cada prescripció */
+FUNCTION CUMPLIMIENTOS_PX
+ (NNUMCLAVE NUMBER
+ ,DFECHA DATE
+ ,NPX_NUM NUMBER
+ ,VPX CHAR := NULL
+ )
+ RETURN VARCHAR2;
+PRAGMA RESTRICT_REFERENCES (CUMPLIMIENTOS_PX, WNDS);
+/* Crea los calendario de cirugia para un año completo */
+PROCEDURE CREAR_CALENDARIO_CIRUGIAS
+ (VANIO IN CHAR
+ );
+/* Verifica que la fecha final sea mayor o igual a la inicial */
+PROCEDURE FECHA_ERRONEA
+ (DFECHA_INICIO DATE
+ ,DFECHA_FIN DATE := SYSDATE
+ );
+/* Fija la clasificación de un paciente */
+PROCEDURE FIJAR_CLASIFICACION
+ (NNUMERO_HC NUMBER
+ );
+/* Cambiamos el plan social en el que se encuentra el paciente */
+PROCEDURE CAMBIAR_PLAN_SOCIAL
+ (VPLNSCL VARCHAR2
+ ,NHC NUMBER
+ ,VPRSCOD VARCHAR2
+ ,VOBS VARCHAR2
+ );
+/* Devuelve el total que debe el paciente */
+FUNCTION TOTAL_DEUDA_PACIENTE
+ (NHC CUENTAS.PCN_NUMERO_HC%TYPE
+ )
+ RETURN NUMBER;
+PRAGMA RESTRICT_REFERENCES (TOTAL_DEUDA_PACIENTE, WNDS);
+/* Ver si el rol esta habilitado o no */
+FUNCTION ROL_HABILITADO
+ (VROL VARCHAR2 := NULL
+ ,DFECHA DATE := NULL
+ ,NDIAS NUMBER := NULL
+ )
+ RETURN BOOLEAN;
+/* Recibe un número, y devuelve en formato de letras. */
+FUNCTION NUMERO_A_LETRAS
+ (NNUMERO IN NUMBER
+ ,VMONEDAPLURAL IN VARCHAR2
+ ,VMONEDASINGULAR IN VARCHAR2
+ ,VDECIMALESPLURAL IN VARCHAR2
+ ,VDECIMALESSINGULAR IN VARCHAR2
+ ,VCENTAVOS_EN_FRACCION IN VARCHAR2
+ )
+ RETURN VARCHAR2;
+/* Realizar la función básica de 3 cifras a letras. */
+FUNCTION NUMERO_3_CIFRAS_A_LETRAS
+ (NNUMERO IN NUMBER
+ ,VETIQUETA IN VARCHAR2
+ )
+ RETURN VARCHAR2;
+/* Devuelve la ultima promocion a la que pertenece el paciente */
+FUNCTION DEVOLVER_ULTIMA_PROMOCION
+ (NHC IN PACIENTES.NUMERO_HC%TYPE
+ ,DFECHA IN DATE := NULL
+ )
+ RETURN VARCHAR2;
+PRAGMA RESTRICT_REFERENCES (DEVOLVER_ULTIMA_PROMOCION, WNDS);
+/* Pasar de centavos a letras. */
+FUNCTION CENTAVOS_A_LETRAS
+ (NNUMERO IN NUMBER
+ ,VETIQUETAPLURAL IN VARCHAR := 'CENTAVOS'
+ ,VETIQUETASINGULAR IN VARCHAR2 := 'CENTAVO'
+ )
+ RETURN VARCHAR2;
+/* DEVUELVE LA CLASIFICACION DEL PACIENTE */
+FUNCTION CLASIFICACION_PACIENTE
+ (NHC PACIENTES.CLASIFICACION%TYPE
+ )
+ RETURN VARCHAR2;
+/* Pasar de dos decimales a fracciones de centésima 24/100 */
+FUNCTION CENTAVOS_A_FRACCIONES
+ (NNUMERO IN NUMBER
+ ,VETIQUETAPLURAL IN VARCHAR2
+ ,VETIQUETASINGULAR IN VARCHAR2
+ )
+ RETURN CHARACTER;
+/* Fija la promoción del paciente */
+PROCEDURE FIJAR_PROMOCION_PACIENTE
+ (NHC PROMOCIONES_PACIENTES.PCN_NUMERO_HC%TYPE
+ ,VPRMCOD PROMOCIONES_PACIENTES.PRM_CODIGO%TYPE
+ ,VPRSCOD PROMOCIONES_PACIENTES.PRS_CODIGO%TYPE
+ ,VOBS PROMOCIONES_PACIENTES.OBSERVACION%TYPE
+ ,DFECHA DATE:=NULL);
+/* Actualizar las secuencias de los code controls. */
+PROCEDURE ACTUALIZA_SECUENCIA
+ (P_CC_DOMAIN VARCHAR2
+ ,P_CC_TARGET IN OUT NUMBER
+ );
+/* Devolver datos de la internación de un paciente */
+PROCEDURE DEVOLVER_DATOS_INTERNACION
+ (NINTERNACION IN PERMANENCIAS_Y_ATENCIONES.NUMERO%TYPE
+ ,VPACIENTE OUT VARCHAR2
+ ,DFECHAING OUT DATE
+ ,DFECHAALT OUT DATE
+ );
+/* Centralización de la carga de la cuenta */
+PROCEDURE CARGAR_CUENTA
+ (P_NUMERO IN CUENTAS.NUMERO%TYPE
+ ,P_DETALLE IN CUENTAS.DETALLE%TYPE
+ ,P_ARA_GENERADORA IN CUENTAS.DPR_ARA_CODIGO%TYPE
+ ,P_DPR_GENERADORA IN CUENTAS.DPR_CODIGO%TYPE
+ ,P_CANTIDAD IN CUENTAS.CANTIDAD%TYPE
+ ,P_CRG_TIPO IN CUENTAS.CRG_TIPO%TYPE
+ ,P_CODIGO IN CUENTAS.CRG_CODIGO%TYPE
+ ,P_DOCUMENTO IN CUENTAS.DOCUMENTO%TYPE
+ ,P_PCN_NUMERO_HC IN CUENTAS.PCN_NUMERO_HC%TYPE
+ ,P_INS_OR_UPD IN VARCHAR2
+ ,P_PRECIO_VENTA IN NUMBER := NULL
+ ,P_FECHA IN DATE := NULL
+ );
+END GNRL;
+
+
+CREATE OR REPLACE  PACKAGE BODY "SMS"."GNRL" IS
+-- Sub-Program Units
+/* Devuelve la cama en la que se encuentra internado el paciente */
+FUNCTION DEVUELVE_CAMA
+ (NHC IN PACIENTES.NUMERO_HC%TYPE
+ ,DFECHA DATE := SYSDATE
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+-- Devuelve la sala y cama en la que se encuentra el paciente internado
+    DECLARE
+       vTmpSala TURNOS_CAMAS.cmahsp_sala%TYPE:= '';
+       vTmpCama TURNOS_CAMAS.cmahsp_cama%TYPE:= '';
+       CURSOR CTrnCma IS
+          SELECT cmahsp_sala, cmahsp_cama
+          FROM TURNOS_CAMAS
+       WHERE
+          ((slcint_pcn_numero_hc=nHC AND
+                TO_CHAR(fecha, 'hh24:mi') = '00:00') AND
+             /* buscamos solo en los turnos de los pacientes internados */
+             Fecha BETWEEN(dFecha-1) AND dFecha)
+          ORDER BY Fecha DESC;
+    BEGIN
+       OPEN CTrnCma;
+       FETCH CTrnCma INTO vTmpSala, vTmpCama;
+       RETURN vTmpSala||vTmpCama;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+       RETURN ' ';
+       -- No esta internado
+       WHEN OTHERS THEN
+       RAISE_APPLICATION_ERROR(-20100, 'Error: '||SQLERRM);
+    END;
+END DEVUELVE_CAMA;
+/* Busca el ultimo diagnostico oncológico */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/* Devuelve el último diagnostico segun tipo que posee el paciente,
+    con un maximo de 40 caracteres */
+    -- Parametros
+    -- 	nNumeroHC => el número de Historia Clínica del paciente
+    --	vTipo => se puede pasar ('ONC',SCN','PRE','PRM') o '%'
+    DECLARE
+       CURSOR enf IS
+          SELECT NVL(d.dx_generico, e.enfermedad)
+          FROM diagnosticos d, enfermedades e
+       WHERE
+          (d.pcn_numero_hc=nNumeroHC) AND
+          (d.enf_codigo=e.codigo) AND(dgn_type LIKE vTipo)
+          order BY fecha_inicio desc;
+       vEnfermedad enfermedades.enfermedad%TYPE;
+    BEGIN
+       OPEN enf;
+       FETCH enf INTO vEnfermedad;
+       IF enf%NOTFOUND THEN
+          vEnfermedad:= '';
+       END IF;
+       CLOSE enf;
+       -- devolvemos solamente los primeros 40 caracteres de la cadena
+       RETURN SUBSTR(vEnfermedad, 1, 40);
+    END;
+END ULTIMO_DIAGNOSTICO;
+/* Busca el último diagnóstico (función sobrecargada) */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ ,VENFCOD IN OUT VARCHAR2
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/* Devuelve el último diagnostico segun tipo que posee el paciente,
+    con un maximo de 40 caracteres y solo si no tiene fecha fin*/
+    -- Parametros
+    -- 	nNumeroHC => el número de Historia Clínica del paciente
+    --	vTipo => se puede pasar ('ONC',SCN','PRE','PRM') o '%'
+    --	vEnfCod => Devuelve el codigo de la enfermedad
+    DECLARE
+       CURSOR enf IS
+          SELECT NVL(d.dx_generico, e.enfermedad), e.codigo
+          FROM diagnosticos d, enfermedades e
+       WHERE
+          (d.pcn_numero_hc=nNumeroHC) AND
+          d.fecha_fin IS NULL AND
+          (d.enf_codigo=e.codigo) AND(dgn_type LIKE vTipo)
+          ORDER BY fecha_inicio DESC;
+       vEnfermedad enfermedades.enfermedad%TYPE;
+       vCodigo enfermedades.codigo%TYPE;
+    BEGIN
+       OPEN enf;
+       FETCH enf INTO vEnfermedad, vCodigo;
+       IF enf%NOTFOUND THEN
+          vEnfermedad:= '';
+          IF NVL(vEnfCod, '') != ''THEN
+             vEnfCod:= '';
+          END IF;
+       ELSE
+          vEnfCod:=vCodigo;
+       END IF;
+       CLOSE enf;
+       -- devolvemos solamente los primeros 40 caracteres de la cadena
+       RETURN SUBSTR(vEnfermedad, 1, 40);
+    END;
+END ULTIMO_DIAGNOSTICO;
+/* Busca el ultimo Diagnostico (función sobrecargada) */
+FUNCTION ULTIMO_DIAGNOSTICO
+ (NNUMEROHC NUMBER
+ ,VTIPO VARCHAR2
+ ,NDGNID IN OUT NUMBER
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/* Devuelve el último diagnostico segun tipo que posee el paciente,
+    con un maximo de 40 caracteres y solo si no tiene fecha fin*/
+    -- Parametros
+    -- 	nNumeroHC => el número de Historia Clínica del paciente
+    --	vTipo => se puede pasar ('ONC',SCN','PRE','PRM') o '%'
+    --	nDgnId => Devuelve el codigo de diagnostico de la enfermedad
+    DECLARE
+       CURSOR enf IS
+          SELECT NVL(d.dx_generico, e.enfermedad), d.dgn_id
+          FROM diagnosticos d, enfermedades e
+       WHERE
+          (d.pcn_numero_hc=nNumeroHC) AND
+          d.fecha_fin IS NULL AND
+          (d.enf_codigo=e.codigo) AND(dgn_type LIKE vTipo)
+          ORDER BY fecha_inicio DESC;
+       vEnfermedad enfermedades.enfermedad%TYPE;
+       nCodigo diagnosticos.dgn_id%TYPE;
+    BEGIN
+       OPEN enf;
+       FETCH enf INTO vEnfermedad, nCodigo;
+       IF enf%NOTFOUND THEN
+          vEnfermedad:= '';
+          IF NVL(nDgnId, 0) != 0THEN
+             nDgnId:= NULL;
+          END IF;
+       ELSE
+          nDgnId:=nCodigo;
+       END IF;
+       CLOSE enf;
+       -- devolvemos solamente los primeros 40 caracteres de la cadena
+       RETURN SUBSTR(vEnfermedad, 1, 40);
+    END;
+END ULTIMO_DIAGNOSTICO;
+/* La supervivencia del paciente sin sintomas de la enfermedad */
+FUNCTION SLE
+ (NNUMERO_HC NUMBER
+ ,DFECHAFINAL DATE := NULL
+ )
+ RETURN NUMBER
+ IS
+-- Program Data
+/* La fecha minima en la que no ha habido remision completa de la enfermedad */
+DFECHA DATE;
+/* La fecha inicial en al que se ha presentado una remisión de la enfermedad */
+DFECHAINI DATE;
+DFECHAULT DATE;
+-- PL/SQL Block
+BEGIN
+/* dfechafinal La fecha hasta la que se desea
+    buscar si ha estado libre de enfermedad*/
+    /* Primero seleccionamos la ultima fecha en la que no tuvo
+    remision de la enfermedad */
+    IF dFechaFinal IS NULL THEN
+       dFechaUlt:=SYSDATE;
+    ELSE
+       dFechaUlt:=dFechaFinal;
+    END IF;
+    IF Existe_Paciente(nNumero_hc) THEN
+       SELECT MAX(fecha)
+       INTO
+          dFecha
+       FROM
+          estados_pacientes
+       WHERE
+          (pcn_numero_hc=nNumero_hc) AND
+          (fecha<=dFechaUlt) AND
+          (estado!= 'CMP');
+       IF dFecha IS NULL THEN
+          dFecha:=TO_DATE('01-01-1900', 'dd-mm-yyyy');
+       END IF;
+    ELSE
+       RETURN NULL;
+    END IF;
+    /* Ahora seleccionamos la primera fecha con remision completa
+     a partir de la ultima fecha sin remision */
+    SELECT MIN(fecha)
+    INTO
+       dFechaIni
+    FROM
+       estados_pacientes
+    WHERE
+       (pcn_numero_hc=nNumero_hc) AND
+       (fecha>dFecha) AND(fecha<=dFechaUlt) AND
+       (estado= 'CMP');
+    IF dFechaIni IS NULL THEN
+       RETURN 0;
+    ELSE
+       RETURN ROUND(MONTHS_BETWEEN(dFechaUlt, dFechaIni));
+    END IF;
+END SLE;
+/* Ver el tiempo en meses que el paciente sobrevive a un cancer */
+FUNCTION SG
+ (NNUMERO_HC NUMBER
+ ,DFECHAFINAL DATE := NULL
+ )
+ RETURN NUMBER
+ IS
+-- Program Data
+/* La fecha en el que el paciente presente una enfermedad oncológica */
+DFECHAINICIAL DATE;
+DFECHAULT DATE;
+-- PL/SQL Block
+BEGIN
+IF dFechaFinal IS NULL THEN
+       dFechaUlt:=SYSDATE;
+    ELSE
+       DFechaUlt:=dFechaFinal;
+    END IF;
+    IF Existe_Paciente(nNumero_hc) THEN
+       /* Primero seleccionamos la fecha inicial en la que tuvo
+       una enfermedad oncologica*/
+       SELECT MIN(fecha_inicio)
+       INTO
+          dFechainicial
+       FROM
+          diagnosticos
+       WHERE
+          (pcn_numero_hc=nNumero_hc) AND
+          (dgn_type= 'ONC');
+       IF dFechainicial IS NULL THEN
+          RETURN 0;
+       ELSE
+          RETURN ROUND(MONTHS_BETWEEN(dFechaUlt, dFechainicial));
+       END IF;
+    ELSE
+       RETURN NULL;
+    END IF;
+END SG;
+/* Ver si el paciente indicado esta en la base de datos */
+FUNCTION EXISTE_PACIENTE
+ (NNUMERO_HC NUMBER
+ )
+ RETURN BOOLEAN
+ IS
+-- Program Data
+NNUMERO NUMBER;
+-- PL/SQL Block
+BEGIN
+BEGIN
+   SELECT numero_hc
+   INTO nNumero
+   FROM
+      PACIENTES
+   WHERE numero_hc=nNumero_HC;
+   RETURN TRUE;
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+   RETURN FALSE;
+END;
+END EXISTE_PACIENTE;
+/* Devuelve el codigo del plan social actual */
+FUNCTION DEVUELVE_PLAN_SOCIAL
+ (NHC IN NUMBER
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+    DECLARE
+    -- Vemos el ultimo plan social de un paciente
+      vPlan promociones_pacientes.prm_codigo%type;
+      CURSOR cPlnSclPcn IS
+      SELECT prm_codigo
+      FROM promociones_pacientes
+      WHERE pcn_numero_hc=nHC
+      order BY fecha desc;
+    BEGIN
+      OPEN cPlnSclPcn;
+      FETCH cPlnSclPcn INTO vPlan;
+      CLOSE cPlnSclPcn;
+      IF vPlan IS NULL THEN
+    -- Si no tiene un plan social asumimos que es el general 01
+        RETURN '01';
+      ELSE
+        RETURN vPlan;
+      END IF;
+    EXCEPTION
+      WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20100,
+        'Error en la funcion Devuelve Plan Social por '||SQLERRM);
+    END;
+END;
+/* Devuelve las dosis administradas para cada prescripció */
+FUNCTION CUMPLIMIENTOS_PX
+ (NNUMCLAVE NUMBER
+ ,DFECHA DATE
+ ,NPX_NUM NUMBER
+ ,VPX CHAR := NULL
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+DECLARE
+       vDev VARCHAR2(2000) := '';
+       vTemp VARCHAR2(50);
+       CURSOR cCmpQmt IS
+          SELECT TO_CHAR(hora, 'hh24:mi') || '->'||TO_CHAR(dosis)
+          FROM CUMPLIMIENTOS_QUIMIOTERAPIA
+       WHERE
+          dssqmt_prsmdcqmt_fecha=dFecha AND
+          dssqmt_numero=nPx_num AND
+          DSSQMT_TRTQMT_QMT_NUMERO=nNumClave
+          ORDER BY HORA ASC;
+       CURSOR cMmtCmp IS
+          SELECT TO_CHAR(hora, 'hh24:mi')
+          FROM MOMENTOS_CUMPLIMIENTO
+       WHERE
+          dtlprs_prsmdc_fecha=dFecha AND
+          dtlprs_numero=nPx_num AND
+          DTLPRS_PRSMDC_SLCINT_PCN_NUMER=nNumClave
+          ORDER BY HORA ASC;
+    BEGIN
+       IF vPx= 'Q'THEN
+          OPEN cCmpQmt;
+          LOOP
+             FETCH cCmpQmt INTO vTemp;
+             EXIT WHEN cCmpQmt%NOTFOUND;
+             vDev:=vDev||RPAD(vTemp, 15) || '  ';
+          END LOOP;
+          CLOSE cCmpQmt;
+          RETURN vDev;
+       ELSE
+          OPEN cMmtCmp;
+          LOOP
+             FETCH cMmtCmp INTO vTemp;
+             EXIT WHEN cMmtCmp%NOTFOUND;
+             vDev:=vDev||vTemp|| '  ';
+          END LOOP;
+          CLOSE cMmtCmp;
+          RETURN vDev;
+       END IF;
+    END;
+END CUMPLIMIENTOS_PX;
+/* Crea los calendario de cirugia para un año completo */
+PROCEDURE CREAR_CALENDARIO_CIRUGIAS
+ (VANIO IN CHAR
+ )
+ IS
+BEGIN
+-- Crea los calendarios de acuerdo a vAnio
+-- Se disparará un excepción si hay un error en el calendario
+DECLARE
+   dFecha DATE;
+   nTemp NUMBER:=0;
+   CALENDARIO_EXISTENTE
+EXCEPTION
+   ;
+BEGIN
+   -- Vemos que no haya ni un solo dia del proximo año fijado
+   SAVEPOINT A;
+   SELECT COUNT(*)
+   INTO
+      nTemp
+   FROM
+      HOJAS_DE_INTERVENCIONES
+   WHERE
+      TO_CHAR(FECHA, 'YYYY') =vAnio;
+   IF nTemp=0 THEN
+      -- Primero vemos cual es el primer dia del año
+      -- antes de crear el calendario
+      SELECT TRUNC(TO_DATE(vAnio, 'YYYY'), 'YEAR')
+      INTO
+         dFecha
+      FROM
+         SYS.DUAL;
+      LOOP
+         -- Ahora recorreremos todo el año viendo los días
+         --  festivo y fines de semana
+         SELECT COUNT(*)
+         INTO
+            nTemp
+         FROM
+            CALENDARIOS_DIAS_FESTIVOS
+         WHERE
+            -- Ahora buscamos con toda la fecha
+            fecha=dFecha;
+         IF nTemp=0 AND
+            UPPER(TO_CHAR(dFecha, 'fmDAY', 'NLS_DATE_LANGUAGE=SPANISH')) NOT IN(
+               'SÁBADO', 'DOMINGO') THEN
+            -- Si no es fin de semana verificamos que no sea un día festivo
+            -- Si no es un día festivo creamos el dia en el calendario de
+            -- hojas de intervenciones
+            INSERT INTO HOJAS_DE_INTERVENCIONES(Fecha)
+            VALUES
+               (dFecha);
+         ELSE
+            -- Si es un día festivo creamos el dia en el calendario de
+            -- hojas de intervenciones pero como no laborable
+            INSERT INTO HOJAS_DE_INTERVENCIONES(Fecha, estado_trabajo)
+            VALUES
+               (dFecha, 'N');
+         END IF;
+         dFecha:=dFecha+1;
+         EXIT WHEN TO_CHAR(dFecha, 'YYYY') !=vAnio;
+      END LOOP;
+   ELSE
+      RAISE CALENDARIO_EXISTENTE;
+   END IF;
+   COMMIT;
+   -- Grabamos y creamos el calendario
+EXCEPTION
+   WHEN CALENDARIO_EXISTENTE THEN
+   ROLLBACK TO SAVEPOINT A;
+   RAISE_APPLICATION_ERROR(-20100,
+      'Ya existe un calendario creado para ese año');
+   WHEN OTHERS THEN
+   ROLLBACK TO SAVEPOINT A;
+   RAISE_APPLICATION_ERROR(-20100, SQLERRM);
+END;
+END CREAR_CALENDARIO_CIRUGIAS;
+/* Verifica que la fecha final sea mayor o igual a la inicial */
+PROCEDURE FECHA_ERRONEA
+ (DFECHA_INICIO DATE
+ ,DFECHA_FIN DATE := SYSDATE
+ )
+ IS
+-- Program Data
+DFECHAMAX DATE;
+-- PL/SQL Block
+BEGIN
+IF(dfecha_fin<dfecha_inicio) THEN
+   RAISE_APPLICATION_ERROR(-20100,
+      'La fecha inicial no puede ser mayor a la final');
+END IF;
+END FECHA_ERRONEA;
+/* Fija la clasificación de un paciente */
+PROCEDURE FIJAR_CLASIFICACION
+ (NNUMERO_HC NUMBER
+ )
+ IS
+-- Program Data
+NNUMONCOLOG NUMBER;
+-- PL/SQL Block
+BEGIN
+-- Primero buscamos el numero de Dx que son ONCologicos
+    -- y que tienen fecha fin en nulo
+       SELECT nvl(COUNT(DGN.dgn_id),0)
+       INTO
+          nNumOncolog
+       FROM
+          diagnosticos DGN
+       WHERE
+          DGN.pcn_numero_hc = nNumero_hc
+          AND DGN.dgn_type = 'ONC'
+          AND DGN.FECHA_FIN IS NULL;
+       IF nNumOncolog>=1 THEN
+        -- Se refleja los cambios de la clasificación si hay por lo menos 1 ONC
+        UPDATE pacientes PCN SET PCN.clasificacion = 'CA.'
+        WHERE numero_hc = nNumero_hc;
+       ELSE
+       -- Si ninguno es oncologico vemos que no sea tipo PAPanikolaous u OTRos
+       -- para pasarlos a DOC
+        UPDATE pacientes PCN SET PCN.clasificacion = 'DOC'
+        WHERE PCN.numero_hc =nNumero_hc AND PCN.clasificacion NOT IN ('PAP','OTR');
+       END IF;
+END FIJAR_CLASIFICACION;
+/* Cambiamos el plan social en el que se encuentra el paciente */
+PROCEDURE CAMBIAR_PLAN_SOCIAL
+ (VPLNSCL VARCHAR2
+ ,NHC NUMBER
+ ,VPRSCOD VARCHAR2
+ ,VOBS VARCHAR2
+ )
+ IS
+-- Program Data
+VPLN VARCHAR2(3);
+-- PL/SQL Block
+BEGIN
+Fijar_Promocion_Paciente(nHc,vPlnScl,vPrsCod,vObs);
+EXCEPTION
+-- Si se repite la clave primaria no hacemos nada
+  WHEN DUP_VAL_ON_INDEX THEN
+    NULL;
+  WHEN OTHERS THEN
+RAISE_APPLICATION_ERROR(-20100,
+   'Error en el procedimiento GNRLCMBPLNSCL por '||SQLERRM);
+END CAMBIAR_PLAN_SOCIAL;
+/* Devuelve el total que debe el paciente */
+FUNCTION TOTAL_DEUDA_PACIENTE
+ (NHC CUENTAS.PCN_NUMERO_HC%TYPE
+ )
+ RETURN NUMBER
+ IS
+-- Program Data
+NSUM NUMBER;
+-- PL/SQL Block
+BEGIN
+-- Devuelve la deuda total pendiente de pago del paciente
+BEGIN
+  SELECT SUM(CANTIDAD*VALOR*PORCENTAJE_PROMOCION)/*-SUM(DESCUENTO_OTORGADO)*/
+  INTO nSum
+  FROM CUENTAS
+  WHERE PCN_NUMERO_HC=nHC
+  AND ESTADO='PND';
+  RETURN NVL(nSum,0);
+END;
+END TOTAL_DEUDA_PACIENTE;
+/* Ver si el rol esta habilitado o no */
+FUNCTION ROL_HABILITADO
+ (VROL VARCHAR2 := NULL
+ ,DFECHA DATE := NULL
+ ,NDIAS NUMBER := NULL
+ )
+ RETURN BOOLEAN
+ IS
+-- Program Data
+NDIAST NUMBER := NVL(nDias,15);
+DPARAMFECHA DATE := NULL;
+DFECHAACT DATE := sysdate;
+DFECHAHASTA DATE := NULL;
+-- PL/SQL Block
+BEGIN
+-- CREADO: 16 - MARZO - 2000
+-- Devuelve TRUE si la fecha o el rol del usuario actual es modificable. Por lo
+-- general debera ser llamado en el PRE-RECORD o WHEN-NEW-RECORD-INSTANCE del
+-- archivo maestro que se desea ver si puede ser modificado.
+-- del rango de fecha para cambio, o es el rol dueño del sistema médico
+-- Si dFECHA viene en nulo, solo verifica el vROL.
+-- Si se no se fija vROL al llamar la funcion, verá que sea del ROL general
+-- El valor por defecto para modificar será 10 días
+-- Parámetros:  vRol-> El rol para el que será modificable
+--              dFecha-> La fecha con la que se desea compara la fecha actual y el rango máximo
+--              nDias-> Número máximo de dias para modificar
+--                    Hasta 15 diás maximo despues devolvera que es modificable el registro por defecto
+  IF DBMS_SESSION.IS_ROLE_ENABLED('SIS_ADMIN') THEN
+-- Si el rol es el dueño del sistema medico, siempre sera modificable
+    RETURN TRUE;
+  END IF;
+  IF dFecha IS NOT NULL THEN
+     dParamFecha:=TO_DATE(TO_CHAR(dFecha,'DD/MM/YYYY'),'DD/MM/YYYY');
+     dFechaHasta:=TO_DATE(TO_CHAR(dParamFecha,'DD/MM/YYYY')||' 23:59','DD/MM/YYYY HH24:MI') + nDiasT;
+  END IF;
+-- raise_application_error(-20100,TO_CHAR(dFechaAct)||' dparm '||TO_CHAR(dParamFecha)||' dfechhasta '||TO_CHAR(dFechaHasta));
+  IF dParamFecha IS NOT NULL AND (dFechaAct BETWEEN dParamFecha  AND dFechaHasta) AND
+    DBMS_SESSION.IS_ROLE_ENABLED(vRol) THEN
+-- Verificamos la fecha y el rol del usuario
+    RETURN TRUE;
+  ELSIF dFecha IS NULL AND DBMS_SESSION.IS_ROLE_ENABLED(vRol) THEN
+    RETURN TRUE;
+  END IF;
+  RETURN FALSE;
+END ROL_HABILITADO;
+/* Recibe un número, y devuelve en formato de letras. */
+FUNCTION NUMERO_A_LETRAS
+ (NNUMERO IN NUMBER
+ ,VMONEDAPLURAL IN VARCHAR2
+ ,VMONEDASINGULAR IN VARCHAR2
+ ,VDECIMALESPLURAL IN VARCHAR2
+ ,VDECIMALESSINGULAR IN VARCHAR2
+ ,VCENTAVOS_EN_FRACCION IN VARCHAR2
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/*Numeros a LETRAS
+ PARAMETROS
+ nNumero Número que sera transformado
+ vMonedaPlural moneda en la que esta el valor en plural dolares, sucres.
+ vMonedaSingular moneda en la que se trabaja en unidad o singular dólar, sucre.
+ vCentavos_En_Fraccion (V/F), Indica si los centavos del número se presentarán
+                       en fracción, o en letras.
+                        25/100
+                       veinte y cinco centavos.
+ */
+DECLARE
+ vNumero VARCHAR2(100);
+ vDevolver VARCHAR2(250);
+ vDecimales VARCHAR2(100);
+ nPosicionPunto NUMBER;
+ vParteEntera VARCHAR2(100);
+ vParteDecimal VARCHAR2(100);
+ nContador NUMBER;
+ nAux NUMBER;
+ vParte NUMBER;
+ vEtiqueta VARCHAR2(100);
+ vEtiqueta_Moneda VARCHAR2(100);
+ i NUMBER;
+BEGIN
+ vNumero:=TO_CHAR(TRUNC(nNumero,2),'999999990D00');
+ nPosicionPunto := INSTR(vNumero,'.');
+ if nposicionpunto = 0 then
+   nPosicionPunto := INSTR(vNumero,',');
+ end if;
+ vParteEntera:=LTRIM(RTRIM(SUBSTR(vNumero,1,nPosicionPunto - 1)));
+ IF vParteEntera <> '0' THEN
+  IF nNumero < 10 AND vParteEntera='1' THEN
+    vEtiqueta_Moneda := vMonedaSingular;
+  ELSE
+    vEtiqueta_Moneda := vMonedaPlural;
+  END IF;
+  nContador := TRUNC(LENGTH(vParteEntera)/3);
+  nAux := LENGTH(vParteEntera) - (nContador * 3);
+  IF nAux>0 THEN
+     vParte := SUBSTR(vParteEntera,1,nAux);
+     IF nContador = 2 THEN
+        IF naux > 1 THEN
+         vEtiqueta := 'MILLONES';
+        ELSE
+         vEtiqueta := 'MILLON';
+        END IF;
+     ELSIF nContador = 1 THEN
+        vEtiqueta := 'MIL';
+     ELSIF nContador = 0 THEN
+        vEtiqueta := '';
+     END IF;
+     IF nNumero < 10 AND vParteEntera='1' THEN
+       vDevolver:='UNO';
+     ELSE
+       vDevolver := NUMERO_3_CIFRAS_A_LETRAS(TO_NUMBER(vParte,'990'),vEtiqueta);
+     END IF;
+  END IF;
+  ncontador := ncontador -1;
+  i:=0;
+  WHILE nContador>=0
+    LOOP
+    IF nContador = 2 THEN
+        vEtiqueta := 'MILLONES';
+     ELSIF nContador = 1 THEN
+        vEtiqueta := 'MIL';
+     ELSIF nContador = 0 THEN
+        vEtiqueta := '';
+     END IF;
+     vparte:=SUBSTR(vParteEntera,nAux+(3*i)+1,3);
+     vDevolver := vDevolver ||' ' ||NUMERO_3_CIFRAS_A_LETRAS(TO_NUMBER(vParte,'990'),vEtiqueta);
+     i:=i+1;
+     nContador:=ncontador-1;
+    END LOOP;
+ ELSE
+   vDevolver := 'CERO '||vMonedaPlural;
+ END IF;
+ vParteDecimal := SUBSTR(vNumero,nPosicionPunto+1,2);
+ IF vCentavos_En_Fraccion = 'F' THEN
+   vDecimales := CENTAVOS_A_LETRAS(TO_NUMBER(vParteDecimal),vDecimalesPlural,vDecimalesSingular);
+ ELSE
+   vDecimales := CENTAVOS_A_FRACCIONES(TO_NUMBER(vParteDecimal),vDecimalesPlural,vDecimalesSingular);
+ END IF;
+ RETURN vDevolver||vEtiqueta_Moneda||' CON '|| vDecimales;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en NMR_LTR.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END NUMERO_A_LETRAS;
+/* Realizar la función básica de 3 cifras a letras. */
+FUNCTION NUMERO_3_CIFRAS_A_LETRAS
+ (NNUMERO IN NUMBER
+ ,VETIQUETA IN VARCHAR2
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/*Función que realiza la parte
+  mas básica de pasar de numeros a letras
+  se recibe un número de tres dígitos, y
+  se pasa este a letras.
+PARAMETROS
+ nNumero el numero de tres dígitos que hay que pasar.
+ vEtiqueta la etiqueta que hay que pasar
+            con el numero, millones, miles, cientos.*/
+DECLARE
+vDevolver VARCHAR2(200);
+vNumero VARCHAR2(4);
+nLargo NUMBER;
+vDigito VARCHAR2(1);
+vDigitoAux VARCHAR2(1);
+vRequiere_Y VARCHAR2(2);
+vDigCentenas VARCHAR2(1);
+vDigDecenas VARCHAR2(1);
+i NUMBER;
+BEGIN
+ vNumero:=LTRIM(TO_CHAR(nNumero,'999'),' ');
+ nLargo := LENGTH(vNumero);
+ i:=0;
+ vRequiere_Y:='F';
+ vDigCentenas := NULL;
+ vDigDecenas := NULL;
+ WHILE nlargo>0
+ LOOP
+   i:= i+1;
+   vDigito := SUBSTR(vNumero,i,1);
+   IF nLargo = 3 THEN
+       vRequiere_Y:='F';
+       vDigCentenas := Vdigito;
+     /*en la columna de las centenas*/
+       IF vDigito = '1' THEN
+         IF vNumero<>'100' THEN
+          vDevolver := 'CIENTO ';
+         ELSE
+          vDevolver := 'CIEN';
+         END IF;
+       ELSIF vDigito = '2' THEN vDevolver := 'DOSCIENTOS ';
+       ELSIF vDigito = '3' THEN vDevolver := 'TRESCIENTOS ';
+       ELSIF vDigito = '4' THEN vDevolver := 'CUATROCIENTOS ';
+       ELSIF vDigito = '5' THEN vDevolver := 'QUINIENTOS ';
+       ELSIF vDigito = '6' THEN vDevolver := 'SEISCIENTOS ';
+       ELSIF vDigito = '7' THEN vDevolver := 'SETECIENTOS ';
+       ELSIF vDigito = '8' THEN vDevolver := 'OCHOCIENTOS ';
+       ELSIF vDigito = '9' THEN vDevolver := 'NOVECIENTOS ';
+       END IF;
+   ELSIF nLargo=2 THEN
+     --en la columna de las decenas
+       IF (Vdigito NOT IN ('1','0'))THEN
+          vRequiere_Y:='V';
+       ELSE
+           vRequiere_Y:='F';
+       END IF;
+       IF vDigito = '1' THEN
+          i:=i+1;
+          vDigitoAux := SUBSTR(vNumero,i,1);
+          nLargo:=nLargo-1;
+           IF vDigitoAux = '0' THEN vDevolver := vDevolver||'DIEZ';
+           ELSIF vDigitoAux = '1' THEN vDevolver := vDevolver||'ONCE';
+           ELSIF vDigitoAux = '2' THEN vDevolver := vDevolver||'DOCE';
+           ELSIF vDigitoAux = '3' THEN vDevolver := vDevolver||'TRECE';
+           ELSIF vDigitoAux = '4' THEN vDevolver := vDevolver||'CATORCE';
+           ELSIF vDigitoAux = '5' THEN vDevolver := vDevolver||'QUINCE';
+           ELSIF vDigitoAux = '6' THEN vDevolver := vDevolver||'DIECISEIS';
+           ELSIF vDigitoAux = '7' THEN vDevolver := vDevolver||'DIECISIETE';
+           ELSIF vDigitoAux = '8' THEN vDevolver := vDevolver||'DIECIOCHO';
+           ELSIF vDigitoAux = '9' THEN vDevolver := vDevolver||'DIECINUEVE';
+           END IF;
+       ELSIF vDigito = '2' THEN vDevolver := vDevolver||'VEINTE';
+       ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TREINTA';
+       ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUARENTA';
+       ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCUENTA';
+       ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SESENTA';
+       ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SETENTA';
+       ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHENTA';
+       ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NOVENTA';
+       END IF;
+   ELSIF nLargo=1 THEN
+       IF (vREQUIERE_Y ='V') AND (vDigito<>0) THEN
+        vDevolver := vDevolver||' Y ';
+       END IF;
+       IF vDigito='1' THEN vDevolver :=vDevolver|| 'UN';
+       ELSIF vDigito = '2' THEN vDevolver :=vDevolver|| 'DOS';
+       ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TRES';
+       ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUATRO';
+       ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCO';
+       ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SEIS';
+       ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SIETE';
+       ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHO';
+       ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NUEVE';
+       END IF;
+   END IF;
+   NLARGO:= NLARGO - 1;
+ END LOOP;
+ IF nNumero=0 OR vEtiqueta IS NULL THEN
+   RETURN vDevolver;
+ ELSE
+   RETURN vDevolver||' '||vEtiqueta;
+ END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en NMR3CFR_LTR.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END NUMERO_3_CIFRAS_A_LETRAS;
+/* Devuelve la ultima promocion a la que pertenece el paciente */
+FUNCTION DEVOLVER_ULTIMA_PROMOCION
+ (NHC IN PACIENTES.NUMERO_HC%TYPE
+ ,DFECHA IN DATE := NULL
+ )
+ RETURN VARCHAR2
+ IS
+-- Program Data
+DFECHATMP DATE;
+VDESC PROMOCIONES.DESCRIPCION%TYPE;
+-- PL/SQL Block
+BEGIN
+-- Devolvemos la ultima promocion del paciente
+IF dFecha IS NULL THEN
+  dFechaTmp:=TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY')||'23:59:59','DD/MM/YYYY HH24:MI:SS');
+ELSE
+  dFechaTmp:=TO_DATE(TO_CHAR(dFecha,'DD/MM/YYYY')||'23:59:59','DD/MM/YYYY HH24:MI:SS');
+END IF;
+SELECT PRM.DESCRIPCION
+  INTO vDesc
+  FROM PROMOCIONES_PACIENTES PRMPCN,PROMOCIONES PRM
+  WHERE PCN_NUMERO_HC=nHC
+  AND PRMPCN.PRMPCN_ID=(
+    SELECT MAX(PRMPCN_ID)
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=nHC
+    and fecha<=dFechaTmp)
+  AND PRM.CODIGO=PRMPCN.PRM_CODIGO;
+RETURN vDesc;
+END DEVOLVER_ULTIMA_PROMOCION;
+/* Pasar de centavos a letras. */
+FUNCTION CENTAVOS_A_LETRAS
+ (NNUMERO IN NUMBER
+ ,VETIQUETAPLURAL IN VARCHAR := 'CENTAVOS'
+ ,VETIQUETASINGULAR IN VARCHAR2 := 'CENTAVO'
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+/*CENTAVOS_A_LETRAS*/
+/*  Función que realiza la parte*/
+/*  de pasar dos dígitos decimales a letras*/
+/*PARAMETROS*/
+/* nNumero el numero de DOS dígitos que hay que pasar.*/
+/* vEtiquetaPlural   la etiqueta, centavos por defecto.*/
+/* vEtiquetaSingular   la etiqueta, centavos por defecto.*/
+DECLARE
+vDevolver VARCHAR2(200);
+vNumero VARCHAR2(4);
+nLargo NUMBER;
+vDigito VARCHAR2(1);
+vDigitoAux VARCHAR2(1);
+vRequiere_Y VARCHAR2(2);
+vDigDecenas VARCHAR2(1);
+vEtiqueta  VARCHAR2(100);
+i NUMBER;
+BEGIN
+ vNumero:=LTRIM(TO_CHAR(TRUNC(nNumero),'99'),' ');
+ IF vNumero='1' THEN
+   vEtiqueta := vEtiquetaSingular;
+ ELSE
+   vEtiqueta := vEtiquetaPlural;
+ END IF;
+IF vNumero<>0 THEN
+  nLargo := LENGTH(vNumero);
+  i:=0;
+  vRequiere_Y:='F';
+  vDigDecenas := NULL;
+  WHILE nlargo>0
+  LOOP
+    i:= i+1;
+    vDigito := SUBSTR(vNumero,i,1);
+    IF nLargo=2 THEN
+      /*en la columna de las decenas*/
+        IF (Vdigito<>'1') THEN
+           vRequiere_Y:='V';
+        ELSE
+           vRequiere_Y:='F';
+        END IF;
+        IF vDigito = '1' THEN
+           i:=i+1;
+           vDigitoAux := SUBSTR(vNumero,i,1);
+           nLargo:=nLargo-1;
+            IF vDigitoAux = '0' THEN vDevolver := vDevolver||'DIEZ';
+            ELSIF vDigitoAux = '1' THEN vDevolver := vDevolver||'ONCE';
+            ELSIF vDigitoAux = '2' THEN vDevolver := vDevolver||'DOCE';
+            ELSIF vDigitoAux = '3' THEN vDevolver := vDevolver||'TRECE';
+            ELSIF vDigitoAux = '4' THEN vDevolver := vDevolver||'CATORCE';
+            ELSIF vDigitoAux = '5' THEN vDevolver := vDevolver||'QUINCE';
+            ELSIF vDigitoAux = '6' THEN vDevolver := vDevolver||'DIECISEIS';
+            ELSIF vDigitoAux = '7' THEN vDevolver := vDevolver||'DIECISIETE';
+            ELSIF vDigitoAux = '8' THEN vDevolver := vDevolver||'DIECIOCHO';
+            ELSIF vDigitoAux = '9' THEN vDevolver := vDevolver||'DIECINUEVE';
+            END IF;
+        ELSIF vDigito = '2' THEN vDevolver := vDevolver||'VEINTE';
+        ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TREINTA';
+        ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUARENTA';
+        ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCUENTA';
+        ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SESENTA';
+        ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SETENTA';
+        ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHENTA';
+        ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NOVENTA';
+        END IF;
+    ELSIF nLargo=1 THEN
+        IF (vREQUIERE_Y ='V') AND (vDigito<>0) THEN
+         vDevolver := vDevolver||' Y ';
+        END IF;
+        IF vDigito='1' THEN vDevolver :=vDevolver|| 'UN ';
+        ELSIF vDigito = '2' THEN vDevolver :=vDevolver|| 'DOS';
+        ELSIF vDigito = '3' THEN vDevolver := vDevolver||'TRES';
+        ELSIF vDigito = '4' THEN vDevolver := vDevolver||'CUATRO';
+        ELSIF vDigito = '5' THEN vDevolver := vDevolver||'CINCO';
+        ELSIF vDigito = '6' THEN vDevolver := vDevolver||'SEIS';
+        ELSIF vDigito = '7' THEN vDevolver := vDevolver||'SIETE';
+        ELSIF vDigito = '8' THEN vDevolver := vDevolver||'OCHO';
+        ELSIF vDigito = '9' THEN vDevolver := vDevolver||'NUEVE';
+        END IF;
+    END IF;
+    NLARGO:= NLARGO - 1;
+ END LOOP;
+ELSE
+ vDevolver := 'CERO';
+END IF;
+ IF vEtiqueta IS NOT NULL THEN
+   RETURN VdEVOLVER||' '||vEtiqueta;
+ ELSE
+   RETURN VdEVOLVER;
+ END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en CNT_LTR.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END CENTAVOS_A_LETRAS;
+/* DEVUELVE LA CLASIFICACION DEL PACIENTE */
+FUNCTION CLASIFICACION_PACIENTE
+ (NHC PACIENTES.CLASIFICACION%TYPE
+ )
+ RETURN VARCHAR2
+ IS
+-- Program Data
+VCLSFPCN PACIENTES.CLASIFICACION%TYPE;
+-- PL/SQL Block
+BEGIN
+BEGIN
+  SELECT CLASIFICACION
+  INTO vClsfPcn
+  FROM PACIENTES
+  WHERE NUMERO_HC=nHC;
+  RETURN vClsfPcn;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    QMS$ERRORS.SHOW_MESSAGE('ADM-00011','Paciente no existente');
+END;
+END CLASIFICACION_PACIENTE;
+/* Pasar de dos decimales a fracciones de centésima 24/100 */
+FUNCTION CENTAVOS_A_FRACCIONES
+ (NNUMERO IN NUMBER
+ ,VETIQUETAPLURAL IN VARCHAR2
+ ,VETIQUETASINGULAR IN VARCHAR2
+ )
+ RETURN CHARACTER
+ IS
+BEGIN
+/*CENTAVOS_A_FRACCIONES*/
+/*  Función que realiza la parte*/
+/*  de pasar dos dígitos decimales a letras*/
+/*PARAMETROS*/
+/* nNumero el numero de DOS dígitos que hay que pasar.*/
+/* vEtiquetaPlural   la etiqueta, centavos por defecto.*/
+/* vEtiquetaSingular   la etiqueta, centavos por defecto.*/
+DECLARE
+vDevolver VARCHAR2(200);
+vNumero VARCHAR2(4);
+vEtiqueta  VARCHAR2(100);
+BEGIN
+ vNumero:=RTRIM(LTRIM(TO_CHAR(TRUNC(nNumero),'00'),' '),' ');
+ IF vNumero='1' THEN
+   vEtiqueta := vEtiquetaSingular;
+ ELSE
+   vEtiqueta := vEtiquetaPlural;
+ END IF;
+ IF vEtiqueta IS NOT NULL THEN
+   vDevolver := vNumero||'/100 '||vEtiqueta;
+ ELSE
+   vDevolver := vNumero||'/100';
+ END IF;
+ RETURN VdEVOLVER;
+EXCEPTION
+    WHEN OTHERS THEN
+    QMS$ERRORS.UNHANDLED_EXCEPTION ('Fallo en Centavos_A_Fracción.  Por error ' || SQLERRM);
+    RETURN vDevolver;
+END;
+END CENTAVOS_A_FRACCIONES;
+/* Fija la promoción del paciente */
+PROCEDURE FIJAR_PROMOCION_PACIENTE
+ (NHC PROMOCIONES_PACIENTES.PCN_NUMERO_HC%TYPE
+ ,VPRMCOD PROMOCIONES_PACIENTES.PRM_CODIGO%TYPE
+ ,VPRSCOD PROMOCIONES_PACIENTES.PRS_CODIGO%TYPE
+ ,VOBS PROMOCIONES_PACIENTES.OBSERVACION%TYPE
+ ,DFECHA DATE:=NULL)
+ IS
+-- Program Data
+NTEMP NUMBER(4, 0);
+dFechaTmp DATE;
+-- PL/SQL Block
+BEGIN
+IF DFECHA IS NULL THEN
+  dFechaTmp:=SYSDATE;
+ELSE
+  dFechaTmp:=DFECHA;
+END IF;
+SELECT COUNT(*)
+INTO nTemp
+FROM PROMOCIONES
+WHERE CODIGO=vPrmCod
+AND ESTADO_DE_DISPONIBILIDAD='D';
+IF nTemp=1 THEN
+  SELECT COUNT(*)
+  INTO nTemp
+  FROM PROMOCIONES_PACIENTES
+  WHERE PCN_NUMERO_HC=nHC
+  AND PRM_CODIGO=vPrmCod
+  AND FECHA=(
+    SELECT MAX(FECHA)
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=nHC
+      AND FECHA<=dFechaTmp);
+-- Insertamos la nueva fila de la promoción despues de revisar que no tenga una fila con la misma promoción
+  IF nTemp=0 THEN
+    INSERT INTO PROMOCIONES_PACIENTES(PRMPCN_ID,FECHA,PCN_NUMERO_HC,PRM_CODIGO,PRS_CODIGO,OBSERVACION)
+    VALUES (PRMPCN_SEQ.NEXTVAL,dFechaTmp,nHC,vPrmCod,vPrsCod,vObs);
+  END IF;
+ELSE
+  RAISE_APPLICATION_ERROR(-20213,'La promoción '||vPrmCod||' no esta disponible actualmente.');
+END IF;
+END FIJAR_PROMOCION_PACIENTE;
+/* Actualizar las secuencias de los code controls. */
+PROCEDURE ACTUALIZA_SECUENCIA
+ (P_CC_DOMAIN VARCHAR2
+ ,P_CC_TARGET IN OUT NUMBER
+ )
+ IS
+BEGIN
+  DECLARE
+    CURSOR C IS
+      SELECT  CC_NEXT_VALUE
+      FROM    CG_CODE_CONTROLS
+      WHERE   CC_DOMAIN = P_CC_DOMAIN
+      FOR UPDATE OF  CC_NEXT_VALUE;
+  BEGIN
+    OPEN C;
+    FETCH C
+    INTO    P_CC_TARGET;
+    IF C%NOTFOUND THEN
+      CLOSE C;
+      RAISE NO_DATA_FOUND;
+    END IF;
+    CLOSE C;
+  END;
+  UPDATE  CG_CODE_CONTROLS
+  SET     CC_NEXT_VALUE = CC_NEXT_VALUE + CC_INCREMENT
+  WHERE   CC_DOMAIN = P_CC_DOMAIN;
+END;
+/* Devolver datos de la internación de un paciente */
+PROCEDURE DEVOLVER_DATOS_INTERNACION
+ (NINTERNACION IN PERMANENCIAS_Y_ATENCIONES.NUMERO%TYPE
+ ,VPACIENTE OUT VARCHAR2
+ ,DFECHAING OUT DATE
+ ,DFECHAALT OUT DATE
+ )
+ IS
+BEGIN
+/*  SELECT DECODE(NVL(PRMATN.PCNTMP_PCNTMP_ID,0),0,
+         PCN.APELLIDO_PATERNO||' '||PCN.APELLIDO_MATERNO||' '||
+         PCN.PRIMER_NOMBRE||' '||PCN.SEGUNDO_NOMBRE,
+         PCNTMP.APELLIDO||' '||PCNTMP.APELLIDOM||' '||
+         PCNTMP.NOMBRE||' '||PCNTMP.SNOMBRE),PRMATN.FECHA_INGRESO,PRMATN.FECHA_ALTA
+  INTO vPaciente,dFechaIng,dFechaAlt
+  FROM PERMANENCIAS_Y_ATENCIONES PRMATN,PACIENTES PCN,PACIENTES_TEMPORALES PCNTMP
+  WHERE PRMATN.NUMERO=nInternacion
+  AND PRMATN.PCN_NUMERO_HC=PCN.NUMERO_HC
+  AND PRMATN.PCNTMP_PCNTMP_ID=PCNTMP.PCNTMP_ID(+);*/
+  SELECT DECODE(NVL(PRMATN.PCNTMP_PCNTMP_ID,0),0,
+         PCN.APELLIDO_PATERNO||' '||PCN.APELLIDO_MATERNO||' '||
+         PCN.PRIMER_NOMBRE||' '||PCN.SEGUNDO_NOMBRE,
+         ' '),PRMATN.FECHA_INGRESO,PRMATN.FECHA_ALTA
+  INTO vPaciente,dFechaIng,dFechaAlt
+  FROM PERMANENCIAS_Y_ATENCIONES PRMATN,PACIENTES PCN
+  WHERE PRMATN.PCN_NUMERO_HC=PCN.NUMERO_HC AND
+    PRMATN.NUMERO=nInternacion AND
+    PRMATN.PCN_NUMERO_HC=PCN.NUMERO_HC;
+  SELECT MAX(FECHA)
+  INTO dFechaAlt
+  FROM TURNOS_CAMAS
+  WHERE SLCINT_NUMERO=nInternacion AND
+        CONDICION IN ('ALA','ALT','FLL','FLT','INA','INF');
+END;
+/* Centralización de la carga de la cuenta */
+PROCEDURE CARGAR_CUENTA
+ (P_NUMERO IN CUENTAS.NUMERO%TYPE
+ ,P_DETALLE IN CUENTAS.DETALLE%TYPE
+ ,P_ARA_GENERADORA IN CUENTAS.DPR_ARA_CODIGO%TYPE
+ ,P_DPR_GENERADORA IN CUENTAS.DPR_CODIGO%TYPE
+ ,P_CANTIDAD IN CUENTAS.CANTIDAD%TYPE
+ ,P_CRG_TIPO IN CUENTAS.CRG_TIPO%TYPE
+ ,P_CODIGO IN CUENTAS.CRG_CODIGO%TYPE
+ ,P_DOCUMENTO IN CUENTAS.DOCUMENTO%TYPE
+ ,P_PCN_NUMERO_HC IN CUENTAS.PCN_NUMERO_HC%TYPE
+ ,P_INS_OR_UPD IN VARCHAR2
+ ,P_PRECIO_VENTA IN NUMBER := NULL
+ ,P_FECHA IN DATE := NULL
+ )
+ IS
+-- Program Data
+VDPR_CDG_PRT_A DEPARTAMENTOS.CODIGO%TYPE;
+NPRECIO_DE_VENTA CUENTAS.VALOR%TYPE;
+NDESCUENTO_OTORGADO CUENTAS.DESCUENTO_OTORGADO%TYPE;
+NIVA CUENTAS.IVA%TYPE;
+DFECHA DATE;
+VPRMPCN PROMOCIONES.CODIGO%TYPE;
+NPORCENTAJE_PROMOCION DETALLES_PROMOCIONES.PORCENTAJE_PROMOCION%TYPE;
+VDPR_ARA_CDG_PRT_A AREAS.CODIGO%TYPE;
+-- PL/SQL Block
+BEGIN
+DECLARE
+-- cursor que devuelve la ultima promoción de un paciente
+  CURSOR CPrm IS
+    SELECT PRM_CODIGO
+    FROM PROMOCIONES_PACIENTES
+    WHERE PCN_NUMERO_HC=p_PCN_NUMERO_HC
+    AND FECHA=(SELECT MAX(FECHA)
+             FROM PROMOCIONES_PACIENTES
+             WHERE PCN_NUMERO_HC=p_PCN_NUMERO_HC);
+-- cursor que devuelve el porcentaje promoción del departamento según la promoción
+  CURSOR cDetPrm (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM DETALLES_PROMOCIONES
+    WHERE prm_codigo=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept;
+-- cursor que devuelve el porcentaje promoción del cargo según la promoción
+  CURSOR cPrmExc (vPromocion PROMOCIONES.CODIGO%TYPE,
+                  vArea AREAS.CODIGO%TYPE,
+                  vDept DEPARTAMENTOS.CODIGO%TYPE,
+                  vTipo CARGOS.TIPO%TYPE,
+                  vCargo CARGOS.CODIGO%TYPE) IS
+    SELECT PORCENTAJE_PROMOCION
+    FROM PROMOCIONES_EXCEPCIONES
+    WHERE PRM_CODIGO=vPromocion
+    AND DPR_ARA_CODIGO=vArea
+    AND DPR_CODIGO=vDept
+    AND CRG_TIPO=vTipo
+    AND CRG_CODIGO=vCargo;
+  PACIENTE_SIN_PROMOCION EXCEPTION;
+  ITEM_NO_EXISTENTE EXCEPTION;
+  YA_FACTURADO EXCEPTION;
+BEGIN
+  BEGIN
+    IF p_CRG_TIPO IN ('M','I','U') THEN
+-- Si es item (insumo,medicamento,suministro) fijamos siempre el deparmento
+-- F -> Farmacia
+-- B -> Economato/Bodega
+      SELECT PRECIO_DE_VENTA,IVA
+      INTO nPRECIO_DE_VENTA,nIVA
+      FROM ITEMS
+      WHERE TIPO =p_CRG_TIPO
+      AND SBS_SCC_CODIGO = SUBSTR(p_CODIGO,1,2)
+      AND SBS_CODIGO = SUBSTR(p_CODIGO,3,2)
+      AND CODIGO = SUBSTR(p_CODIGO,5,3);
+      vDPR_ARA_CDG_PRT_A := 'A';
+      IF p_Crg_Tipo='S' THEN
+        vDPR_CDG_PRT_A := 'B';
+      ELSE
+        vDPR_CDG_PRT_A := 'F';
+      END IF;
+    ELSE
+-- Si es cargo (procedimiento, servicio) leemos el departamento desde el cargo
+      SELECT DPR_ARA_CODIGO,DPR_CODIGO,COSTO,IVA
+      INTO vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A,nPrecio_de_Venta,nIVA
+      FROM CARGOS
+      WHERE TIPO =p_CRG_TIPO
+      AND CODIGO = p_Codigo;
+      IF p_Precio_Venta IS NOT NULL THEN
+        nPrecio_de_Venta:=p_Precio_Venta;
+      END IF;
+    END IF;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RAISE ITEM_NO_EXISTENTE;
+  END;
+  nPORCENTAJE_PROMOCION := 1;
+  BEGIN
+    OPEN CPrm;
+    FETCH CPrm INTO vPrmPcn;
+    IF CPrm%NOTFOUND THEN
+      RAISE PACIENTE_SIN_PROMOCION;
+    END IF;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RAISE PACIENTE_SIN_PROMOCION;
+  END;
+  BEGIN
+    OPEN CDetPrm (vPrmPcn,vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A);
+    FETCH CDetPrm INTO nPORCENTAJE_PROMOCION;
+    -- Si el area y departamento tienen una promocion, vemos si es una excepcion
+    OPEN CPrmExc (vPrmPcn,vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A,p_CRG_TIPO,p_CODIGO);
+    FETCH CPrmExc INTO nPorcentaje_Promocion;
+  EXCEPTION
+     WHEN NO_DATA_FOUND THEN
+      NULL; -- El area y el departamento ni la excepcion no tienen ninguna promocion
+  END;
+  IF P_Fecha IS NULL THEN
+-- Si viene sin fecha, ingresamos la fecha del dia de hoy
+    dFecha:=SYSDATE;
+  ELSE
+    dFecha:=p_Fecha;
+  END IF;
+  IF p_ins_or_upd = 'I' AND nPRECIO_DE_VENTA>0  THEN
+    nDESCUENTO_OTORGADO := 0;
+    INSERT INTO cuentas
+      (documento, numero, detalle,
+      estado,fecha,cantidad,valor,crg_tipo,crg_codigo,porcentaje_promocion,
+      descuento_otorgado,iva,dpr_ara_codigo,dpr_codigo,pcn_numero_hc,
+      dpr_ara_codigo_perteneciente_a,dpr_codigo_perteneciente_a,prm_codigo)
+    VALUES
+      (p_DOCUMENTO,p_NUMERO,p_DETALLE,
+      'PND',dFECHA,p_CANTIDAD,nPRECIO_DE_VENTA,p_CRG_TIPO,p_CODIGO,nPorcentaje_Promocion,
+      nDESCUENTO_OTORGADO,nIVA,p_Ara_Generadora,p_Dpr_Generadora,p_PCN_NUMERO_HC,
+      vDPR_ARA_CDG_PRT_A,vDPR_CDG_PRT_A,vPrmPcn);
+  ELSIF p_ins_or_upd = 'U' AND nPRECIO_DE_VENTA>0 THEN
+-- La actualización puede afectar el costo o el porcentaje promoción, la cantidad
+-- el tipo de cargo y el código del cargo
+    UPDATE CUENTAS
+    SET prm_codigo=vPrmPcn,valor=nPRECIO_DE_VENTA,
+        cantidad=P_CANTIDAD,porcentaje_promocion=nPorcentaje_Promocion,
+        crg_tipo=p_Crg_tipo,crg_codigo=p_CODIGO
+    WHERE documento=p_Documento AND numero=p_Numero AND detalle=p_Detalle
+        AND estado!='FCT';
+    IF SQL%ROWCOUNT!=1 THEN
+        RAISE YA_FACTURADO;
+    END IF;
+  END IF;
+EXCEPTION
+  WHEN PACIENTE_SIN_PROMOCION THEN
+    RAISE_APPLICATION_ERROR(-20210,'Cuenta no insertada/actualizada. El paciente '||p_PCN_NUMERO_HC||' no tiene promoción asociada');
+  WHEN ITEM_NO_EXISTENTE THEN
+    RAISE_APPLICATION_ERROR(-20211,'Cuenta no insertada/actualizada. El item con codigo '||p_Codigo||' no existe');
+  WHEN YA_FACTURADO THEN
+    RAISE_APPLICATION_ERROR(-20212,'Una cuenta ya facturada no puede ser cambiada');
+  WHEN OTHERS THEN
+    RAISE_APPLICATION_ERROR(-20213,'La cuenta del paciente no pudo ser insertada/actualizado por el error '||SQLERRM);
+END;
+END CARGAR_CUENTA;
+-- PL/SQL Block
+END GNRL;

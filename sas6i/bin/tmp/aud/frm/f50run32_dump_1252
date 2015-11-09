@@ -1,0 +1,33 @@
+[01/26/06 09:12:30 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=1252]
+	>> ERROR: Abnormal termination, Error Code: C0000005 ACCESS_VIOLATION
+
+======================= STACK DUMP =======================
+
+Fault address:  5DF437B3 01:000527B3
+Module: C:\ORANT\BIN\f50r32.dll
+
+System Information:
+Operating System: Windows NT Version 5.0 Build 2195 Service Pack 4
+Command line: C:\ORANT\BIN\F50RUN32.EXE "Z:\sas\bin\aud\frm\audsrignr.fmx"
+FORM/BLOCK/FIELD: AUDSRIGNR:<NULL>.<NULL>
+Last Trigger: POST-LOGON - (Successfully Completed)
+Msg: <NULL>
+Last Builtin: COPY - (Successfully Completed)
+
+Registers:
+EAX:00000000
+EBX:016B3C0C
+ECX:0012FFB0
+EDX:016BE1BC
+ESI:01DA8EB8
+EDI:01662F14
+CS:EIP:001B:5DF437B3
+SS:ESP:0023:0012F744  EBP:016B3E32
+DS:0023  ES:0023  FS:0038  GS:0000
+Flags:00010202
+
+
+Call stack:
+Address   Frame
+5DF437B3  016B3E32  exiterr
+

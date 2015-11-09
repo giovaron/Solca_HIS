@@ -1,0 +1,37 @@
+[05/09/07 12:47:36 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=844]
+	>> ERROR: Abnormal termination, Error Code: C0000005 ACCESS_VIOLATION
+
+======================= STACK DUMP =======================
+
+Fault address:  664F35B0 01:000A25B0
+Module: C:\ORANT\BIN\PLS805.dll
+
+System Information:
+Operating System: Windows NT Version 5.1 Build 2600 Service Pack 2
+Command line: "C:\ORANT\BIN\ifrun60.EXE"  "C:\sas6i\bin\cnt\frm\cntgnr.fmx"
+FORM/BLOCK/FIELD: CNTINGCMP:ASCCMP.<NULL>
+Last Trigger: WHEN-VALIDATE-RECORD - (In Progress)
+Msg: <NULL>
+Last Builtin: NAME_IN - (Successfully Completed)
+
+Registers:
+EAX:00000000
+EBX:01FC22E0
+ECX:00000000
+EDX:01EC50FC
+ESI:0012D8A4
+EDI:010DB9C0
+CS:EIP:001B:664F35B0
+SS:ESP:0023:0012CB90  EBP:0012CBB0
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010246
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+0x0012cbb0 664b8296 01ec50fc 00000001 0012d8a4 01fc22e0 0x664f35b0          
+0x0012dcb4 6646452a 01ec50fc 010db9c0 01fa0054 00000001 0x664b8296          
+0x0012dd1c 67e28edc 010db9c0 01ec50fc 010e90c8 010cdef4 0x6646452a          
+0x010db1fc 010cdef4 67deac90 67deacd0 00467ab0 00000000 0x67e28edc          
+0x010e90c8 00000001 0000000a 010e93e8 67fbcf2f 0041189a 0x010cdef4          
+------------------- End of Stack Trace -------------------
+
+

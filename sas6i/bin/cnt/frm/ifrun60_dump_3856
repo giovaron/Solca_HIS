@@ -1,0 +1,46 @@
+[11/09/07 13:57:32 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=3856]
+	>> ERROR: Abnormal termination, Error Code: C0000005 ACCESS_VIOLATION
+
+======================= STACK DUMP =======================
+
+Fault address:  77C17696 01:00036696
+Module: C:\WINDOWS\system32\MSVCRT.dll
+
+System Information:
+Operating System: Windows NT Version 5.1 Build 2600 Service Pack 2
+Command line: "C:\ORANT\BIN\ifrun60.EXE" C:\sas6i\bin\cnt\frm\cntgnr.fmx
+FORM/BLOCK/FIELD: CNTRVSSLD:SLD.<NULL>
+Last Trigger: ON-ERROR - (Successfully Completed)
+Msg: <NULL>
+Last Builtin: GET_BLOCK_PROPERTY - (Successfully Completed)
+
+Registers:
+EAX:00000000
+EBX:00000000
+ECX:00000000
+EDX:00000000
+ESI:010CD0D0
+EDI:010CD224
+CS:EIP:001B:77C17696
+SS:ESP:0023:0012F188  EBP:0012F204
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010246
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+0x0012f204 0044aea3 010c2780 00000000 00000000 00000000 0x77c17696          
+0x0012f258 0043030f 010cd8e0 0012f290 00000001 022490b8 0x0044aea3          
+0x0012f284 0042fc5c 010cd8e0 01f51e18 01c080d8 010cd8e0 0x0043030f          
+0x0012f2b0 0044cf8a 00000000 00000000 01ebb348 01ebb348 0x0042fc5c          
+0x0012f2d8 0043e8df 01c080d8 01ebb348 022490b8 01f4fcfc 0x0044cf8a          
+0x0012f30c 0043dedd 01c080d8 01ebb348 01e1de94 010cd8e0 0x0043e8df          
+0x0012f334 0043d11a 01c080d8 01e1de94 00000000 010cd8e0 0x0043dedd          
+0x0012f384 0041a3a7 00000000 010d33e0 0012f3bc 00000000 0x0043d11a          
+0x0012f3ec 00419dd6 01ae39d0 010c4a34 00000000 00000001 0x0041a3a7          
+0x0012f508 00412ee1 00000000 010c49f4 0000001f 010d1788 0x00419dd6          
+0x0012fd68 004119e9 00000014 00000000 00000002 01390a80 0x00412ee1          
+0x0012fd8c 004118be 00ff2090 00000000 00000000 00000002 0x004119e9          
+0x0012fdac 67948973 00ff2090 00000000 00000000 00000002 0x004118be          
+0x0012fdfc 6794a3b1 00ff312c 00403010 00000000 00000002 0x67948973          
+------------------- End of Stack Trace -------------------
+
+

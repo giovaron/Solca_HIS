@@ -1,0 +1,30 @@
+-- Y:\sas\guiones\cambios_solca_quito\NOVEDADES_PERSONAL.vw
+--
+-- Generated for Oracle 9i on Sat Aug 19  09:01:15 2006 by Server Generator 6.5.96.5.6
+ 
+
+PROMPT Creating View 'NOVEDADES_PERSONAL'
+CREATE OR REPLACE FORCE VIEW NOVEDADES_PERSONAL
+ (CEDULA
+ ,DESCRIPCION
+ ,VALOR
+ ,FECHA)
+ AS SELECT '0301187555' CEDULA,
+                 'HORAS EXTRAS' DESCRIPCION,
+                 '5.5' VALOR,
+                 TO_DATE('15/01/2006','DD/MM/YYYY') FECHA 
+FROM DUAL
+UNION 
+SELECT  '0301187554' CEDULA,
+                 'HORAS SUPLEMENTARIAS' DESCRIPCION,
+                 '10' VALOR,
+                 TO_DATE('25/01/2006','DD/MM/YYYY') FECHA 
+FROM DUAL
+UNION 
+SELECT  '0102841848' CEDULA,
+                 'HORAS SUPLEMENTARIAS' DESCRIPCION,
+                 '10' VALOR,
+                 TO_DATE('25/01/2006','DD/MM/YYYY') FECHA
+FROM DUAL 
+/
+

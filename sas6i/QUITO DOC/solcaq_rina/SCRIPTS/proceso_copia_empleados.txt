@@ -1,0 +1,63 @@
+PROCEDURE GENERA_EMPLEADOS IS
+BEGIN
+DECLARE
+   NDEV NUMBER :=0;
+   NUMERO NUMBER:=0;
+   NUM_CRG NUMBER:=0;        
+   BANDERA VARCHAR2(1):= 'V';
+BEGIN
+    GO_BLOCK('EMPPRS');
+    FIRST_RECORD;                    
+    WHILE :System.Last_Record <> 'TRUE'  OR BANDERA = 'V' LOOP
+    IF :EMPPRS.CEDULA IS NOT NULL AND :EMPPRS.SEL = 'V' THEN
+       BEGIN
+          SELECT COUNT(*) INTO NDEV
+          FROM EMPLEADOS_ROLES
+          WHERE CEDULA = :EMPPRS.CEDULA;
+       EXCEPTION
+       WHEN OTHERS THEN
+          NDEV:=0;
+       END;
+       IF NDEV > 0 THEN
+          QMS$ERRORS.SHOW_MESSAGE('El Empleado con el número de cédula '||:EMPPRS.CEDULA||' Ya existe, debe desmarcarlo');
+       ELSE
+       /*  SELECT COUNT(*) INTO NUM_CRG
+         FROM CARGOS_EMPLEADOS
+         WHERE EMP_CODIGO = :GLOBAL.CG$EMPRESA_CODIGO AND
+               CODIGO = :EMPPRS.CRG_CODIGO;
+         IF NUM_CRG > 0 THEN
+            BEGIN
+            SELECT EMPROL_SEQ.NEXTVAL INTO NUMERO FROM DUAL;
+            INSERT INTO EMPLEADOS_ROLES (EMP_CODIGO,CODIGO,PRFEMP_CODIGO,PRFEMP_EMP_CODIGO,
+                                      CRGEMP_EMP_CODIGO,CRGEMP_CODIGO,PRQ_CNT_CODIGO,PRQ_CNT_PRV_CODIGO,
+                                      PRQ_CODIGO,NOMBRES,APELLIDOS,CEDULA,FECHA_DE_NACIMIENTO,ESTADO_CIVIL,
+                                      SEXO,FECHA_DE_INGRESO,ESTADO_LABORAL,TIPO_EMPLEADO,ESTADO_DE_DISPONIBILIDAD,
+                                      DIRECCION,TELEFONO,FECHA_DE_SALIDA,CARNET_IESS,OBSERVACIONES,TERCERIZADORA)
+             VALUES(:GLOBAL.CG$EMPRESA_CODIGO,NUMERO,'G',:GLOBAL.CG$EMPRESA_CODIGO,
+                    :GLOBAL.CG$EMPRESA_CODIGO,:EMPPRS.CRG_CODIGO,:EMPPRS.CANTON,:EMPPRS.PROVINCIA,
+                    :EMPPRS.PARROQUIA,:EMPPRS.NOMBRES,:EMPPRS.APELLIDOS,:EMPPRS.CEDULA,:EMPPRS.FECHA_NACIMIENTO,:EMPPRS.ESTADO_CIVIL,
+                    :EMPPRS.SEXO,:EMPPRS.FECHA_INGRESO,'A',:EMPPRS.TIPO,'D',
+                    :EMPPRS.DIRECCION,:EMPPRS.TELEFONO,:EMPPRS.FECHA_SALIDA,:EMPPRS.CARNET_SEGURO,:EMPPRS.OBSERVACIONES,:GLOBAL.CG$EMPRESA_CODIGO);
+            GENERA_PARAMETROS_EMPLEADO(NUMERO,:EMPPRS.TIPO);
+            EXCEPTION
+            WHEN OTHERS THEN
+               QMS$ERRORS.SHOW_MESSAGE('No se pudo copiar el empleado con el número de cédula '||:EMPPRS.CEDULA||' debe desmarcarlo');
+            END;
+            NULL;
+         ELSE
+            QMS$ERRORS.SHOW_MESSAGE('No se pudo copiar el empleado con el número de cédula '||:EMPPRS.CEDULA||' el cargo no existe, debe copiar los cargos');
+         END IF;*/
+           NULL;       
+       END IF;
+       IF :System.Last_Record = 'TRUE' THEN
+          BANDERA := 'F';
+       ELSE
+          NEXT_RECORD;
+       END IF;
+       NDEV:=0;
+       NUM_CRG:=0;
+   END IF;
+   END LOOP;
+   SET_ITEM_PROPERTY('EMPPRS.BTN_COPIAR',ENABLED,PROPERTY_FALSE);
+END;
+END;

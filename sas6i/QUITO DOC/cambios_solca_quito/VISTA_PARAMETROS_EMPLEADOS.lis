@@ -1,0 +1,46 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\VISTA_PARAMETROS_EMPLEADOS.lis
+
+Generated on Wed Aug 09  11:22:13 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View PARAMETROS_EMPLEADOS                                                  * DIFFERENT *                           * DIFFERENT *
+                                     Object Type                                                                                
+                               PL/SQL Definition SELECT PRMROLEMP.PRMROL_EMP_CODIGO P...                               SELECT... ***
+
+                                         Comment                                                                                
+Column PRMROL_EMP_CODIGO                                                        - same -                                - same -
+                                                 El código de la empresa de la que es...                                        
+Column PRMROL_CODIGO                                                            - same -                                - same -
+                                                                    Código del parámetro                                        
+Column EMPROL_EMP_CODIGO                                                        - same -                                - same -
+                                                 El código de la empresa de la que es...                                        
+Column EMPROL_CODIGO                                                            - same -                                - same -
+                                                                     Código del Empleado                                        
+Column NOMBRES                                                                  - same -                                - same -
+                                                                    Nombres del Empleado                                        
+Column APELLIDOS                                                                - same -                                - same -
+                                                                  Apellidos del Empleado                                        
+Column VALOR                                                                    - same -                                - same -
+                                                                                                                                
+Column ESTADO_DE_DISPONIBILIDAD                                                 - same -                                - same -
+                                                 Si esta disponible, fuera de servici...                                        
+Column NOMBRE_AGRUPADOR                                                         - same -                                - same -
+                                                         Nombre agrupador de  parámetros                                        
+                                              ----------------------------------------
+                                              View PARAMETROS_EMPLEADOS Differences: 1
+                                              ----------------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

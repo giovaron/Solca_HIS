@@ -1,0 +1,21 @@
+-- Y:\sas\guiones\cambios_solca_quito\parametros_novedades_personal.ind
+--
+-- Generated for Oracle 9i on Thu Jul 27  15:24:22 2006 by Server Generator 6.5.96.5.6
+  
+
+PROMPT Creating Index 'PRMNVDPRS_PRMROL_FK_I'
+CREATE INDEX PRMNVDPRS_PRMROL_FK_I ON PARAMETROS_NOVEDADES_PERSONAL
+ (PRMROL_EMP_CODIGO
+ ,PRMROL_CODIGO)
+ STORAGE
+ (
+   PCTINCREASE 25
+   INITIAL 50K
+   NEXT 50K
+   MINEXTENTS 1
+   MAXEXTENTS UNLIMITED
+ )
+ TABLESPACE TBINDICESP
+/
+
+

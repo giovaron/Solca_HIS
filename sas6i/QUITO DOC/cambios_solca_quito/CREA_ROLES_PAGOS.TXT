@@ -1,0 +1,35 @@
+DECLARE
+CURSOR cTemp is
+SELECT * FROM ROLES_DE_PAGOS
+WHERE NUMERO between 4 and 6 order by semana;
+i number:=7;
+anio number:=2006;
+mes number:=10;
+begin
+  while anio<2021
+  loop
+    for RtEMP in Ctemp loop
+    insert into roles_de_pagos 
+          (EMP_CODIGO     ,
+          NUMERO         ,
+          ANO            ,
+          MES            ,
+          SEMANA         ,
+          PRS_CODIGO     ,
+          FECHA_REGISTRO ,
+          ESTADO         ,
+          TIPO           )
+    values ('CSI',i,anio,mes,rtemp.semana,rtemp.prs_codigo,
+          round(to_date('16/'||mes||'/'||anio,'dd/mm/yyyy'),'mm')-1,rtemp.estado,
+          rtemp.tipo);
+      i:=i+1;
+    end loop;
+--dbms_output.put_line(to_char(i)||' semana '||rtemp.semana||' mes '||to_char(mes)||' anio '||to_char(anio));
+  mes:=mes+1;
+  if mes>12 then
+    mes:=1;
+    anio:=anio+1;
+  end if;
+  end loop;
+end;
+/

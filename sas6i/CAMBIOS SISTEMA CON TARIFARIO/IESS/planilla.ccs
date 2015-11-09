@@ -1,0 +1,16 @@
+-- \\Svr\Z\sas\guiones\CAMBIOS SISTEMA CON TARIFARIO\ICSC\planilla.ccs
+--
+-- Generated for Oracle 9i on Wed Nov 09  09:07:03 2011 by Server Generator 6.5.96.5.6
+ 
+
+PROMPT Creating Code Control Sequence 'PLNLL_SEQ'
+INSERT INTO CG_CODE_CONTROLS
+	(CC_DOMAIN, CC_NEXT_VALUE, CC_INCREMENT, CC_COMMENT)
+VALUES
+	('PLNLL_SEQ', 1, 1, NULL)
+/
+
+COMMIT
+/
+
+

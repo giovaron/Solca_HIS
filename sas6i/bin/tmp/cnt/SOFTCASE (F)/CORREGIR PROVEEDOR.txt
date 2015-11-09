@@ -1,0 +1,18 @@
+declare
+CURSOR CTMP is
+SELECT C2.BENEFICIARIO beneficiario,C.*
+FROM COMPRAS_NC_ND_SRI C,COMPROBANTES_POR_REVISAR C2
+WHERE TPOCMPEMP_EMP_CODIGO=IVA_EMP_CODIGO AND
+TPOCMPEMP_TPOCMP_CODIGO=CMP_TIPO AND
+FECHA                  =CMP_FECHA AND
+CLAVE                  =CMP_CLAVE;
+BEGIN
+  FOR rTmp in cTmp LOOP
+    UPDATE COMPRAS_NC_ND_SRI
+    SET PROVEEDOR=rTmp.beneficiario
+    WHERE IVA_EMP_CODIGO=rtmp.IVA_EMP_CODIGO AND
+          CMP_TIPO=rtmp.CMP_TIPO AND
+          CMP_FECHA                  =rtmp.CMP_FECHA                   AND
+          CMP_CLAVE                  =rtmp.CMP_CLAVE                  ;
+  END LOOP;
+END;

@@ -1,0 +1,1303 @@
+
+Starting report CNTRTNCMP [Fri Apr 01 14:23:59 2005] ...
+End report CNTRTNCMP [Fri Apr 01 14:24:24 2005].
+
+Starting report CNTRTNCMP [Fri Apr 01 14:26:44 2005] ...
+End report CNTRTNCMP [Fri Apr 01 14:26:48 2005].
+
+Starting report CNTRTNCMP [Fri Apr 01 14:49:42 2005] ...
+End report CNTRTNCMP [Fri Apr 01 14:49:46 2005].
+
+Starting report CNTCDLPRSING [Wed Apr 27 11:48:08 2005] ...
+End report CNTCDLPRSING [Wed Apr 27 11:48:24 2005].
+
+Starting report CNTCDLPRSING [Wed Apr 27 11:48:52 2005] ...
+End report CNTCDLPRSING [Wed Apr 27 11:59:41 2005].
+
+Starting report CNTCDLPRSGST [Wed Apr 27 12:00:00 2005] ...
+End report CNTCDLPRSGST [Wed Apr 27 12:04:21 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:14:24 2005] ...
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+End report CNTRVSSLDR [Thu Apr 28 15:14:24 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:16:45 2005] ...
+End report CNTRVSSLDR [Thu Apr 28 15:17:45 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:19:58 2005] ...
+MSG-01000: EXCLUIR 1TO_NUMBER(SUBSTR(PLNCNTCMP.CODIGO,1,4))
+MSG-01000: EXCLUIR 22128
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:20:22 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:20:42 2005] ...
+MSG-01000: EXCLUIR 1TO_NUMBER(SUBSTR(PLNCNTCMP.CODIGO,1,4))
+MSG-01000: EXCLUIR 22128
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:20:48 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:21:00 2005] ...
+MSG-01000: EXCLUIR 1TO_NUMBER(SUBSTR(PLNCNTCMP.CODIGO,1,4))
+MSG-01000: EXCLUIR 21101
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:21:08 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:21:15 2005] ...
+MSG-01000: EXCLUIR 1TO_NUMBER(SUBSTR(PLNCNTCMP.CODIGO,1,4))
+MSG-01000: EXCLUIR 21101.1102
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:21:23 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:27:58 2005] ...
+MSG-01000: EXCLUIR 1SUBSTR(PLNCNTCMP.CODIGO,1,4)
+MSG-01000: EXCLUIR 22128
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:28:07 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:28:41 2005] ...
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:28:44 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:29:31 2005] ...
+ORA-00911: invalid character
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:29:35 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:31:48 2005] ...
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:31:53 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:32:00 2005] ...
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:32:03 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:32:04 2005] ...
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:32:06 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:32:51 2005] ...
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:32:54 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:33:01 2005] ...
+MSG-01000: EXCLUIR 1TO_NUMBER(SUBSTR(PLNCNTCMP.CODIGO,1,4))
+MSG-01000: EXCLUIR 21101,1102
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:33:16 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:34:20 2005] ...
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:34:22 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:37:17 2005] ...
+MSG-01000: EXCLUIR 1SUBSTR(PLNCNTCMP.CODIGO,1,4)
+MSG-01000: EXCLUIR 21101
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:37:26 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:37:46 2005] ...
+MSG-01000: EXCLUIR 1SUBSTR(PLNCNTCMP.CODIGO,1,4)
+MSG-01000: EXCLUIR 21101
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRVSSLDR [Thu Apr 28 15:37:55 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:38:01 2005] ...
+ORA-00933: SQL command not properly ended
+ SELECT PLNCNTCMP . CODIGO CODIGO , PLNCNTCMP . NOMBRE NOMBRE , PLNCNTCMP . MONEDA_DE_TRABAJO MONEDA_DE_TRABAJO , PLNCNTCMP . EMP_CODIGO EMP_CODIGO , PLNCNTCMP . MYR_CODIGO MYR_CODIGO , PLNCNTCMP . CNT_CODIGO CNT_CODIGO , PLNCNTCMP . SCNT_CODIGO SCNT
+End report CNTRVSSLDR [Thu Apr 28 15:38:03 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:39:04 2005] ...
+MSG-01000: EXCLUIR 1SUBSTR(PLNCNTCMP.CODIGO,1,4)
+MSG-01000: EXCLUIR 2(1101,1102)
+End report CNTRVSSLDR [Thu Apr 28 15:39:27 2005].
+
+Starting report CNTRVSSLDR [Thu Apr 28 15:41:15 2005] ...
+End report CNTRVSSLDR [Thu Apr 28 15:41:35 2005].
+
+Starting report CNTRVSSLDR [Mon May 23 09:24:35 2005] ...
+End report CNTRVSSLDR [Mon May 23 09:26:37 2005].
+
+Starting report CNTINGCMP [Wed Jun 29 15:41:49 2005] ...
+REP-0099: Report is aborted upon user request.
+End report CNTINGCMP [Wed Jun 29 15:41:53 2005].
+
+Starting report CNTRPTCNTASCING [Wed Jun 29 15:42:17 2005] ...
+End report CNTRPTCNTASCING [Wed Jun 29 15:42:20 2005].
+
+Starting report CNTRPTCNTASCING [Wed Jun 29 15:42:23 2005] ...
+End report CNTRPTCNTASCING [Wed Jun 29 15:42:26 2005].
+
+Starting report CNTRPTCNTASCING [Wed Jun 29 15:42:31 2005] ...
+REP-0099: Report is aborted upon user request.
+REP-0594: No report output generated.
+End report CNTRPTCNTASCING [Wed Jun 29 15:57:12 2005].
+
+Starting report CNTRPTCNTASCING [Wed Jun 29 15:58:26 2005] ...
+End report CNTRPTCNTASCING [Wed Jun 29 15:59:04 2005].
+
+Starting report CNTRVSSLDR [Tue Aug 09 10:33:56 2005] ...
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+End report CNTRVSSLDR [Tue Aug 09 10:33:56 2005].
+
+Starting report CNTRVSSLDR [Tue Aug 09 10:34:21 2005] ...
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+End report CNTRVSSLDR [Tue Aug 09 10:34:21 2005].
+
+Starting report CNTRVSSLDR [Tue Aug 09 10:34:27 2005] ...
+End report CNTRVSSLDR [Tue Aug 09 10:35:30 2005].
+
+Starting report CNTRVSSLDR [Tue Aug 09 10:35:36 2005] ...
+End report CNTRVSSLDR [Tue Aug 09 10:38:11 2005].
+
+Starting report CNTRPTOBL [Thu Aug 18 16:03:19 2005] ...
+End report CNTRPTOBL [Thu Aug 18 16:04:35 2005].
+
+Starting report CNTSLDINIFINR [Thu Aug 25 12:12:55 2005] ...
+End report CNTSLDINIFINR [Thu Aug 25 12:13:29 2005].
+
+Starting report CNTIMPCHQCMP [Thu Aug 25 13:05:16 2005] ...
+End report CNTIMPCHQCMP [Thu Aug 25 13:05:22 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 12:05:54 2005] ...
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+End report CNTIMPCHQCMP [Fri Aug 26 12:05:54 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 12:07:50 2005] ...
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+End report CNTIMPCHQCMP [Fri Aug 26 12:07:50 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 12:09:22 2005] ...
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+End report CNTIMPCHQCMP [Fri Aug 26 12:09:23 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 12:09:47 2005] ...
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTIMPCHQCMP'.
+End report CNTIMPCHQCMP [Fri Aug 26 12:09:47 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 12:11:15 2005] ...
+End report CNTIMPCHQCMP [Fri Aug 26 12:11:20 2005].
+
+Starting report CNTRTNCMP [Fri Aug 26 12:11:45 2005] ...
+End report CNTRTNCMP [Fri Aug 26 14:23:19 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 11:51:32 2005] ...
+End report CNTIMPCHQCMP [Fri Aug 26 11:51:46 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 11:52:02 2005] ...
+End report CNTIMPCHQCMP [Fri Aug 26 11:52:09 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 11:52:42 2005] ...
+End report CNTIMPCHQCMP [Fri Aug 26 11:53:08 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 11:59:27 2005] ...
+End report CNTIMPCHQCMP [Fri Aug 26 11:59:48 2005].
+
+Starting report CNTRTNCMP [Fri Aug 26 12:05:58 2005] ...
+End report CNTRTNCMP [Fri Aug 26 12:09:27 2005].
+
+Starting report CNTRTNCMP [Fri Aug 26 12:11:03 2005] ...
+End report CNTRTNCMP [Fri Aug 26 12:11:40 2005].
+
+Starting report CNTIMPCHQCMP [Fri Aug 26 12:35:19 2005] ...
+End report CNTIMPCHQCMP [Fri Aug 26 12:35:27 2005].
+
+Starting report CNTRVSSLDPRSINGR [Mon Aug 29 14:42:45 2005] ...
+End report CNTRVSSLDPRSINGR [Mon Aug 29 14:46:49 2005].
+
+Starting report CNTRPTOBL [Tue Aug 30 12:20:45 2005] ...
+End report CNTRPTOBL [Tue Aug 30 12:22:54 2005].
+
+Starting report CNTRPTOBL [Tue Aug 30 12:23:01 2005] ...
+End report CNTRPTOBL [Tue Aug 30 12:23:41 2005].
+
+Starting report CNTRPTOBL [Tue Aug 30 12:23:47 2005] ...
+End report CNTRPTOBL [Tue Aug 30 12:24:00 2005].
+
+Starting report CNTESTRSLANL [Tue Aug 30 12:27:49 2005] ...
+End report CNTESTRSLANL [Tue Aug 30 12:54:29 2005].
+
+Starting report CNTRPTRTN [Thu Sep 01 09:30:37 2005] ...
+End report CNTRPTRTN [Thu Sep 01 09:30:43 2005].
+
+Starting report CNTDROGNR [Thu Sep 01 09:36:43 2005] ...
+End report CNTDROGNR [Thu Sep 01 09:36:46 2005].
+
+Starting report CNTDROGNR [Thu Sep 01 09:44:48 2005] ...
+End report CNTDROGNR [Thu Sep 01 09:44:57 2005].
+
+Starting report CNTDROGNR [Thu Sep 01 09:45:51 2005] ...
+End report CNTDROGNR [Thu Sep 01 09:47:08 2005].
+
+Starting report CNTRVSSLDR [Thu Sep 01 09:47:36 2005] ...
+End report CNTRVSSLDR [Thu Sep 01 09:50:21 2005].
+
+Starting report CNTBLNCMP [Thu Sep 01 09:52:31 2005] ...
+End report CNTBLNCMP [Thu Sep 01 09:54:19 2005].
+
+Starting report CNTRPTOBL [Mon Sep 05 11:31:08 2005] ...
+REP-1849: Failed while printing.
+End report CNTRPTOBL [Mon Sep 05 11:31:13 2005].
+
+Starting report CNTRPTOBL [Mon Sep 05 11:58:06 2005] ...
+End report CNTRPTOBL [Mon Sep 05 11:58:22 2005].
+
+Starting report CNTRPTOBL [Mon Sep 05 13:09:38 2005] ...
+End report CNTRPTOBL [Mon Sep 05 13:10:29 2005].
+
+Starting report CNTRVSSLDR [Mon Sep 05 15:23:44 2005] ...
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+End report CNTRVSSLDR [Mon Sep 05 15:23:45 2005].
+
+Starting report CNTRVSSLDR [Mon Sep 05 15:25:25 2005] ...
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+End report CNTRVSSLDR [Mon Sep 05 15:25:25 2005].
+
+Starting report CNTRPTIVADSG [Tue Sep 20 12:46:21 2005] ...
+REP-0110: Unable to open file 'CNTRPTIVADSG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRPTIVADSG'.
+End report CNTRPTIVADSG [Tue Sep 20 12:46:22 2005].
+
+Starting report CNTRPTIVADSG [Tue Sep 20 12:46:59 2005] ...
+End report CNTRPTIVADSG [Tue Sep 20 12:47:08 2005].
+
+Starting report CNTDROGNR [Wed Sep 21 14:26:01 2005] ...
+End report CNTDROGNR [Wed Sep 21 14:26:05 2005].
+
+Starting report CNTDROGNR [Wed Sep 21 14:26:20 2005] ...
+End report CNTDROGNR [Wed Sep 21 14:26:24 2005].
+
+Starting report CNTRPTOBL [Mon Oct 10 14:24:51 2005] ...
+End report CNTRPTOBL [Mon Oct 10 14:25:50 2005].
+
+Starting report CNTRPTRTNXPRV [Mon Oct 10 15:20:39 2005] ...
+End report CNTRPTRTNXPRV [Mon Oct 10 15:20:58 2005].
+
+Starting report CNTRVSSLDR [Fri Dec 09 15:32:53 2005] ...
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+End report CNTRVSSLDR [Fri Dec 09 15:32:54 2005].
+
+Starting report CNTRVSSLDR [Fri Dec 09 15:47:40 2005] ...
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRVSSLDR'.
+End report CNTRVSSLDR [Fri Dec 09 15:47:42 2005].
+
+Starting report CNTRVSSLDR [Fri Dec 09 15:47:50 2005] ...
+End report CNTRVSSLDR [Fri Dec 09 15:48:22 2005].
+
+Starting report BNCRPTMVM [Fri Dec 09 17:04:52 2005] ...
+REP-0110: Unable to open file 'BNCRPTMVM'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'BNCRPTMVM'.
+End report BNCRPTMVM [Fri Dec 09 17:04:54 2005].
+
+Starting report CNTRTNCMP [Thu Dec 22 12:36:07 2005] ...
+REP-0110: Unable to open file 'CNTRTNCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRTNCMP'.
+End report CNTRTNCMP [Thu Dec 22 12:36:12 2005].
+
+Starting report CNTRTNCMP [Thu Dec 22 12:36:41 2005] ...
+End report CNTRTNCMP [Thu Dec 22 12:39:02 2005].
+
+Starting report CNTRTNCMP [Fri Dec 23 09:12:50 2005] ...
+End report CNTRTNCMP [Fri Dec 23 09:13:30 2005].
+
+Starting report CNTRTNCMP [Fri Dec 23 09:24:47 2005] ...
+REP-0110: Unable to open file 'CNTRTNCMP'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'CNTRTNCMP'.
+End report CNTRTNCMP [Fri Dec 23 09:24:48 2005].
+
+Starting report CNTRTNCMP [Fri Dec 23 09:25:22 2005] ...
+End report CNTRTNCMP [Fri Dec 23 09:27:21 2005].
+
+Starting report cntrtncmp [Thu Apr 27 17:29:09 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrtncmp [Thu Apr 27 17:29:21 2006].
+
+Starting report cntimpchqcmp [Thu Apr 27 17:29:25 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntimpchqcmp [Thu Apr 27 17:29:30 2006].
+
+Starting report cntimpchqcmp [Thu Apr 27 17:29:50 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntimpchqcmp [Thu Apr 27 17:29:51 2006].
+
+Starting report cntimpchqcmp [Thu Apr 27 17:29:57 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntimpchqcmp [Thu Apr 27 17:30:01 2006].
+
+Starting report cntrtncmp [Thu Apr 27 17:31:55 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrtncmp [Thu Apr 27 17:31:55 2006].
+
+Starting report cntimpchqcmp [Thu Apr 27 17:31:59 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntimpchqcmp [Thu Apr 27 17:32:00 2006].
+
+Starting report cntimpchqcmp [Wed Jun 14 15:39:02 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntimpchqcmp [Wed Jun 14 15:39:31 2006].
+
+Starting report cntrtncmp [Wed Jun 14 15:39:34 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrtncmp [Wed Jun 14 15:39:35 2006].
+
+Starting report cntrvssldprsingr [Wed Jun 14 15:40:00 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrvssldprsingr [Wed Jun 14 15:40:01 2006].
+
+Starting report cntrvssldprsgstr [Wed Jun 14 15:40:04 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrvssldprsgstr [Wed Jun 14 15:40:04 2006].
+
+Starting report cntcdlprsing [Wed Jun 14 15:40:07 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntcdlprsing [Wed Jun 14 15:40:08 2006].
+
+Starting report cntcdlprsgst [Wed Jun 14 15:40:10 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntcdlprsgst [Wed Jun 14 15:40:11 2006].
+
+Starting report cntdrognr [Wed Jun 14 15:40:18 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntdrognr [Wed Jun 14 15:40:18 2006].
+
+Starting report cntrvssldr [Wed Jun 14 15:40:21 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrvssldr [Wed Jun 14 15:40:22 2006].
+
+Starting report cntrptfchnomyr [Wed Jun 14 15:40:24 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrptfchnomyr [Wed Jun 14 15:40:25 2006].
+
+Starting report cntrptttlingfct [Wed Jun 14 15:40:32 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrptttlingfct [Wed Jun 14 15:40:33 2006].
+
+Starting report cntimpchqcmp [Mon Jul 03 13:07:23 2006] ...
+REP-0546: Invalid parameter input.
+End report cntimpchqcmp [Mon Jul 03 13:08:05 2006].
+
+Starting report cntrtncmp [Mon Jul 03 13:08:08 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrtncmp [Mon Jul 03 13:08:09 2006].
+
+Starting report cntrtncmp [Mon Jul 03 13:08:13 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrtncmp [Mon Jul 03 13:08:13 2006].
+
+Starting report cntrptcntascing [Mon Jul 03 15:30:52 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptcntascing [Mon Jul 03 15:31:03 2006].
+
+Starting report cntrptcntascing [Mon Jul 03 16:25:24 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptcntascing [Mon Jul 03 16:26:35 2006].
+
+Starting report cntrptcntascing [Mon Jul 03 16:29:26 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptcntascing [Mon Jul 03 16:29:42 2006].
+
+Starting report cntrptcntascing [Mon Jul 03 16:37:30 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptcntascing [Mon Jul 03 16:37:42 2006].
+
+Starting report cntrptrtn [Tue Jul 04 10:05:39 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptrtn [Tue Jul 04 10:05:42 2006].
+
+Starting report cntimpchqcmp [Thu Jul 06 09:10:43 2006] ...
+End report cntimpchqcmp [Thu Jul 06 09:11:07 2006].
+
+Starting report cntrtncmp [Thu Jul 06 09:11:09 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrtncmp [Thu Jul 06 09:11:09 2006].
+
+Starting report cntcdlprsgst [Thu Jul 06 09:16:29 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntcdlprsgst [Thu Jul 06 09:16:37 2006].
+
+Starting report cntrptobl [Thu Jul 06 09:32:51 2006] ...
+End report cntrptobl [Thu Jul 06 09:34:11 2006].
+
+Starting report cntrptoblvnc [Thu Jul 06 09:34:15 2006] ...
+End report cntrptoblvnc [Thu Jul 06 09:34:29 2006].
+
+Starting report cntdrognr [Thu Jul 06 09:34:37 2006] ...
+End report cntdrognr [Thu Jul 06 09:37:51 2006].
+
+Starting report cntrvssldr [Thu Jul 06 09:37:55 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrvssldr [Thu Jul 06 09:37:56 2006].
+
+Starting report cntrptfchnomyr [Thu Jul 06 09:38:07 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptfchnomyr [Thu Jul 06 09:39:35 2006].
+
+Starting report cntrptfchnomyr [Thu Jul 06 09:39:42 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptfchnomyr [Thu Jul 06 09:39:45 2006].
+
+Starting report cntrptttlingfct [Thu Jul 06 09:39:48 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptttlingfct [Thu Jul 06 09:40:05 2006].
+
+Starting report cntimpchqcmp [Thu Jul 06 11:31:42 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntimpchqcmp [Thu Jul 06 11:31:45 2006].
+
+Starting report cntrvssldprsingr [Thu Jul 06 11:32:37 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrvssldprsingr [Thu Jul 06 11:32:38 2006].
+
+Starting report cntrvssldprsgstr [Thu Jul 06 11:32:43 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntrvssldprsgstr [Thu Jul 06 11:32:44 2006].
+
+Starting report cntcdlprsing [Thu Jul 06 11:32:51 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntcdlprsing [Thu Jul 06 11:32:51 2006].
+
+Starting report cntcdlprsgst [Thu Jul 06 11:32:55 2006] ...
+REP-0002: Unable to retrieve a string from the Report Builder message file.
+REP-1439: 
+End report cntcdlprsgst [Thu Jul 06 11:32:56 2006].
+
+Starting report cntrptobl [Thu Jul 06 12:47:51 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptobl [Thu Jul 06 12:47:55 2006].
+
+Starting report cntrptoblvnc [Thu Jul 06 12:47:56 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptoblvnc [Thu Jul 06 12:47:59 2006].
+
+Starting report cntdrognr [Thu Jul 06 12:48:06 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntdrognr [Thu Jul 06 12:48:09 2006].
+
+Starting report cntimpchqcmp [Thu Jul 06 16:52:50 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntimpchqcmp [Thu Jul 06 16:52:57 2006].
+
+Starting report cntrtncmp [Thu Jul 06 16:53:01 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrtncmp [Thu Jul 06 16:53:09 2006].
+
+Starting report rolrptdtlrol [Thu Jul 06 16:54:33 2006] ...
+REP-0110: Unable to open file 'rolrptdtlrol'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'rolrptdtlrol'.
+End report rolrptdtlrol [Thu Jul 06 16:54:33 2006].
+
+Starting report cntdrognr [Wed Jul 12 11:52:37 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntdrognr [Wed Jul 12 11:53:02 2006].
+
+Starting report cntrvssldr [Wed Jul 12 11:53:06 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrvssldr [Wed Jul 12 11:53:09 2006].
+
+Starting report cntrptfchnomyr [Wed Jul 12 11:53:11 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptfchnomyr [Wed Jul 12 11:53:13 2006].
+
+Starting report cntrptttlingfct [Wed Jul 12 11:53:17 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptttlingfct [Wed Jul 12 11:53:20 2006].
+
+Starting report cntrptinggst [Wed Jul 12 11:53:22 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptinggst [Wed Jul 12 11:53:25 2006].
+
+Starting report cntrptrtnxprv [Wed Jul 12 11:53:28 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptrtnxprv [Wed Jul 12 11:53:30 2006].
+
+Starting report cntblncmp [Wed Jul 12 11:53:33 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntblncmp [Wed Jul 12 11:53:36 2006].
+
+Starting report cntestrsl [Wed Jul 12 11:53:42 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntestrsl [Wed Jul 12 11:53:45 2006].
+
+Starting report cntestrslanl [Wed Jul 12 11:53:53 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntestrslanl [Wed Jul 12 11:53:55 2006].
+
+Starting report cntrptrtn [Wed Jul 12 11:54:00 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptrtn [Wed Jul 12 11:54:03 2006].
+
+Starting report cntrptivasri [Wed Jul 12 11:54:06 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptivasri [Wed Jul 12 11:54:08 2006].
+
+Starting report cntrptoblvnc [Wed Jul 12 11:54:15 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptoblvnc [Wed Jul 12 11:54:18 2006].
+
+Starting report cntrptcntascing [Wed Jul 12 11:54:34 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptcntascing [Wed Jul 12 11:54:37 2006].
+
+Starting report cntdrognr [Mon Jul 17 14:45:18 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntdrognr [Mon Jul 17 14:45:29 2006].
+
+Starting report cntdrognr [Mon Jul 17 11:46:26 2006] ...
+End report cntdrognr [Mon Jul 17 12:01:22 2006].
+
+Starting report cntdrognr [Mon Jul 17 12:01:27 2006] ...
+REP-0099: Report is aborted upon user request.
+End report cntdrognr [Mon Jul 17 12:03:31 2006].
+
+Starting report cntrptfchnomyr [Mon Jul 17 12:03:43 2006] ...
+End report cntrptfchnomyr [Mon Jul 17 12:04:27 2006].
+
+Starting report cntrptfchnomyr [Mon Jul 17 12:04:35 2006] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report cntrptfchnomyr [Mon Jul 17 12:04:40 2006].
+
+Starting report cntrptttlingfct [Mon Jul 17 12:04:46 2006] ...
+End report cntrptttlingfct [Mon Jul 17 12:06:08 2006].
+
+Starting report cntrptgstxprv [Mon Jul 17 12:06:11 2006] ...
+End report cntrptgstxprv [Mon Jul 17 12:08:14 2006].
+
+Starting report cntrptrtn [Mon Jul 17 12:08:19 2006] ...
+End report cntrptrtn [Mon Jul 17 12:09:31 2006].
+
+Starting report cntrptcntascing [Mon Jul 17 12:09:44 2006] ...
+End report cntrptcntascing [Mon Jul 17 12:10:05 2006].
+
+Starting report CNTDROGNR [Mon Jul 17 14:53:18 2006] ...
+End report CNTDROGNR [Mon Jul 17 14:53:47 2006].
+
+Starting report CNTDROGNR [Mon Jul 17 14:53:52 2006] ...
+End report CNTDROGNR [Mon Jul 17 14:53:54 2006].
+
+Starting report CNTDROGNR [Mon Jul 17 14:53:58 2006] ...
+End report CNTDROGNR [Mon Jul 17 14:54:53 2006].
+
+Starting report CNTRPTFCHNOMYR [Mon Jul 17 14:56:07 2006] ...
+End report CNTRPTFCHNOMYR [Mon Jul 17 14:56:27 2006].
+
+Starting report CNTRPTTTLINGFCT [Mon Jul 17 14:56:43 2006] ...
+End report CNTRPTTTLINGFCT [Mon Jul 17 14:56:45 2006].
+
+Starting report CNTRPTTTLINGFCT [Mon Jul 17 14:56:51 2006] ...
+End report CNTRPTTTLINGFCT [Mon Jul 17 14:56:54 2006].
+
+Starting report CNTRPTTTLINGFCT [Mon Jul 17 14:57:08 2006] ...
+End report CNTRPTTTLINGFCT [Mon Jul 17 14:57:13 2006].
+
+Starting report CNTRPTTTLINGFCT [Mon Jul 17 14:57:16 2006] ...
+End report CNTRPTTTLINGFCT [Mon Jul 17 14:57:21 2006].
+
+Starting report CNTRPTINGGST [Mon Jul 17 14:57:43 2006] ...
+End report CNTRPTINGGST [Mon Jul 17 14:57:46 2006].
+
+Starting report CNTRPTINGGST [Mon Jul 17 14:57:51 2006] ...
+End report CNTRPTINGGST [Mon Jul 17 14:57:54 2006].
+
+Starting report CNTRPTINGGST [Mon Jul 17 14:57:57 2006] ...
+End report CNTRPTINGGST [Mon Jul 17 14:57:58 2006].
+
+Starting report CNTRPTINGGST [Mon Jul 17 14:58:02 2006] ...
+End report CNTRPTINGGST [Mon Jul 17 14:58:06 2006].
+
+Starting report CNTRPTGSTXPRV [Mon Jul 17 14:58:26 2006] ...
+End report CNTRPTGSTXPRV [Mon Jul 17 14:59:03 2006].
+
+Starting report CNTRPTGSTXPRV [Mon Jul 17 14:59:36 2006] ...
+End report CNTRPTGSTXPRV [Mon Jul 17 14:59:47 2006].
+
+Starting report CNTBLNCMP [Mon Jul 17 15:00:38 2006] ...
+End report CNTBLNCMP [Mon Jul 17 15:06:00 2006].
+
+Starting report CNTBLNGNR [Mon Jul 17 15:06:10 2006] ...
+End report CNTBLNGNR [Mon Jul 17 15:06:52 2006].
+
+Starting report CNTESTRSL [Mon Jul 17 15:07:02 2006] ...
+End report CNTESTRSL [Mon Jul 17 15:07:33 2006].
+
+Starting report CNTESTRSL [Mon Jul 17 15:07:37 2006] ...
+End report CNTESTRSL [Mon Jul 17 15:09:26 2006].
+
+Starting report CNTESTRSLANL [Mon Jul 17 15:10:28 2006] ...
+End report CNTESTRSLANL [Mon Jul 17 15:15:53 2006].
+
+Starting report CNTRPTRTN [Mon Jul 17 15:16:03 2006] ...
+End report CNTRPTRTN [Mon Jul 17 15:16:05 2006].
+
+Starting report CNTRPTRTN [Mon Jul 17 15:16:42 2006] ...
+End report CNTRPTRTN [Mon Jul 17 15:16:54 2006].
+
+Starting report CNTRPTRTN [Mon Jul 17 15:16:59 2006] ...
+End report CNTRPTRTN [Mon Jul 17 15:17:05 2006].
+
+Starting report CNTRPTIVASRI [Mon Jul 17 15:17:53 2006] ...
+End report CNTRPTIVASRI [Mon Jul 17 15:18:25 2006].
+
+Starting report CNTRPTIVADSG [Mon Jul 17 15:18:37 2006] ...
+End report CNTRPTIVADSG [Mon Jul 17 15:18:50 2006].
+
+Starting report CNTRPTOBL [Mon Jul 17 15:19:09 2006] ...
+End report CNTRPTOBL [Mon Jul 17 15:19:14 2006].
+
+Starting report CNTRPTOBLVNC [Mon Jul 17 15:19:27 2006] ...
+End report CNTRPTOBLVNC [Mon Jul 17 15:19:53 2006].
+
+Starting report CNTRPTOBLVNC [Mon Jul 17 15:21:17 2006] ...
+End report CNTRPTOBLVNC [Mon Jul 17 15:21:27 2006].
+
+Starting report CNTINGCMP [Mon Jul 17 15:22:13 2006] ...
+REP-1814: Report cannot be formatted. Object 'vertically' can never fit within 'B_3'.
+REP-0594: No report output generated.
+End report CNTINGCMP [Mon Jul 17 15:22:20 2006].
+
+Starting report CNTINGCMP [Mon Jul 17 15:22:22 2006] ...
+REP-1814: Report cannot be formatted. Object 'vertically' can never fit within 'B_3'.
+REP-0594: No report output generated.
+End report CNTINGCMP [Mon Jul 17 15:22:28 2006].
+
+Starting report CNTRPTCNTASCING [Mon Jul 17 15:22:45 2006] ...
+End report CNTRPTCNTASCING [Mon Jul 17 15:24:47 2006].
+
+Starting report PRMPCNXCLSF [Mon Jul 17 16:35:53 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Mon Jul 17 16:35:55 2006].
+
+Starting report PRMPCNXCLSF [Mon Jul 17 16:36:06 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Mon Jul 17 16:36:06 2006].
+
+Starting report PRMPCNXCLSF [Mon Jul 17 16:36:10 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Mon Jul 17 16:36:10 2006].
+
+Starting report PRMPCNXCLSF [Mon Jul 17 16:37:02 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Mon Jul 17 16:37:03 2006].
+
+Starting report PRMPCNXCLSF [Mon Jul 17 16:37:13 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Mon Jul 17 16:37:14 2006].
+
+Starting report PRMRPTPCNCTG [Mon Jul 17 16:37:40 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+End report PRMRPTPCNCTG [Mon Jul 17 16:37:40 2006].
+
+Starting report PRMRPTPCNCTG [Mon Jul 17 16:38:34 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+End report PRMRPTPCNCTG [Mon Jul 17 16:38:35 2006].
+
+Starting report PRMRPTPCNCTG [Mon Jul 17 16:39:46 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+End report PRMRPTPCNCTG [Mon Jul 17 16:39:46 2006].
+
+Starting report PRMRPTPCNCTG [Mon Jul 17 16:43:38 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+End report PRMRPTPCNCTG [Mon Jul 17 16:43:39 2006].
+
+Starting report PRMRPTPCNCTG [Mon Jul 17 16:47:03 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+End report PRMRPTPCNCTG [Mon Jul 17 16:47:04 2006].
+
+Starting report PRMRPTPCNCTG [Mon Jul 17 16:47:17 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+End report PRMRPTPCNCTG [Mon Jul 17 16:47:17 2006].
+
+Starting report PRMRPTPCNCTGSRV [Mon Jul 17 16:48:21 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTGSRV'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTGSRV'.
+End report PRMRPTPCNCTGSRV [Mon Jul 17 16:48:21 2006].
+
+Starting report PRMRPTPCNCTGSRV [Mon Jul 17 16:49:06 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTGSRV'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTGSRV'.
+End report PRMRPTPCNCTGSRV [Mon Jul 17 16:49:06 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:23:05 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:23:06 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:23:22 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:23:23 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:23:25 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:23:26 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:23:27 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:23:27 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:23:29 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:23:29 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:29:54 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:29:54 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:32:09 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:32:09 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:32:11 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:32:11 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:33:43 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:33:43 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:33:52 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:33:52 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:34:47 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:34:48 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:42:05 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:42:06 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:42:08 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:42:08 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:42:09 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:42:09 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:42:10 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:42:10 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:42:11 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:42:12 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:42:26 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:42:26 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:46:24 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:46:25 2006].
+
+Starting report PRMRPTPCNCTG [Tue Jul 18 09:46:56 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTG'.
+End report PRMRPTPCNCTG [Tue Jul 18 09:46:57 2006].
+
+Starting report PRMRPTPCNCTGSRV [Tue Jul 18 09:47:13 2006] ...
+REP-0110: Unable to open file 'PRMRPTPCNCTGSRV'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMRPTPCNCTGSRV'.
+End report PRMRPTPCNCTGSRV [Tue Jul 18 09:47:13 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 09:47:52 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 09:47:52 2006].
+
+Starting report PRMPCNXCLSF [Tue Jul 18 10:10:05 2006] ...
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+REP-1070: Error while opening or saving a document.
+REP-0110: Unable to open file 'PRMPCNXCLSF'.
+End report PRMPCNXCLSF [Tue Jul 18 10:10:06 2006].
+
+Starting report CNTRVSSLDR [Thu Aug 31 12:22:40 2006] ...
+End report CNTRVSSLDR [Thu Aug 31 12:22:54 2006].
+
+Starting report CNTRPTRTNXPRV [Thu Aug 31 12:51:16 2006] ...
+End report CNTRPTRTNXPRV [Thu Aug 31 12:51:30 2006].
+
+Starting report CNTRPTRTNXPRV [Thu Aug 31 12:53:54 2006] ...
+End report CNTRPTRTNXPRV [Thu Aug 31 12:53:57 2006].
+
+Starting report CNTRTNCMP [Mon Jan 08 11:23:56 2007] ...
+REP-3300: Fatal error in the toolkit.
+UI-4099: The windowing system failed.
+End report CNTRTNCMP [Mon Jan 08 11:24:52 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 11:25:25 2007] ...
+End report CNTRTNCMP [Mon Jan 08 11:26:01 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 11:34:08 2007] ...
+End report CNTRTNCMP [Mon Jan 08 11:34:10 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 11:55:39 2007] ...
+End report CNTRTNCMP [Mon Jan 08 11:55:40 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 11:58:44 2007] ...
+End report CNTRTNCMP [Mon Jan 08 11:58:48 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 12:41:19 2007] ...
+End report CNTRTNCMP [Mon Jan 08 12:41:23 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 12:44:44 2007] ...
+End report CNTRTNCMP [Mon Jan 08 12:44:54 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 12:45:01 2007] ...
+End report CNTRTNCMP [Mon Jan 08 12:45:04 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 12:50:34 2007] ...
+End report CNTRTNCMP [Mon Jan 08 12:50:35 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 12:59:37 2007] ...
+End report CNTRTNCMP [Mon Jan 08 12:59:38 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 13:08:38 2007] ...
+End report CNTRTNCMP [Mon Jan 08 13:08:39 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 13:16:07 2007] ...
+End report CNTRTNCMP [Mon Jan 08 13:16:08 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 13:19:34 2007] ...
+End report CNTRTNCMP [Mon Jan 08 13:19:35 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 13:54:06 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 13:59:13 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:09:59 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:10:32 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:14:50 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:14:53 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:18:20 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:18:21 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:18:22 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:18:24 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:30:02 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:30:03 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:37:45 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:37:46 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:37:51 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:37:52 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:48:16 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:48:17 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:48:20 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:48:21 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:48:25 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:48:27 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 14:56:50 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 14:56:51 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 14:58:22 2007] ...
+End report CNTRTNCMP [Mon Jan 08 14:58:24 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 14:58:54 2007] ...
+End report CNTRTNCMP [Mon Jan 08 14:58:55 2007].
+
+Starting report CNTRTNCMP [Mon Jan 08 14:59:15 2007] ...
+End report CNTRTNCMP [Mon Jan 08 14:59:15 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:10:11 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:10:32 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:11:50 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:12:06 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:13:36 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:13:43 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:21:00 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:21:08 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:21:59 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:22:05 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:24:00 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:24:22 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:25:25 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:25:38 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:27:01 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:27:30 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:29:31 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:36:48 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:37:24 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:37:30 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:37:35 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:37:37 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:38:28 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:38:29 2007].
+
+Starting report CNTINGCMPEB [Mon Jan 08 16:39:53 2007] ...
+End report CNTINGCMPEB [Mon Jan 08 16:39:54 2007].
+
+Starting report CNTINGCMPIB [Mon Jan 08 17:40:28 2007] ...
+End report CNTINGCMPIB [Mon Jan 08 17:41:26 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 07:56:00 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 07:58:17 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:01:54 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:02:07 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:06:57 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:07:20 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:09:23 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:09:29 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:15:49 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:16:25 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:18:11 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:18:35 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:22:14 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:24:46 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:31:55 2007] ...
+REP-1213: Field 'F_CG$CF_LUGAR_Y_FECHA1' references column 'CF_LUGAR_Y_FECHA' at a frequency below its group.
+End report CNTINGCMPIB [Tue Jan 09 08:32:00 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:34:25 2007] ...
+REP-1517: Column 'CF_LUGAR_Y_FECHA' references column 'CMP_FECHA2', which has incompatible frequency.
+End report CNTINGCMPIB [Tue Jan 09 08:34:34 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:36:28 2007] ...
+REP-1213: Field 'F_CG$CF_LUGAR_Y_FECHA1' references column 'CF_LUGAR_Y_FECHA' at a frequency below its group.
+End report CNTINGCMPIB [Tue Jan 09 08:36:39 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:36:47 2007] ...
+REP-1213: Field 'F_CG$CF_LUGAR_Y_FECHA1' references column 'CF_LUGAR_Y_FECHA' at a frequency below its group.
+End report CNTINGCMPIB [Tue Jan 09 08:37:03 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:43:43 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:44:01 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:45:03 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:49:46 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:49:49 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:49:55 2007].
+
+Starting report CNTINGCMPIB [Tue Jan 09 08:50:02 2007] ...
+End report CNTINGCMPIB [Tue Jan 09 08:50:04 2007].
+
+Starting report CNTINGCMPEB [Thu Jan 11 09:14:40 2007] ...
+End report CNTINGCMPEB [Thu Jan 11 09:14:54 2007].
+
+Starting report CNTINGCMPEB [Thu Jan 11 09:15:02 2007] ...
+End report CNTINGCMPEB [Thu Jan 11 09:15:34 2007].
+
+Starting report CNTINGCMPEB [Thu Jan 11 09:24:05 2007] ...
+End report CNTINGCMPEB [Thu Jan 11 09:24:42 2007].
+
+Starting report CNTINGCMPEB [Thu Jan 11 09:29:56 2007] ...
+End report CNTINGCMPEB [Thu Jan 11 09:30:10 2007].
+
+Starting report CNTINGCMPEB [Thu Jan 11 09:31:33 2007] ...
+End report CNTINGCMPEB [Thu Jan 11 09:32:01 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:09:48 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:10:17 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:15:31 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:18:11 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:18:45 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:28:12 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:28:17 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:29:29 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:34:00 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:35:22 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:36:52 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:37:44 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:38:25 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:38:44 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:40:05 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 17:41:52 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 17:58:37 2007] ...
+MSG-01000: Los comprobantes concelados no cuedran con los presupuestos
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Tue Jan 16 17:58:49 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 18:00:11 2007] ...
+MSG-01000: El total de presupuestos es 522.37 y del patrimonio es 515.37 no se puede imprimir
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Tue Jan 16 18:00:23 2007].
+
+Starting report CNTINGCMPEB [Tue Jan 16 18:00:48 2007] ...
+End report CNTINGCMPEB [Tue Jan 16 18:01:28 2007].
+
+Starting report CNTRTNCMP [Wed Jan 17 07:48:37 2007] ...
+End report CNTRTNCMP [Wed Jan 17 07:51:03 2007].
+
+Starting report CNTRTNCMP [Wed Jan 17 07:51:52 2007] ...
+End report CNTRTNCMP [Wed Jan 17 07:52:09 2007].
+
+Starting report CNTRTNCMP [Wed Jan 17 07:54:49 2007] ...
+End report CNTRTNCMP [Wed Jan 17 07:55:03 2007].
+
+Starting report CNTRTNCMP [Wed Jan 17 07:55:33 2007] ...
+End report CNTRTNCMP [Wed Jan 17 07:55:45 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 07:58:30 2007] ...
+MSG-01000: El total de presupuestos es 0 y del patrimonio es 20.14 no se puede imprimir
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 07:58:45 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 08:01:16 2007] ...
+End report CNTINGCMPEB [Wed Jan 17 08:01:36 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:05:45 2007] ...
+REP-1401: 'beforereport': Fatal PL/SQL error occurred.
+ORA-00937: la función de grupo no es de grupo simple
+
+End report CNTINGCMPEB [Wed Jan 17 17:05:54 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:07:00 2007] ...
+End report CNTINGCMPEB [Wed Jan 17 17:07:12 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:08:03 2007] ...
+MSG-01000: No cuadran los presupestos de CH2007/01/02 00:00:002
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 17:08:20 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:09:46 2007] ...
+REP-1401: 'beforereport': Fatal PL/SQL error occurred.
+ORA-00979: no es una expresión GROUP BY
+
+End report CNTINGCMPEB [Wed Jan 17 17:09:55 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:11:21 2007] ...
+MSG-01000: No cuadran los presupestos de CH-02/01/2007-2
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 17:13:22 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:13:26 2007] ...
+MSG-01000: No cuadran los presupestos de CH-2 del 02/01/2007
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 17:13:43 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:15:15 2007] ...
+MSG-01000: No cuadran los presupestos del CH-1 del 02/01/2007 ,CH-2 del 02/01/2007
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 17:15:30 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:16:25 2007] ...
+MSG-01000: No cuadran los presupestos del CH-1 del 02/01/2007, CH-2 del 02/01/2007.
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 17:16:41 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:17:07 2007] ...
+MSG-01000: No cuadran los presupestos del CH-1 del 02/01/2007, CH-2 del 02/01/2007.
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 17:17:29 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:18:45 2007] ...
+MSG-01000: No cuadran los presupestos del CH-2 del 02/01/2007.
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Wed Jan 17 17:19:08 2007].
+
+Starting report CNTINGCMPEB [Wed Jan 17 17:20:00 2007] ...
+End report CNTINGCMPEB [Wed Jan 17 17:20:09 2007].
+
+Starting report CNTINGCMPEB [Fri Jan 19 11:03:19 2007] ...
+MSG-01000: No cuadran los presupestos del DC-4 del 18/01/2007.
+REP-1825: Before Report trigger returned FALSE.
+End report CNTINGCMPEB [Fri Jan 19 11:03:27 2007].
+
+Starting report CNTINGCMPEB [Fri Jan 19 11:14:15 2007] ...
+End report CNTINGCMPEB [Fri Jan 19 11:14:38 2007].
+
+Starting report CNTINGCMPIB [Fri Jan 19 15:08:44 2007] ...
+End report CNTINGCMPIB [Fri Jan 19 15:08:52 2007].
+
+Starting report CNTINGCMPEB [Thu Feb 01 09:31:17 2007] ...
+End report CNTINGCMPEB [Thu Feb 01 09:33:54 2007].
+
+Starting report CNTINGCMPEB [Thu Feb 01 09:34:10 2007] ...
+REP-0099: Report is aborted upon user request.
+REP-0098: Report not run - user cancelled in the parameter form.
+End report CNTINGCMPEB [Thu Feb 01 09:52:51 2007].
+
+Starting report ADMRPTERR [Fri Feb 02 14:44:53 2007] ...
+End report ADMRPTERR [Fri Feb 02 14:44:55 2007].
+
+Starting report ADMRPTERR [Fri Feb 02 16:12:57 2007] ...
+End report ADMRPTERR [Fri Feb 02 16:13:02 2007].

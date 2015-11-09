@@ -1,0 +1,19 @@
+select cja_codigo, numero,fecha,valor,saldo, vinculaciones, devoluciones, valor-vinculaciones-devoluciones SALDO_CORTE
+from(
+select cja_codigo, numero,fecha,valor,saldo,
+(select nvl(sum(valor),0) from cuentas_por_cobrar_pagos cpcp
+ where cpcp.pgs_cja_codigo = p.cja_codigo 
+   and cpcp.pgs_numero = p.numero
+   and cpcp.fecha < :dfh
+   and cpcp.estado = 'NRM'
+) VINCULACIONES,
+(select nvl(sum(valor),0) from devoluciones_pagos dvp
+ where dvp.pgs_cja_codigo = p.cja_codigo 
+   and dvp.pgs_numero = p.numero
+   and dvp.fecha < :dfh
+) DEVOLUCIONES
+from pagos p where
+fecha between :dfd and :dfh
+)
+order by fecha
+

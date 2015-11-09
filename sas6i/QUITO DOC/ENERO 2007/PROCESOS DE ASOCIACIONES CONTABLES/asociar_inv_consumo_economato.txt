@@ -1,0 +1,783 @@
+DECLARE
+-- INSUMOS MEDICOS  'U27281' S.GRAPADORA DE PIEL PMW-35 (S.GRAPADORA)
+  CURSOR cCntAsc2 IS 
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U27281'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- REACTIVOS
+  CURSOR cCntAsc4 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U08255'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; --='U08255' GRADILLA DE 100 TUBOS
+
+-- INSUMOS MEDICOS DE LABORATORIO
+  CURSOR cCntAsc45 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U26071'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- INSUMOS DE RAYOS X 'U04011' PELICULA PARA RAYOSX 
+  CURSOR cCntAsc5 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U04011'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS';
+
+-- ALIMENTOS SECOS NUTRICION 'U09021' ACEITE LITRO
+  CURSOR cCntAscAS IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U09021'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- INSUMOS DE COCINA 'U09031' AXION MEDIANO TARRINA
+  CURSOR cCntAscIC IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U09031'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- UTENSILIOS DE COCINA U09041 TAMALERA UMCO
+  CURSOR cCntAscCP IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U09041'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- INSUMOS ODONTOLOGICOS 'U17011' OXIDO DE ZING FRASCO
+  CURSOR cCntAscIO IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U17011'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+--INSUMOS DE LIMPIEZA  JOBON DE LIMPIEZA
+  CURSOR cCntAsc12 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U02022'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- INSUMOS DE SEGURIDAD REVOLVER
+  CURSOR cCntAsc13 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U01013'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- LENCERIA TOALLA DE BAÑO(S.GRAPADORA)
+  CURSOR cCntAsc14 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U050168'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS';
+
+
+-- MATERIALES Y ÚTILES DE OFICINA 
+  CURSOR cCntAsc15 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U03014'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS'; 
+
+-- MATERIALES Y SUMINISTROS  PROBETA GRADUADA 250 :1ML
+  CURSOR cCntAsc17 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U15023'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS';
+
+--INSUMO DE ENDOSCOPIA 'U25055' PAPEL ENDOSCOPIA UPC-1010
+  CURSOR cCntAsc18 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U25055'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS';
+--  11401006 INSUMOS DE ECOGRAFIA 'U25052' PAPEL ECO NORMAL SONY  UPP-110S
+  CURSOR cCntAsc19 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U25052'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS';
+--  11401008 INSUMOS DE CARDIOLOGIA 'U25031' PAPEL ELECTROCARDIOGRAFO (PAPEL)
+  CURSOR cCntAsc20 IS
+    SELECT * FROM CUENTAS_ASOCIADAS
+    WHERE CLAVE_RELACIONADA='U25031'
+          AND TIPO_DE_CUENTA='ECN' AND TIPO_DE_ASOCIACION='CNS';
+
+--  11401002 INSUMOS MEDICOS
+  CURSOR cItmCrg2 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND (substr(clave,2,2) in ('21','22','27','28') OR (substr(clave,2,2) = '26' AND substr(clave,4,2) <> '07')
+                                                    OR (substr(clave,2,2) = '04' AND substr(clave,4,2) = '02'));
+
+-- REACTIVOS
+  CURSOR cItmCrg4 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('08');
+
+-- INSUMOS MEDICOS LABORATORIO 
+  CURSOR cItmCrg45 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('26') AND substr(clave,4,2) in ('07');
+
+--  11401003 INSUMOS DE ODONTOLOGICOS
+  CURSOR cItmCrgIO IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('17');
+
+-- INSUMOS DE RAYOS X
+  CURSOR cItmCrg5 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('04') AND substr(clave,4,2) in ('01');
+
+--  ALIMENTOS 
+  CURSOR cItmCrgAS IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('09') AND substr(clave,4,2) in ('01','02','05');
+
+-- INSUMOS COCINA
+  CURSOR cItmCrgIC IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('09') AND substr(clave,4,2) in ('03');
+
+--  UTEN. DE COCINA
+  CURSOR cItmCrgCP IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('09') AND substr(clave,4,2) in ('04');
+
+-- INSUMOS DE LIMPIEZA
+  CURSOR cItmCrg12 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('02');
+
+-- INSUMOS DE SEGURIDAD
+  CURSOR cItmCrg13 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('01');
+
+-- LENCERIA
+  CURSOR cItmCrg14 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('05');
+
+-- MATERIALES Y ÚTILES DE OFICINA
+  CURSOR cItmCrg15 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('03');
+
+-- MATERIALES Y SUMINISTROS
+  CURSOR cItmCrg17 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('06','07','15','28','10');
+
+-- ECOGRAFIA
+  CURSOR cItmCrg18 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('25') AND substr(clave,4,2) in ('05') ;
+-- ENDOSCOPIA
+  CURSOR cItmCrg19 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('25') AND substr(clave,4,2) in ('06') ;
+-- CARDIOLOGIA
+  CURSOR cItmCrg20 IS
+    select clave
+    from nuevos_items,cuentas_asociadas cntasc
+    where  cntasc.clave_relacionada(+)=clave
+    AND cntAsc.tipo_de_cuenta(+)='ECN'
+    AND cntAsc.tipo_de_ASOCIACION(+)='CNS'
+    and cntasc.clave_relacionada is null
+    AND substr(clave,2,2) in ('25') AND substr(clave,4,2) in ('01','03') ;
+
+
+  i Number:=0;
+  j Number:=0;
+BEGIN
+--  11401002 INSUMOS MEDICOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg2 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc2 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS MEDICOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  11401004 INSUMOS DE LABORATORIO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg4 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc4 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS DE LABORATORIO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  INSUMOS MEDICOS DE LABORATORIO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg4 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc4 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS DE LABORATORIO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  INSUMOS MEDICOS DE LABORATORIO
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg45 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc45 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS DE LABORATORIO '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  11401005 INSUMOS DE RAYOS X
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg5 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc5 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS DE RAYOS X '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+--  11401012 INSUMOS DE LIMPIEZA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg12 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc12 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS DE LIMPIEZA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+--  11401013 INSUMOS DE SEGURIDAD
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg13 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc13 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS DE SEGURIDAD '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+--  11401014 LENCERIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg14 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc14 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados LENCERIA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+--  11401015 MATERIALES Y ÚTILES DE OFICINA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg15 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc15 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados MATERIALES Y ÚTILES DE OFICINA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  11401017 MATERIALES Y SUMINISTROS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg17 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc17 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados MATERIALES Y SUMINISTROS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  11401006 ECOGRAFIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg18 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc18 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados MATERIALES Y ÚTILES DE OFICINA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+--  11401007 ENDOSCOPIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg19 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc19 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados MATERIALES Y ÚTILES DE OFICINA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  11401008 CARDIOLOGIA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrg20 LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAsc20 LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados MATERIALES Y ÚTILES DE OFICINA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  ALIMENTOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgAS LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscAS LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados ALIMENTOS SECOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  INSUMOS COCINA
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgIC LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscIC LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS COCINA '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  UTEN. COCINA.
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgCP LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscCP LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados POLLO Y CARNE '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+--  11401003 INSUMOS ODONTOLOGICOS
+i:=0;
+j:=0;
+  FOR rItmCrg IN cItmCrgIO LOOP
+    i:=i+1;
+    FOR rCntAsc IN cCntAscIO LOOP
+      j:=j+1;
+      INSERT INTO CUENTAS_ASOCIADAS 
+(CNTASC_ID              ,
+TIPO_DE_CUENTA         ,
+TIPO_DE_ASOCIACION,
+CUENTA             ,    
+CLAVE_RELACIONADA   ,   
+OBSERVACION          ,  
+EMP_CODIGO            , 
+AGRCNT_CODIGO          ,
+AGRCNT_TIPO)
+VALUES (CNTASC_SEQ.NEXTVAL,
+rCntAsc.TIPO_DE_CUENTA         ,
+rCntAsc.TIPO_DE_ASOCIACION,
+rCntAsc.CUENTA             ,    
+rItmCrg.CLAVE,
+rCntAsc.OBSERVACION            ,
+rCntAsc.EMP_CODIGO             ,
+rCntAsc.AGRCNT_CODIGO          ,
+rCntAsc.AGRCNT_TIPO            );
+    END LOOP;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Item procesados INSUMOS ODONTOLOGICOS '||to_char(i));
+  DBMS_OUTPUT.PUT_LINE('Item procesados '||to_char(j));
+
+END;            
+/

@@ -1,0 +1,135 @@
+/* Devuelve la Descripcion de la cuenta de mayor a la cuenta consultada  */
+FUNCTION DEVUELVE_CUENTA_MAYOR
+ (VEMPCOD VARCHAR2
+ ,VMYRCOD VARCHAR2
+ ,VCNTCOD VARCHAR2
+ ,VSCNTCOD VARCHAR2
+ ,VAXLCOD VARCHAR2
+ ,VSAXLCOD VARCHAR2
+ ,VSAXL2COD VARCHAR2
+ ,VSAXL3COD VARCHAR2
+ )
+ RETURN VARCHAR2
+ IS
+BEGIN
+DECLARE
+  CURSOR cCnt IS
+    SELECT NIVEL
+    FROM PLAN_DE_CUENTAS_COMPLETO
+    WHERE EMP_CODIGO=vEmpCod AND
+          MYR_CODIGO=vMyrCod AND
+          CNT_CODIGO=vCntCod AND
+          SCNT_CODIGO=vScntCod AND
+          AXL_CODIGO=vAxlCod AND
+          SAXL_CODIGO=vSAxlCod AND
+          SAXL2_CODIGO=vSaxl2Cod AND
+          SAXL3_CODIGO=vSaxl3Cod;
+  vEmpCod1 SUBAUXILIARES_3.S_S_A_SC_CNT_MYR_EMP_CODIGO%TYPE;
+  vMyrCod1 SUBAUXILIARES_3.S_S_A_SC_CNT_MYR_CODIGO%TYPE;
+  vCntCod1 SUBAUXILIARES_3.S_S_A_SC_CNT_CODIGO%TYPE;
+  vScntCod1 SUBAUXILIARES_3.S_S_A_SC_CODIGO%TYPE;
+  vAxlCod1 SUBAUXILIARES_3.S_S_A_CODIGO%TYPE;
+  vSAxlCod1 SUBAUXILIARES_3.S_S_CODIGO%TYPE;
+  vSAxl2Cod1 SUBAUXILIARES_3.S_CODIGO%TYPE;
+  vSAxl3Cod1 SUBAUXILIARES_3.CODIGO%TYPE;
+  CURSOR cCntSprCentroCosto IS
+-- PARA EVITARSE ESTO HAY QUE CREAR AL MISMO NIVEL TANTO LOS CENTROS DE COSTOS Y LOS GASTOS
+    SELECT NOMBRE
+       FROM AUXILIARES
+       WHERE  SC_CNT_MYR_EMP_CODIGO=vEmpCod1 AND
+              SC_CNT_MYR_CODIGO=vMyrCod1  AND
+              SC_CNT_CODIGO=vCntCod1  AND
+              SC_CODIGO=vScntCod1  AND
+              CODIGO=vAxlCod1 AND
+              (('5'=vMyrCod1  AND '01'=vCntCod1 AND vScntCod1 NOT IN ('03','05','06')) OR '4'=vMyrCod1 OR
+              ('5'=vMyrCod1  AND '01'=vCntCod1 AND vScntCod1 IN ('01','02','04','07','99'))) AND
+              (SC_CNT_MYR_CODIGO='5'  AND
+              SC_CNT_CODIGO!='02')
+    UNION
+    SELECT NOMBRE
+       FROM SUBCUENTAS
+       WHERE  CNT_MYR_EMP_CODIGO=vEmpCod1 AND
+              CNT_MYR_CODIGO=vMyrCod1  AND
+              CNT_CODIGO=vCntCod1  AND
+              CODIGO=vScntCod1  AND
+              (vMyrCod1='5' AND vCntCod1='02' AND
+              CNT_MYR_CODIGO='5' AND CNT_CODIGO='02') OR
+              (vMyrCod1='5' AND vCntCod1='01' AND vScntCod1 IN ('03','05','06') AND
+              CNT_MYR_CODIGO='5' AND CNT_CODIGO='01' AND CODIGO=vScntCod1);
+/*       
+       
+       WHERE  SC_CNT_MYR_EMP_CODIGO=vEmpCod1 AND
+              SC_CNT_MYR_CODIGO=vMyrCod1  AND
+              SC_CNT_CODIGO=vCntCod1  AND
+              SC_CODIGO=vScntCod1  AND
+              CODIGO=vAxlCod1 AND
+              SC_CNT_MYR_CODIGO='4'  OR
+              (SC_CNT_MYR_CODIGO='5'  AND (SC_CNT_CODIGO!='02' AND (SC_CNT_CODIGO='01' AND SC_CODIGO NOT IN ('05','06'))))
+    UNION
+    SELECT NOMBRE
+       FROM SUBCUENTAS
+       WHERE  CNT_MYR_EMP_CODIGO=vEmpCod1 AND
+              CNT_MYR_CODIGO=vMyrCod1  AND
+              CNT_CODIGO=vCntCod1  AND
+              CODIGO=vScntCod1  AND
+              CNT_MYR_CODIGO='5' AND 
+              (CNT_CODIGO='02' OR (CNT_CODIGO='01' AND CODIGO IN ('05','06')));*/
+  CURSOR cCntSpr IS 
+  SELECT NOMBRE
+    FROM PLAN_DE_CUENTAS_COMPLETO
+    WHERE EMP_CODIGO=vEmpCod1 AND
+          MYR_CODIGO=vMyrCod1 AND
+          CNT_CODIGO=vCntCod1 AND
+          SCNT_CODIGO=vScntCod1 AND
+          AXL_CODIGO=vAxlCod1 AND
+          SAXL_CODIGO=vSAxlCod1 AND
+          SAXL2_CODIGO=vSaxl2Cod1 AND
+          SAXL3_CODIGO=vSaxl3Cod1;
+  vTipo CHAR;
+  nNivel NUMBER;
+  vDev PLAN_DE_CUENTAS.NOMBRE%TYPE;
+  vDevCntCst PLAN_DE_CUENTAS.NOMBRE%TYPE;
+BEGIN
+  vEmpCod1:=vEmpCod;
+  vMyrCod1:=vMyrCod;
+  vCntCod1:=vCntCod;
+  vScntCod1:=vScntCod;
+  vAxlCod1:=vAxlCod;
+  vSAxlCod1:=vSAxlCod;
+  vSAxl2Cod1:=vSAxl2Cod;
+  vSAxl3Cod1:=vSAxl3Cod;
+  IF vMyrCod='4' THEN
+    vTipo:='I';
+  ELSIF vMyrCod='5' THEN
+    vTipo:='G';
+  ELSE
+    vTipo:='O';
+  END IF;
+  OPEN cCnt;
+  FETCH cCnt INTO nNivel;
+  CLOSE cCnt;
+  IF nNivel=7 THEN
+    vSAxl3Cod1:='00000';
+  ELSIF nNivel=6 THEN
+    vSAxl2Cod1:='00000';
+  ELSIF nNivel=5 THEN
+    vSAxlCod1:='00000';
+  ELSIF nNivel=4 THEN
+    vAxlCod1:='00000';
+  ELSIF nNivel=3 THEN
+    vScntCod1:='00000';
+  ELSIF nNivel=2 THEN
+    vCntCod1:='00000';
+  END IF;
+  OPEN cCntSpr;
+  FETCH cCntSpr INTO vDev;
+  CLOSE cCntSpr;
+  IF vTipo IN ('I','G') AND nNIVEL>5 THEN
+    OPEN cCntSprCentroCosto;
+    FETCH cCntSprCentroCosto INTO vDevCntCst;
+    CLOSE cCntSprCentroCosto;
+    vDev:=NVL(vDevCntCst,'SIN CENTRO COSTO')||' - '||vDev;
+  END IF;
+  RETURN NVL(vDev,' ');
+END;
+END DEVUELVE_CUENTA_MAYOR;

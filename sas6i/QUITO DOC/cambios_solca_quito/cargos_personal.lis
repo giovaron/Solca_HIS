@@ -1,0 +1,32 @@
+
+Reconcile Report: Y:\sas\guiones\cambios_solca_quito\cargos_personal.lis
+
+Generated on Tue Jul 25  12:17:44 2006 by Server Generator 6.5.96.5.6
+
+
+======                                  ========                        ================                          ==============
+Object                                  Property                        Repository Value                          Database Value
+======                                  ========                        ================                          ==============
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Object                                  Property                        Repository Value                          Database Value
+------                                  --------                        ----------------                          --------------
+View CARGOS_PERSONAL                                                                                         * NOT IN DATABASE * ***
+                                     Object Type                                                                                
+                               PL/SQL Definition                     SELECT 1 CODIGO,...                                        
+
+                                         Comment                                                                                
+Column CODIGO                                                                                                * NOT IN DATABASE * ***
+                                                                                                                                
+Column DESCRIPCION                                                                                           * NOT IN DATABASE * ***
+                                                                                                                                
+                                                -----------------------------------
+                                                View CARGOS_PERSONAL Differences: 1
+                                                -----------------------------------
+
+
+====================================================================================================================================
+                                                        Total Differences: 1
+====================================================================================================================================

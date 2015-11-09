@@ -1,0 +1,13 @@
+ - Creating menu module D:\sas\bin\aud\frm\audsrimnu.mmx.
+Compiling procedure OBTENER_CONEXION_INFO... 
+   No compilation errors.
+
+Compiling procedure CONECTAR_BD... 
+Compilation error on procedure CONECTAR_BD:
+PL/SQL ERROR 201 at line 29, column 9
+identifier 'FIJAR_PERSONAL' must be declared
+PL/SQL ERROR 0 at line 29, column 9
+Statement ignored
+
+Compilation errors have occurred.
+

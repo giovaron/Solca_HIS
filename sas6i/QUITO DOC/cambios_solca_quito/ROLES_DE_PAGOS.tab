@@ -1,0 +1,29 @@
+-- Y:\sas\guiones\cambios_solca_quito\ROLES_DE_PAGOS.tab
+--
+-- Generated for Oracle 9i on Tue Aug 08  11:16:11 2006 by Server Generator 6.5.96.5.6
+ 
+
+PROMPT Altering Table 'ROLES_DE_PAGOS' 
+ALTER TABLE ROLES_DE_PAGOS 
+ ADD (TIPO VARCHAR2(1) DEFAULT 'P' NOT NULL
+ )
+ MODIFY (SEMANA NUMBER(1) DEFAULT 4
+ )
+/
+
+COMMENT ON COLUMN ROLES_DE_PAGOS.EMP_CODIGO IS 'El código de la empresa de la que es el plan de cuentas'
+/
+
+COMMENT ON COLUMN ROLES_DE_PAGOS.NUMERO IS 'Código del Rol'
+/
+
+COMMENT ON COLUMN ROLES_DE_PAGOS.ANO IS 'Año del Rol'
+/
+
+COMMENT ON COLUMN ROLES_DE_PAGOS.MES IS 'Define los meses del Año'
+/
+
+COMMENT ON COLUMN ROLES_DE_PAGOS.PRS_CODIGO IS 'Código del personal'
+/
+
+

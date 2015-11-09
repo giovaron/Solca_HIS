@@ -1,0 +1,16 @@
+-- Y:\sas\guiones\cambios_solca_quito\INGRESOS_Y_SALIDAS.avt
+--
+-- Generated for Oracle 9i on Tue Aug 08  10:08:27 2006 by Server Generator 6.5.96.5.6
+
+
+DELETE FROM 
+WHERE RV_DOMAIN = 'SECUENCIA NUMERO'
+/
+
+INSERT INTO  (RV_DOMAIN, RV_LOW_VALUE, RV_HIGH_VALUE, RV_ABBREVIATION, RV_MEANING)
+VALUES ('SECUENCIA NUMERO', '0', '999999', NULL, NULL)
+/
+
+COMMIT
+/
+

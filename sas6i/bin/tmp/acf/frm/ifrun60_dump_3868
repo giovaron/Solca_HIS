@@ -1,0 +1,38 @@
+[11/10/06 12:09:14 Hora est. del Pacífico de SA]::Client Status [ConnId=0, PID=3868]
+	>> ERROR: Abnormal termination, Error Code: C0000094 INT_DIVIDE_BY_ZERO
+
+======================= STACK DUMP =======================
+
+Fault address:  664F0126 01:0009F126
+Module: C:\IDS6i\BIN6i\PLS805.dll
+
+System Information:
+Operating System: Windows NT Version 5.1 Build 2600 Service Pack 1
+Command line: "C:\IDS6i\BIN6i\ifrun60.EXE" "M:\sas\bin\acf\frm\actfjognr.fmx"
+FORM/BLOCK/FIELD: ACTFJOASGRNGTMP:ML_DTLASGRING.CRI
+Last Trigger: WHEN-BUTTON-PRESSED - (In Progress)
+Msg: <NULL>
+Last Builtin: SET_GROUP_CHAR_CELL - (Successfully Completed)
+
+Registers:
+EAX:000007D1
+EBX:01B26408
+ECX:000007D1
+EDX:00000000
+ESI:01CC5090
+EDI:00000003
+CS:EIP:001B:664F0126
+SS:ESP:0023:0012CD94  EBP:0012CF50
+DS:0023  ES:0023  FS:003B  GS:0000
+Flags:00010246
+------------------- Call Stack Trace ---------------------
+Frameptr   RetAddr  Param#1  Param#2  Param#3  Param#4  Function Name       
+0x0012cf50 664ef854 01b26408 0012dca4 0012e048 0000000f 0x664f0126          
+0x0012cf80 664b9149 01b26408 0012dca4 0012e048 01ccae79 0x664ef854          
+0x0012e084 6646452a 01b26408 0108b538 01cb13fc 00000008 0x664b9149          
+0x0012e0ec 67e28edc 0108b538 01b26408 01097d88 0107d7ec 0x6646452a          
+0x0108aaf4 0107d7ec 67deac90 67deacd0 00467ab0 00000000 0x67e28edc          
+0x01097d88 00000001 0000000a 003cff40 67fbcf2f 0041189a 0x0107d7ec          
+------------------- End of Stack Trace -------------------
+
+

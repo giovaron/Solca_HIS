@@ -1,0 +1,142 @@
+-- RECORDAR CAMBIR EL DEPARTAMENTO DESDE DONDE SE VA A TRANSFERIR
+-- CREAR SUBBODEGA EN FARMASHOP F M AREA FARMACIA Y DEPARTAMENTO M
+declare
+NUM_TRANSACCION NUMBER;
+CURSOR CIERRE IS
+     SELECT
+          ITM_TIPO,
+     ITM_SBS_SCC_CODIGO,
+     ITM_SBS_CODIGO,
+     ITM_CODIGO,
+          cantidad,
+          costo_anterior,
+     IVA
+     from transacciones
+          where ingbdg_numero = NUM_TRANSACCION
+          and trnsfr_tipo = 'T' AND SENTIDO = 'E';
+xtipo items.tipo%type;
+xsbs_scc_codigo items.sbs_scc_codigo%type;
+xsbs_codigo items.sbs_codigo%type;
+xcodigo items.codigo%type;
+xstock items.stock2%type;
+xcosto items.costo_promedio%type;
+XCANTIDAD NUMBER;
+XIVA   items.iva%type;
+numero_ingreso number;
+area_fuente varchar2(1);
+dept_fuente varchar2(1);
+area_destino varchar2(1);
+dept_destino varchar2(1);
+begin
+NUM_TRANSACCION := 985;  /* PONER TRANSFERENCIA ERRONEA*/
+numero_ingreso := 987 ;  /* NUEVA TRANSFERNCIA QUE TOCARIA*/
+area_fuente := 'H' ;   /*DONDE MANDO, Y QUIERO REVESAR */
+dept_fuente := 'U';
+area_destino := 'A';   /* ACUAL VA*/
+dept_destino := 'F';
+INSERT INTO TRANSFERENCIAS
+(
+TIPO,
+NUMERO,
+ESTADO,
+FECHA,
+TOTAL,
+OBSERVACIONES,
+DPR_CODIGO,
+DPR_ARA_CODIGO,
+DPR_CODIGO_INCREMENTAN,
+DPR_ARA_CODIGO_INCREMENTAN,
+PRS_CODIGO,
+PRS_CODIGO_SE_ENTREGA)
+VALUES
+(
+'T',
+numero_ingreso, /*numero*/
+'N',
+'03/12/2004',
+0,
+'REVERSAR TRANSFERENCIA HECHA POR ERROR',
+dept_fuente,  /*dept fuente*/
+area_fuente,  /*Area fuente*/
+dept_destino,  /*destino*/
+area_destino,  /*destino*/
+'6000',
+'203');
+open cierre;
+if cierre%isopen then
+LOOP
+   FETCH cierre into xtipo,xsbs_scc_codigo,xsbs_codigo,xcodigo,xcantidad,xcosto,xiva;
+   EXIT WHEN cierre%NOTFOUND;
+             INSERT INTO TRANSACCIONES
+                   (TRN_ID,
+                   INGBDG_TIPO,
+                   INGBTC_TIPO,
+                   EGRBDG_TIPO,
+                   EGRBTC_TIPO,
+                   RGL_TIPO,
+                   EGRSBB_TIPO,
+                   TRNSFR_TIPO,
+                   INGBDG_NUMERO,
+                   FECHA,
+                   ITM_TIPO,
+                   ITM_SBS_SCC_CODIGO,
+                   ITM_SBS_CODIGO,
+                   ITM_CODIGO,
+                   CANTIDAD,
+                   STOCK_ANTERIOR,
+                   COSTO_ANTERIOR,
+                   COSTO_TOTAL,
+                   PRECIO_VENTA,
+                   ESTADO,
+                   DPR_CODIGO,
+                   DPR_ARA_CODIGO,
+                   SENTIDO,
+                   IVA,
+                   STOCK_GLOBAL_ANTERIOR,
+                   PROMOCION)
+           VALUES
+           (NULL,NULL,NULL,NULL,NULL,NULL,NULL,'T',NUMERO_INGRESO,NULL,XTIPO,
+                   XSBS_SCC_CODIGO,XSBS_CODIGO,XCODIGO,XCANTIDAD,
+                   0,XCOSTO,(XCOSTO * XCANTIDAD)
+                        ,XCOSTO,'N',dept_destino,area_destino,'I',(XIVA),NULL,NULL);
+           INSERT INTO TRANSACCIONES
+                   (TRN_ID,
+                   INGBDG_TIPO,
+                   INGBTC_TIPO,
+                   EGRBDG_TIPO,
+                   EGRBTC_TIPO,
+                   RGL_TIPO,
+                   EGRSBB_TIPO,
+                   TRNSFR_TIPO,
+                   INGBDG_NUMERO,
+                   FECHA,
+                   ITM_TIPO,
+                   ITM_SBS_SCC_CODIGO,
+                   ITM_SBS_CODIGO,
+                   ITM_CODIGO,
+                   CANTIDAD,
+                   STOCK_ANTERIOR,
+                   COSTO_ANTERIOR,
+                   COSTO_TOTAL,
+                   PRECIO_VENTA,
+                   ESTADO,
+                   DPR_CODIGO,
+                   DPR_ARA_CODIGO,
+                   SENTIDO,
+                   IVA,
+                   STOCK_GLOBAL_ANTERIOR,
+                   PROMOCION)
+           VALUES
+           (NULL,NULL,NULL,NULL,NULL,NULL,NULL,'T',NUMERO_INGRESO,NULL,XTIPO,
+                   XSBS_SCC_CODIGO,XSBS_CODIGO,XCODIGO,XCANTIDAD,
+                   0,XCOSTO,(XCOSTO * XCANTIDAD)
+                        ,XCOSTO,'N',dept_fuente,area_fuente,'E',(XIVA),NULL,NULL);
+end loop;
+end if;
+CLOSE CIERRE;
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE(SQLERRM);
+    DBMS_OUTPUT.PUT_LINE(SQLCODE);
+    ROLLBACK;   
+end;

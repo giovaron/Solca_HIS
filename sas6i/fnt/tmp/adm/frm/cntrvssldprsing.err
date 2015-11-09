@@ -1,0 +1,69 @@
+Compiling package specification CG$CNTRVSSLDPRSING_GLOBALS... 
+   No compilation errors.
+
+Compiling procedure CGDV$POPULATE_DYNAMIC_LISTS... 
+   No compilation errors.
+
+Compiling procedure CGSF$CLR_SLD_SLD_PLNCNTCMP_FK... 
+   No compilation errors.
+
+Compiling procedure CGFK$QRY_SLD_SLD_MVM_FK... 
+   No compilation errors.
+
+Compiling procedure CGSF$CLR_SLD_SLD_MVM_FK... 
+   No compilation errors.
+
+Compiling procedure CGFK$QRY_SLD_SLD_PLNCNTCMP_FK... 
+   No compilation errors.
+
+Compiling function CGTE$CHECK_CONSTRAINT_VIO... 
+   No compilation errors.
+
+Compiling procedure CGTE$PLNCNTCMP_ERRORS... 
+   No compilation errors.
+
+Compiling procedure CGTE$SLD_ERRORS... 
+   No compilation errors.
+
+Compiling procedure CGNV$AI_RVSCMP... 
+   No compilation errors.
+
+Compiling procedure CGLY$DISPLAY_CANVASES... 
+   No compilation errors.
+
+Compiling procedure CGLY$GET_RELATED_CANVASES... 
+   No compilation errors.
+
+Compiling procedure CGLY$CANVAS_MANAGEMENT... 
+   No compilation errors.
+
+Compiling procedure BOTON_COMPROBANTES... 
+   No compilation errors.
+
+Compiling procedure CONSULTAR_BLOQUE_SALDOS... 
+   No compilation errors.
+
+Compiling procedure FIJAR_PARAMETROS_REPORTES... 
+   No compilation errors.
+
+Compiling procedure FIJAR_REPORTE... 
+   No compilation errors.
+
+Compiling procedure FIJAR_SALDOS... 
+Compilation error on procedure FIJAR_SALDOS:
+PL/SQL ERROR 306 at line 4, column 34
+wrong number or types of arguments in call to 'CALCULAR_SALDOS'
+PL/SQL ERROR 0 at line 4, column 3
+Statement ignored
+PL/SQL ERROR 306 at line 5, column 28
+wrong number or types of arguments in call to 'CALCULAR_SALDOS'
+PL/SQL ERROR 0 at line 5, column 3
+Statement ignored
+
+Compiling procedure FIJAR_TIPO_MONEDA... 
+   No compilation errors.
+
+Compiling function FIJAR_CONCEPTO... 
+   No compilation errors.
+
+Compilation errors have occurred.
